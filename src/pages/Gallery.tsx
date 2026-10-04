@@ -63,8 +63,8 @@ export const Gallery: React.FC = () => {
           Visual Field Proofs & Seva Gallery
         </h1>
         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-          Geotagged visual records capturing meals served, medical camps conducted,
-          classroom setups, and preliminary Kumbh sanitation groundwork in Nashik and surrounding regions.
+          Documented photographs capturing medical camps, educational stationery drives, tree plantations,
+          and community assistance across Nashik and surrounding regions.
         </p>
       </div>
 

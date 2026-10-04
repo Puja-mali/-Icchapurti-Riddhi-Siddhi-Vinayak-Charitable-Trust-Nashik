@@ -21,7 +21,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
-import { DemoBadge } from "@/src/components/common/DemoBadge";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
 
@@ -425,10 +424,10 @@ export const HeroNamaste: React.FC = () => {
             Sample:{" "}
             <button
               type="button"
-              onClick={() => setSearchPassportId("SCT-2024-8821")}
+              onClick={() => setSearchPassportId("SCT-PASS-2025-0812")}
               className="text-[#14532d] font-mono font-semibold underline hover:text-emerald-950 cursor-pointer"
             >
-              SCT-2024-8821
+              SCT-PASS-2025-0812
             </button>
           </span>
           <Link
@@ -717,7 +716,6 @@ export const HeroNamaste: React.FC = () => {
               </span>
               <span className="text-stone-300">|</span>
               <span className="text-stone-600 font-medium truncate">{t.hero.badge}</span>
-              <DemoBadge size="sm" className="bg-stone-100 text-stone-700 border-stone-300 shrink-0" />
             </div>
 
             {/* Main Headline */}
@@ -808,7 +806,6 @@ export const HeroNamaste: React.FC = () => {
             </span>
             <span className="text-stone-300">|</span>
             <span className="text-stone-600 font-medium truncate">{t.hero.badge}</span>
-            <DemoBadge size="sm" className="bg-stone-100 text-stone-700 border-stone-300 shrink-0" />
           </div>
 
           {/* 2. Main headline */}

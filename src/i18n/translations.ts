@@ -670,7 +670,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     stageImpactDesc:
       "Final outcome reports, beneficiary case logs, and photographic proofs are compiled into your permanent Impact Passport.",
     openPassport: "Open Impact Passport",
-    samplePassportLabel: "Verified Public Demo Ledger Sample",
+    samplePassportLabel: "Verified Public Ledger Sample",
 
     // Modularized schema
     common: {
@@ -732,10 +732,10 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     hero: {
-      badge: "Regd. Public Charitable Trust • Est. 2012 (Demo Reference)",
+      badge: "Regd. Public Charitable Trust • Reg. No. E-9389 / Nashik",
       welcomeTitle: "Empowering Communities Through Transparent Charitable Action",
       welcomeSubtitle:
-        "A legally governed public charitable trust dedicated to rural education, critical healthcare, emergency nutrition, and disaster relief with 100% auditable impact.",
+        "A registered public charitable trust dedicated to education for needy and orphan children, healthcare camps, food and clothing relief, senior citizen care, and tree plantation with auditable impact records.",
       namasteTag: "Welcoming Host • नम्र अभिवादन",
       namasteQuote: "Serving with humility, transparency and devotion.",
       welcomeSpeakerPrompt: "🔊 Listen to Welcome",
@@ -754,14 +754,14 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       directSevaVol: "🤝 Volunteer",
       searchPassportPlaceholder: "Enter Impact Passport ID (e.g. SCT-2024-8821)",
       trackImpact: "Track",
-      stat1Value: "₹42.8 Lakh",
-      stat1Label: "Funds Disbursed",
-      stat2Value: "18 Drives",
-      stat2Label: "Active Campaigns",
-      stat3Value: "650+ Active",
+      stat1Value: "Audited Ledger",
+      stat1Label: "Disbursal Records",
+      stat2Value: "Active Drives",
+      stat2Label: "Grassroots Causes",
+      stat3Value: "Field Sevadars",
       stat3Label: "Registered Volunteers",
-      stat4Value: "100%",
-      stat4Label: "Audited Ledgers",
+      stat4Value: "Public Registry",
+      stat4Label: "Statutory Filings",
     },
 
     about: {
@@ -775,15 +775,15 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       visionDesc:
         "A compassionate, equitable society where every child learns, every patient receives dignified treatment, and every donor sees the verifiable fruit of their generosity.",
       valuesTitle: "Core Institutional Values",
-      value1: "Radical Transparency",
+      value1: "Auditable Transparency",
       value1Desc:
-        "Every rupee received is documented with public vendor vouchers, beneficiary geotags, and audit stamps.",
+        "Every contribution received is documented with official receipts, vendor purchase orders, and itemized accounts.",
       value2: "Dignity in Giving",
       value2Desc:
         "We serve beneficiaries not as dependents, but as respected community members deserving equal opportunity.",
       value3: "Zero Waste Governance",
       value3Desc:
-        "Over 92% of operational budgets directly reach ground procurement; administrative costs are kept strictly below 8%.",
+        "Contributions are dedicated to grassroots programs and essential supplies, keeping administrative overhead strictly minimized.",
       boardTitle: "Board of Trustees & Leadership",
       governanceTitle: "Legal & Statutory Compliance",
       taxNotice: "Statutory and tax-related information is subject to verification of the Trust's current official documentation.",
@@ -887,7 +887,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       subtitle:
         "Track your contribution end-to-end from receipt generation to field disbursal, vendor vouchers, and verified beneficiary outcomes.",
       searchPlaceholder: "Enter Passport Token (e.g., SCT-2024-8821)",
-      samplePassports: "Or inspect verified public demo audit records:",
+      samplePassports: "Or inspect verified public audit records:",
       stage1: "Stage 1: Contribution Logged",
       stage2: "Stage 2: Fund Allocation",
       stage3: "Stage 3: Field Verification",
@@ -924,10 +924,10 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       disabledDesc:
         "The dedicated Kumbh Seva module is currently deactivated in site settings. Trust administrators can activate this module from the Admin Settings desk.",
       adminSettingsBtn: "Go to Admin Settings",
-      preparatoryNoticeTitle: "Preparatory Planning Phase (Demo Reference)",
+      preparatoryNoticeTitle: "Preparatory Planning Framework",
       preparatoryNoticeDesc:
-        "Nashik Simhastha Kumbh occurs in 2027. The initiatives, infrastructure targets, and volunteer deployment drives shown below represent preparatory planning blueprints and illustrative demonstration figures.",
-      demoPlanningBadge: "Demo / Planning Phase",
+        "Nashik Simhastha Kumbh will occur in 2027. The initiatives, infrastructure targets, and volunteer deployment drives shown below represent advance planning frameworks subject to administrative approvals and field scheduling.",
+      demoPlanningBadge: "Advance Planning Phase",
       metricsMeals: "Daily Satvik Meals (Target)",
       metricsMealsSub: "Across 4 Annachhatra hubs",
       metricsWater: "Clean Water Points (Target)",
@@ -1378,10 +1378,10 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     hero: {
-      badge: "नोंदणीकृत सार्वजनिक धर्मादाय ट्रस्ट • स्था. २०१२ (डेमो संदर्भ)",
+      badge: "नोंदणीकृत सार्वजनिक धर्मादाय ट्रस्ट • नोंदणी क्र. E-9389 / Nashik",
       welcomeTitle: "पारदर्शक समाजकार्यातून वंचित घटकांना सशक्त बनवणारे व्यासपीठ",
       welcomeSubtitle:
-        "ग्रामीण शिक्षण, आरोग्य उपचार, आपत्कालीन अन्नछत्र आणि आपत्ती निवारणासाठी समर्पित अधिकृत चॅरिटेबल ट्रस्ट. प्रत्येक योगदानाचा संपूर्ण पारदर्शक हिशोब.",
+        "गरजू व अनाथ मुलांचे शिक्षण, आरोग्य शिबिरे, अन्न व वस्त्र मदत, ज्येष्ठ नागरिक सेवा आणि वृक्षारोपणासाठी समर्पित नोंदणीकृत धर्मादाय ट्रस्ट. सर्व सेवाकार्यांचा पडताळणीयोग्य हिशोब.",
       namasteTag: "स्वागताध्यक्ष • नम्र अभिवादन",
       namasteQuote: "परमेश्वर प्रत्येक जीवात वास करतो — सेवा हीच खरी भक्ती.",
       welcomeSpeakerPrompt: "🔊 स्वागत ऐका",
@@ -1400,14 +1400,14 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       directSevaVol: "🤝 स्वयंसेवक",
       searchPassportPlaceholder: "पासपोर्ट आयडी प्रविष्ट करा (उदा. SCT-2024-8821)",
       trackImpact: "तपासा",
-      stat1Value: "₹४२.८ लाख",
-      stat1Label: "वाटप केलेला निधी",
-      stat2Value: "१८ मोहिमा",
-      stat2Label: "सक्रिय सेवा मोहिमा",
-      stat3Value: "६५०+ सक्रिय",
+      stat1Value: "लेखाजोखा नोंद",
+      stat1Label: "वितरण तपशील",
+      stat2Value: "सक्रिय उपक्रम",
+      stat2Label: "सेवा प्रकल्प",
+      stat3Value: "मैदानी सेवेकरी",
       stat3Label: "नोंदणीकृत स्वयंसेवक",
-      stat4Value: "१००%",
-      stat4Label: "लेखापरीक्षित हिशेब",
+      stat4Value: "सार्वजनिक नोंदवही",
+      stat4Label: "वैधानिक नोंदी",
     },
 
     about: {
@@ -1423,16 +1423,16 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       valuesTitle: "आमची मूलभूत मूल्ये",
       value1: "संपूर्ण पारदर्शकता",
       value1Desc:
-        "प्रत्येक रुपयाच्या देणगीचा तपशील, खरेदी पावत्या आणि लाभार्थी नोंदीसह उपलब्ध केला जातो.",
+        "प्रत्येक देणगीचा तपशील, अधिकृत पावत्या, खरेदी नोंदी आणि हिशोबासह उपलब्ध केला जातो.",
       value2: "सन्मानपूर्वक सेवा",
       value2Desc:
         "गरजू व्यक्तींची सेवा करताना त्यांच्या आत्मसन्मानाला सर्वोच्च प्राधान्य दिले जाते.",
       value3: "काटकसर आणि प्रामाणिकपणा",
       value3Desc:
-        "९२% पेक्षा अधिक निधी थेट सेवा साहित्यासाठी वापरला जातो, प्रशासकीय खर्च अत्यल्प ठेवला जातो.",
+        "निधी थेट सेवा साहित्य व गरजू घटकांच्या मदतीसाठी वापरला जातो, प्रशासकीय खर्च नियमांनुसार अत्यल्प ठेवला जातो.",
       boardTitle: "विश्वस्त मंडळ आणि नेतृत्व",
       governanceTitle: "वैधानिक व प्रशासकीय नोंदणी",
-      taxNotice: "आयकर कायदा १९६१ च्या कलम ८०जी अंतर्गत ५०% कर सवलत",
+      taxNotice: "वैधानिक व कर सवलत तपशील ट्रस्टच्या अधिकृत दस्तऐवजांच्या पडताळणीच्या अधीन आहेत.",
     },
 
     causes: {
@@ -1569,10 +1569,10 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       disabledDesc:
         "वेबसाईट सेटिंग्जमध्ये कुंभ सेवा विभाग सध्या निष्क्रिय आहे. संस्था व्यवस्थापक ॲडमिन डेस्कवरून हा विभाग पुन्हा सुरू करू शकतात.",
       adminSettingsBtn: "ॲडमिन सेटिंग्जवर जा",
-      preparatoryNoticeTitle: "पूर्वतयारी नियोजन टप्पा (डेमो संदर्भ)",
+      preparatoryNoticeTitle: "पूर्वतयारी नियोजन आराखडा",
       preparatoryNoticeDesc:
-        "नाशिक सिंहस्थ कुंभमेळा २०२७ मध्ये आयोजित होत आहे. खालील उपक्रम, पायाभूत सुविधांची उद्दिष्टे आणि स्वयंसेवक नियोजन हे पूर्वतयारी आराखडा व प्रात्यक्षिक स्वरूपाचे आहेत.",
-      demoPlanningBadge: "डेमो / नियोजन टप्पा",
+        "नाशिक सिंहस्थ कुंभमेळा २०२७ मध्ये आयोजित होत आहे. खालील उपक्रम, पायाभूत सुविधांची उद्दिष्टे आणि स्वयंसेवक नियोजन हे प्रशासकीय मंजुरी व पूर्वतयारी आराखड्याच्या अधीन आहेत.",
+      demoPlanningBadge: "पूर्वतयारी नियोजन",
       metricsMeals: "दैनिक सात्विक भोजन (उद्दिष्ट)",
       metricsMealsSub: "४ मुख्य महा-अन्नछत्र केंद्रांमध्ये",
       metricsWater: "शुद्ध पाणी केंद्रे (उद्दिष्ट)",
@@ -1941,7 +1941,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     stageImpact: "प्रत्यक्ष प्रभाव",
     stageImpactDesc: "मरीज का उपचार, छात्रों की पढ़ाई या भोजन वितरण का अंतिम सत्यापन।",
     openPassport: "इम्पैक्ट पासपोर्ट खोलें",
-    samplePassportLabel: "सत्यापित सार्वजनिक डेमो ऑडिट रिकॉर्ड",
+    samplePassportLabel: "सत्यापित सार्वजनिक ऑडिट रिकॉर्ड",
 
     common: {
       trustName: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट, नाशिक",
@@ -2002,10 +2002,10 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     hero: {
-      badge: "पंजीकृत सार्वजनिक धर्मार्थ ट्रस्ट • स्था. २०१२ (डेमो संदर्भ)",
+      badge: "पंजीकृत सार्वजनिक धर्मार्थ ट्रस्ट • पंजीकरण सं. E-9389 / Nashik",
       welcomeTitle: "पारदर्शी सामाजिक कार्यों से जरूरतमंदों को सशक्त बनाना",
       welcomeSubtitle:
-        "ग्रामीण शिक्षा, स्वास्थ्य, पोषण और आपदा राहत के लिए समर्पित अधिकृत चैरिटेबल ट्रस्ट। हर एक रुपये का स्पष्ट हिसाब।",
+        "जरूरतमंद एवं अनाथ बच्चों की शिक्षा, स्वास्थ्य शिविर, अन्न व वस्त्र सहायता, वरिष्ठ नागरिक सेवा और पर्यावरण संरक्षण के लिए समर्पित पंजीकृत चैरिटेबल ट्रस्ट।",
       namasteTag: "स्वागत कर्ता • सादर प्रणाम",
       namasteQuote: "जीव सेवा ही सच्ची ईश्वर भक्ति है।",
       welcomeSpeakerPrompt: "🔊 स्वागत सुनें",
@@ -2024,14 +2024,14 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       directSevaVol: "🤝 स्वयंसेवक",
       searchPassportPlaceholder: "इम्पैक्ट पासपोर्ट आईडी दर्ज करें (उदा. SCT-2024-8821)",
       trackImpact: "ट्रैक करें",
-      stat1Value: "₹४२.८ लाख",
-      stat1Label: "वितरित फंड",
-      stat2Value: "१८ अभियान",
-      stat2Label: "सक्रिय सेवा अभियान",
-      stat3Value: "६५०+ सक्रिय",
+      stat1Value: "लेखाजोखा रिकॉर्ड",
+      stat1Label: "वितरण विवरण",
+      stat2Value: "सक्रिय अभियान",
+      stat2Label: "सेवा प्रकल्प",
+      stat3Value: "मैदानी सेवादार",
       stat3Label: "पंजीकृत स्वयंसेवक",
-      stat4Value: "१००%",
-      stat4Label: "ऑडिटेड खाता-बही",
+      stat4Value: "सार्वजनिक पंजी",
+      stat4Label: "वैधानिक रिकॉर्ड",
     },
 
     about: {
@@ -2047,10 +2047,10 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       value2: "सम्मानपूर्वक सेवा",
       value2Desc: "सेवा कार्य करते समय हर व्यक्ति के स्वाभिमान का सर्वोच्च ध्यान।",
       value3: "जिम्मेदार प्रबंधन",
-      value3Desc: "९२% से अधिक निधि सीधे जमीनी राहत कार्यों में व्यय।",
+      value3Desc: "दान राशि सीधे जमीनी सेवा सामग्री एवं सहायतार्थ व्यय की जाती है, प्रशासनिक व्यय को यथासंभव न्यूनतम रखा जाता है।",
       boardTitle: "ट्रस्टी बोर्ड और नेतृत्व",
       governanceTitle: "कानूनी व वैधानिक पंजीकरण",
-      taxNotice: "आयकर अधिनियम १९६१ की धारा 80G के तहत ५०% कर छूट",
+      taxNotice: "वैधानिक एवं कर संबंधी विवरण ट्रस्ट के आधिकारिक दस्तावेजों के सत्यापन के अधीन हैं।",
     },
 
     causes: {
@@ -2147,7 +2147,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       title: "इम्पैक्ट पासपोर्ट • दान सत्यापन लेजर",
       subtitle: "दान से लेकर वितरण, बिल वाउचर और अंतिम परिणाम तक का पारदर्शी ब्योरा।",
       searchPlaceholder: "पासपोर्ट टोकन दर्ज करें (उदा. SCT-2024-8821)",
-      samplePassports: "या सत्यापित सार्वजनिक डेमो रिकॉर्ड देखें:",
+      samplePassports: "या सत्यापित सार्वजनिक रिकॉर्ड देखें:",
       stage1: "चरण 1: दान दर्ज हुआ",
       stage2: "चरण 2: फंड का आवंटन",
       stage3: "चरण 3: जमीनी सत्यापन",
@@ -2180,9 +2180,9 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       disabledTitle: "सिंहस्थ कुंभ सेवा २०२७ अनुभाग वर्तमान में बंद है",
       disabledDesc: "साइट सेटिंग्स में कुंभ सेवा अनुभाग निष्क्रिय है। व्यवस्थापक एडमिन डेस्क से इसे पुनः सक्रिय कर सकते हैं।",
       adminSettingsBtn: "एडमिन सेटिंग्स पर जाएं",
-      preparatoryNoticeTitle: "प्रारंभिक योजना चरण (डेमो संदर्भ)",
-      preparatoryNoticeDesc: "नासिक सिंहस्थ कुंभ २०२७ में आयोजित हो रहा है। नीचे प्रदर्शित पहल और स्वयंसेवक योजनाएं प्रदर्शन उद्देश्य हेतु हैं।",
-      demoPlanningBadge: "डेमो / योजना चरण",
+      preparatoryNoticeTitle: "प्रारंभिक योजना रूपरेखा",
+      preparatoryNoticeDesc: "नासिक सिंहस्थ कुंभ २०२७ में आयोजित होगा। नीचे प्रदर्शित पहल और स्वयंसेवक योजनाएं अग्रिम रूपरेखा के अधीन हैं।",
+      demoPlanningBadge: "अग्रिम योजना चरण",
       metricsMeals: "दैनिक सात्विक भोजन (लक्ष्य)",
       metricsMealsSub: "४ मुख्य महा-अन्नक्षेत्र केंद्रों में",
       metricsWater: "शुद्ध जल केंद्र (लक्ष्य)",

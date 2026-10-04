@@ -70,7 +70,7 @@ export class PublicController {
             ],
             samplePassport: {
               id: 'pass-2025-0812',
-              passportNumber: 'PASSPORT-DEMO-2025-0812',
+              passportNumber: 'SCT-PASS-2025-0812',
               donorName: 'Verified Contributor',
               donationDate: '2025-01-14',
               amount: 5000,
@@ -87,7 +87,7 @@ export class PublicController {
                   status: 'completed',
                   description: 'Official receipt generated with Trust registration reference E-9389 / Nashik.',
                   evidenceType: 'receipt',
-                  evidenceDocNumber: 'REC-DEMO-2025-0812',
+                  evidenceDocNumber: 'REC-SCT-2025-0812',
                   details: [
                     { label: 'Donor Name', value: 'Verified Contributor' },
                     { label: 'Amount', value: '₹5,000' },

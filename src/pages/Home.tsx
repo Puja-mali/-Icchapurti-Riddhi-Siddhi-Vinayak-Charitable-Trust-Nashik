@@ -320,7 +320,7 @@ export const Home: React.FC = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1: 100% Traceability */}
+          {/* Card 1: Transparent Donation Process */}
           <motion.div
             whileHover={!shouldReduceMotion ? { y: -4 } : undefined}
             transition={{ duration: 0.2 }}
@@ -749,8 +749,8 @@ export const Home: React.FC = () => {
               </p>
               <p>
                 {language === "mr"
-                  ? "विश्वस्त मंडळाने मंजूर केलेले अधिकृत अहवाल पारदर्शकता दालनात उपलब्ध आहेत."
-                  : "Certified financial balance sheets, 80G utilization certificates, and CA reports are filed in the Transparency Portal."}
+                  ? "विश्वस्त मंडळाने मंजूर केलेले वार्षिक लेखाजोखा अहवाल पारदर्शकता दालनात उपलब्ध आहेत."
+                  : "Annual financial statements, statutory balance sheets, and utilization records are published in the Transparency Portal."}
               </p>
             </div>
           ) : (

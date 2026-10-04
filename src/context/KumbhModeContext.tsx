@@ -18,7 +18,7 @@ const DEFAULT_CONFIG: KumbhConfig = {
   location: "Nashik & Trimbakeshwar, Maharashtra, India",
   targetYear: "2027",
   status: "Advance Civic & Pilgrim Seva Planning",
-  demoNote: "Preparatory Civic & Pilgrim Mobilization — Simhastha Kumbh 2027 Seva Initiative",
+  planningNote: "Preparatory Civic & Pilgrim Mobilization — Simhastha Kumbh 2027 Seva Initiative",
 };
 
 const KumbhModeContext = createContext<KumbhContextType | undefined>(undefined);

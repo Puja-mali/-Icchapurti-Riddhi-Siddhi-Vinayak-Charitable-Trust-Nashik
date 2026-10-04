@@ -41,7 +41,7 @@ export const uploadDocumentMiddleware = multer({
 /**
  * Wraps Multer middleware to convert Multer errors (e.g., file too large) into standard AppError (HTTP 400).
  */
-export function handleUploadErrors(uploadFn: (req: Request, res: Response, next: NextFunction) => void) {
+export function handleUploadErrors(uploadFn: any) {
   return (req: Request, res: Response, next: NextFunction) => {
     uploadFn(req, res, (err: any) => {
       if (err) {

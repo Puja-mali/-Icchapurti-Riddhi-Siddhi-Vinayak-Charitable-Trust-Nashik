@@ -93,7 +93,7 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
               <span className="font-semibold text-[#14532d]">{percentage}% Accounted</span>
               <span className="flex items-center gap-1">
                 <Users className="w-3 h-3 text-stone-400" />
-                {cause.donorCount} records (demo)
+                {cause.donorCount} contributions
               </span>
             </div>
           </div>

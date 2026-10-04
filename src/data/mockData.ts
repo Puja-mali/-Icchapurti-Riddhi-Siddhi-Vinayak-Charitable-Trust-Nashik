@@ -219,7 +219,7 @@ export const MOCK_CAUSES: Cause[] = [
 export const MOCK_IMPACT_PASSPORTS: ImpactPassportRecord[] = [
   {
     id: "pass-2025-0812",
-    passportNumber: "PASSPORT-DEMO-2025-0812",
+    passportNumber: "SCT-PASS-2025-0812",
     donorName: "Sample Donor",
     donationDate: "2025-01-14",
     amount: 5000,
@@ -236,7 +236,7 @@ export const MOCK_IMPACT_PASSPORTS: ImpactPassportRecord[] = [
         status: "completed",
         description: "Official receipt generated with Trust registration reference E-9389 / Nashik.",
         evidenceType: "receipt",
-        evidenceDocNumber: "REC-DEMO-2025-0812",
+        evidenceDocNumber: "REC-SCT-2025-0812",
         details: [
           { label: "Donor Name", value: "Sample Donor" },
           { label: "Amount", value: "₹5,000" },

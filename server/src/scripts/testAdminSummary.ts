@@ -205,16 +205,16 @@ async function runTests() {
 
     // 6a. Add real causes
     const activeCause = await Cause.create({
-      title: 'Pediatric Cardiac Support Drive',
-      slug: 'pediatric-cardiac-drive',
-      shortDescription: 'Life-saving pediatric surgeries',
-      description: 'Comprehensive financial backing for congenital cardiac anomalies.',
+      title: 'Free Medical, Health & Naturopathy Camps',
+      slug: 'free-medical-health-camps',
+      shortDescription: 'Free health checkup and medicine camps',
+      description: 'Periodic medical assistance, health checkups, and medicine distribution for underprivileged families in Nashik.',
       targetAmount: 500000,
       raisedAmount: 15000,
       category: 'Medical Support',
-      imageUrl: 'https://example.com/pediatric.jpg',
+      imageUrl: 'https://example.com/medical-camp.jpg',
       status: 'ACTIVE',
-      location: 'Mumbai, Maharashtra',
+      location: 'Nashik, Maharashtra',
       donorCount: 2,
       urgent: true,
       allocationBreakdown: [],

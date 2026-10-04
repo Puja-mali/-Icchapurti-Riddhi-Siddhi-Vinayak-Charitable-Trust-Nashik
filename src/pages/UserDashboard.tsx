@@ -153,7 +153,7 @@ export const UserDashboard: React.FC = () => {
             Audit Reconciliation
           </div>
           <div className="text-xl sm:text-2xl font-serif font-bold text-emerald-700 mt-1">
-            100% Reconciled
+            Bank Reconciled
           </div>
           <div className="text-[11px] text-stone-500 mt-1">
             Direct banking payment settlement

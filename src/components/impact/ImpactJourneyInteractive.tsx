@@ -238,7 +238,7 @@ export const ImpactJourneyInteractive: React.FC = () => {
             </span>
             <span className="text-stone-400">•</span>
             <span className="text-xs text-stone-300">
-              Verified by Siddhivinayak Internal Audit Cell
+              Verified under Trust Accounting Standards
             </span>
           </div>
           <p className="text-xs text-stone-300 max-w-2xl leading-relaxed">
@@ -246,7 +246,7 @@ export const ImpactJourneyInteractive: React.FC = () => {
             <code className="text-amber-300 font-mono">
               {stages[activeStage - 1].sampleRef}
             </code>
-            ) ensuring 100% of non-overhead funds reach the vetted humanitarian destination.
+            ) ensuring allocated program funds directly reach the vetted humanitarian destination.
           </p>
         </div>
 

@@ -42,6 +42,28 @@ export const errorHandler = (
     return sendError(res, err.message, err.statusCode, err.errors || []);
   }
 
+  // Handle Mongoose / MongoDB offline errors gracefully
+  if (
+    err.name === 'MongooseError' ||
+    err.name === 'MongoNetworkError' ||
+    err.name === 'MongoServerSelectionError' ||
+    (typeof err.message === 'string' && (
+      err.message.includes('buffering timed out') ||
+      err.message.includes('before initial connection') ||
+      err.message.includes('connect ECONNREFUSED')
+    ))
+  ) {
+    logger.warn(`[AI Studio] Database offline — returning fallback response: ${err.message}`);
+    if (req.method === 'GET') {
+      const isPlural = req.path.endsWith('s') || req.path.endsWith('s/');
+      return res.json(isPlural ? [] : {});
+    }
+    return res.status(503).json({
+      success: false,
+      message: 'Service temporarily unavailable (database offline)',
+    });
+  }
+
   // Handle Zod Validation Error
   if (err instanceof ZodError) {
     const formattedErrors = err.issues.map((issue) => ({

@@ -11,7 +11,6 @@ interface ImpactStatProps {
   sublabel: string;
   iconName: string;
   className?: string;
-  showDemoBadge?: boolean;
 }
 
 export const ImpactStat: React.FC<ImpactStatProps> = ({
@@ -22,7 +21,6 @@ export const ImpactStat: React.FC<ImpactStatProps> = ({
   sublabel,
   iconName,
   className,
-  showDemoBadge = false,
 }) => {
   // Safe dynamic icon resolution
   const IconComponent =

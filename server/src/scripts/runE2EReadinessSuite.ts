@@ -401,10 +401,10 @@ async function runE2ESuite() {
 
     // Create an active Cause with all required schema fields
     const cause = await Cause.create({
-      title: 'Pediatric Surgery Fund',
-      slug: 'pediatric-surgery-fund',
-      shortDescription: 'Subsidies for critical pediatric cardiac interventions.',
-      description: 'Comprehensive medical fund providing surgeries and ICU stays for children from low-income families across Nashik district.',
+      title: 'Free Medical, Health & Naturopathy Camps',
+      slug: 'free-medical-camps',
+      shortDescription: 'Providing medical camps, healthcare assistance, and health checkups in Nashik.',
+      description: 'Organizing periodic free medical camps, health checkup camps, vaccination awareness, naturopathy guidance, and healthcare support for the poor.',
       category: 'Medical Support',
       imageUrl: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118',
       targetAmount: 500000,

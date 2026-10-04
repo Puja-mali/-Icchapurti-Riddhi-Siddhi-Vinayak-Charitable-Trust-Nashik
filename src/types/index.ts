@@ -336,7 +336,7 @@ export interface KumbhConfig {
   location: string;
   targetYear: string;
   status: string;
-  demoNote: string;
+  planningNote: string;
 }
 
 export interface TrustObjective {

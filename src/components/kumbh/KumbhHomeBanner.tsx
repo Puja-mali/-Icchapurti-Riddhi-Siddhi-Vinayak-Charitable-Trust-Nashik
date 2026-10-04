@@ -88,7 +88,7 @@ export const KumbhHomeBanner: React.FC = () => {
               </Button>
             </Link>
             <div className="text-[11px] text-emerald-300/80 text-center">
-              {kumbhConfig.demoNote}
+              {kumbhConfig.planningNote}
             </div>
           </div>
         </div>

@@ -178,7 +178,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Strip */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
           <div className="flex items-center gap-2 flex-wrap">
-            <span>© 2012–2025 {trustName}.</span>
+            <span>© {new Date().getFullYear()} {trustName}.</span>
             <span>•</span>
             <span>Reg. No: {regNumber}</span>
             <span>•</span>
