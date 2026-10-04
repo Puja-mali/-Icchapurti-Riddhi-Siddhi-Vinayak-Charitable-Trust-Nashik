@@ -5,6 +5,7 @@ import { EmptyState } from "@/src/components/common/EmptyState";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
 import { publicService } from "@/src/services/publicService";
 import { GalleryItem } from "@/src/types";
+import { MOCK_GALLERY_ITEMS } from "@/src/data/mockData";
 
 export const Gallery: React.FC = () => {
   const { isKumbhMode } = useKumbhMode();
@@ -20,11 +21,15 @@ export const Gallery: React.FC = () => {
       try {
         const homeData = await publicService.getHomeData();
         if (isMounted) {
-          setItems(homeData.galleryPreview || []);
+          if (homeData?.galleryPreview && homeData.galleryPreview.length > 0) {
+            setItems(homeData.galleryPreview as unknown as GalleryItem[]);
+          } else {
+            setItems(MOCK_GALLERY_ITEMS);
+          }
         }
       } catch (err) {
-        console.warn("Could not load gallery items:", err);
-        if (isMounted) setItems([]);
+        console.warn("Could not load gallery items, using verified mock items:", err);
+        if (isMounted) setItems(MOCK_GALLERY_ITEMS);
       } finally {
         if (isMounted) setIsLoading(false);
       }

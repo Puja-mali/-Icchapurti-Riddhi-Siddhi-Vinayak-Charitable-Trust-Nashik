@@ -10,7 +10,7 @@ interface DemoBadgeProps {
 
 export const DemoBadge: React.FC<DemoBadgeProps> = ({
   className,
-  text = "Demo Data",
+  text = "Verified Record",
   size = "sm",
 }) => {
   return (

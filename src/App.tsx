@@ -26,6 +26,8 @@ import { Login } from "@/src/pages/Login";
 import { Register } from "@/src/pages/Register";
 import { UserDashboard } from "@/src/pages/UserDashboard";
 import { AdminDashboard } from "@/src/pages/AdminDashboard";
+import { AdminLogin } from "@/src/pages/AdminLogin";
+import { ProtectedRoute } from "@/src/components/common/ProtectedRoute";
 import { KumbhSeva } from "@/src/pages/KumbhSeva";
 import { RequestHelp } from "@/src/pages/RequestHelp";
 import { Transparency } from "@/src/pages/Transparency";
@@ -69,7 +71,15 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
           {/* Catch-all fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

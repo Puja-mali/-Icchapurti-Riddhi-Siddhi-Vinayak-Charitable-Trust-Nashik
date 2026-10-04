@@ -222,7 +222,7 @@ const REAL_CAUSES = [
     slug: 'notebooks-stationery-distribution',
     shortDescription: 'Providing notebooks, pens, and essential learning stationery for underprivileged school children in Nashik and surrounding rural areas.',
     description: 'Direct distribution of quality notebook bundles and stationery sets to students in government and community schools. Ensures students have essential writing materials for uninterrupted education.',
-    targetAmount: 50000,
+    targetAmount: 0,
     raisedAmount: 0,
     category: 'Education',
     imageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1000&q=80',
@@ -231,32 +231,15 @@ const REAL_CAUSES = [
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'Notebooks & Ruled Paper Procurement', percentage: 70 },
-      { category: 'Stationery Kits (Pens, Pencils, Erasers)', percentage: 20 },
-      { category: 'Packing & School Delivery', percentage: 10 },
-    ],
-    impactMilestones: [
-      {
-        title: 'Requirement Survey in Partner Schools',
-        description: 'Documenting student headcount requiring stationery support.',
-        targetDate: '2025-06-15',
-        status: 'completed',
-      },
-      {
-        title: 'Batch Procurement & Packaging',
-        description: 'Bulk procurement of standard ruled notebooks and writing materials.',
-        targetDate: '2025-07-01',
-        status: 'in_progress',
-      },
-    ],
+    allocationBreakdown: [],
+    impactMilestones: [],
   },
   {
     title: 'School Uniforms & Dress Distribution for Students',
     slug: 'school-dress-distribution',
     shortDescription: 'Supplying school uniforms and stitched dress sets to underprivileged and orphan children.',
     description: 'Providing durable and comfortable school uniforms to needy students, supporting their dignity, attendance, and enthusiasm for daily schooling.',
-    targetAmount: 60000,
+    targetAmount: 0,
     raisedAmount: 0,
     category: 'Education',
     imageUrl: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1000&q=80',
@@ -265,25 +248,15 @@ const REAL_CAUSES = [
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'Uniform Fabric & Stitching', percentage: 85 },
-      { category: 'Packaging & Field Distribution', percentage: 15 },
-    ],
-    impactMilestones: [
-      {
-        title: 'Student Sizing & Enrollment Check',
-        description: 'Gathering size requirements across local schools.',
-        targetDate: '2025-06-20',
-        status: 'completed',
-      },
-    ],
+    allocationBreakdown: [],
+    impactMilestones: [],
   },
   {
     title: 'School Infrastructure: Clean Water Purifier & Assembly Podium',
     slug: 'school-water-purifier-podium-support',
     shortDescription: 'Installing commercial RO water purifiers and stage assembly podiums in public schools.',
     description: 'Safe drinking water is essential for child health. This program provides reliable RO water purification filtration systems and stage podiums for school assembly grounds.',
-    targetAmount: 75000,
+    targetAmount: 0,
     raisedAmount: 0,
     category: 'Education',
     imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80',
@@ -292,11 +265,7 @@ const REAL_CAUSES = [
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'RO Water Filtration System & Installation', percentage: 65 },
-      { category: 'Assembly Ground Stage Podium', percentage: 25 },
-      { category: 'Plumbing & Annual Filter Servicing', percentage: 10 },
-    ],
+    allocationBreakdown: [],
     impactMilestones: [],
   },
   {
@@ -304,7 +273,7 @@ const REAL_CAUSES = [
     slug: 'educational-support-5-children',
     shortDescription: 'Dedicated educational adoption covering school fees, books, and academic essentials for 5 orphan and needy children.',
     description: 'Providing comprehensive annual academic support for 5 orphan and destitute children. Covers school admission, textbooks, tuition assistance, and learning materials without inflating impact numbers.',
-    targetAmount: 50000,
+    targetAmount: 0,
     raisedAmount: 0,
     category: 'Education',
     imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1000&q=80',
@@ -313,11 +282,7 @@ const REAL_CAUSES = [
     urgent: true,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'School Term Fees & Tuition (5 Children)', percentage: 60 },
-      { category: 'Curriculum Books & Uniforms', percentage: 25 },
-      { category: 'Tutoring Mentorship & Nutrition', percentage: 15 },
-    ],
+    allocationBreakdown: [],
     impactMilestones: [],
   },
   {
@@ -325,19 +290,16 @@ const REAL_CAUSES = [
     slug: 'clothing-sweater-distribution',
     shortDescription: 'Distributing warm winter sweaters, blankets, and seasonal clothing to poor and destitute families.',
     description: 'Seasonal distribution of warm sweaters and clean clothes for disadvantaged children, daily-wage laborers, and roadside destitute persons across Nashik.',
-    targetAmount: 40000,
+    targetAmount: 0,
     raisedAmount: 0,
-    category: 'Community Relief',
+    category: 'Emergency Relief',
     imageUrl: 'https://images.unsplash.com/photo-1547496502-affa22d38842?auto=format&fit=crop&w=1000&q=80',
     status: 'ACTIVE',
     location: 'Nashik & Surrounding Hamlets',
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'Sweaters & Thermal Wear Procurement', percentage: 75 },
-      { category: 'Clothing Sorting & Volunteer Distribution', percentage: 25 },
-    ],
+    allocationBreakdown: [],
     impactMilestones: [],
   },
   {
@@ -345,7 +307,7 @@ const REAL_CAUSES = [
     slug: 'diwali-faral-food-distribution',
     shortDescription: 'Sharing festive Diwali Faral sweets, snacks, and dry food grains with economically disadvantaged families.',
     description: 'Ensuring that every family in our community celebrates festive moments with dignity and joy through fresh, hygienic Diwali Faral packets and staple groceries.',
-    targetAmount: 45000,
+    targetAmount: 0,
     raisedAmount: 0,
     category: 'Food & Nutrition',
     imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1000&q=80',
@@ -354,11 +316,7 @@ const REAL_CAUSES = [
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'Diwali Faral Sweets & Snacks Preparation', percentage: 60 },
-      { category: 'Dry Ration Grains (Rice, Wheat, Dal)', percentage: 30 },
-      { category: 'Hygienic Packaging & Transport', percentage: 10 },
-    ],
+    allocationBreakdown: [],
     impactMilestones: [],
   },
   {
@@ -366,20 +324,16 @@ const REAL_CAUSES = [
     slug: 'senior-citizens-umbrellas-walking-sticks',
     shortDescription: 'Providing durable walking sticks, monsoon umbrellas, and support aids to elderly citizens through Jyeshtha Nagrik Sangh.',
     description: 'Elderly care initiative providing sturdy mobility walking sticks and monsoon umbrellas to senior citizens, alongside regular healthcare checkups and social engagement.',
-    targetAmount: 35000,
+    targetAmount: 0,
     raisedAmount: 0,
-    category: 'Community Relief',
+    category: 'Emergency Relief',
     imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1000&q=80',
     status: 'ACTIVE',
     location: 'Nashik Senior Centers',
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'Mobility Walking Sticks & Canes', percentage: 50 },
-      { category: 'Heavy-Duty Monsoon Umbrellas', percentage: 35 },
-      { category: 'Distribution Gathering & Health Checkup', percentage: 15 },
-    ],
+    allocationBreakdown: [],
     impactMilestones: [],
   },
   {
@@ -387,7 +341,7 @@ const REAL_CAUSES = [
     slug: 'free-medical-health-camps',
     shortDescription: 'Periodic free health screening, vital checks, doctor consultations, and naturopathy advice.',
     description: 'Organizing accessible health checkup camps in underserved neighborhoods. Doctors perform general physical examinations, blood pressure checks, and provide health counseling.',
-    targetAmount: 50000,
+    targetAmount: 0,
     raisedAmount: 0,
     category: 'Medical Support',
     imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=80',
@@ -396,11 +350,7 @@ const REAL_CAUSES = [
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'Doctor Honorarium & Medical Team Travel', percentage: 40 },
-      { category: 'Diagnostic Strips, BP & Vitals Equipment', percentage: 35 },
-      { category: 'Basic Non-Prescription Medicines & First Aid', percentage: 25 },
-    ],
+    allocationBreakdown: [],
     impactMilestones: [],
   },
   {
@@ -408,7 +358,7 @@ const REAL_CAUSES = [
     slug: 'tree-plantation-green-nashik',
     shortDescription: 'Planting indigenous trees and saplings to restore green cover and promote environmental care.',
     description: 'Community-led tree plantation campaigns planting native banyan, peepal, neem, and fruit saplings across schools and public grounds with regular watering care.',
-    targetAmount: 30000,
+    targetAmount: 0,
     raisedAmount: 0,
     category: 'Environment',
     imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1000&q=80',
@@ -417,11 +367,7 @@ const REAL_CAUSES = [
     urgent: false,
     donorCount: 0,
     isKumbhRelated: false,
-    allocationBreakdown: [
-      { category: 'Indigenous Saplings & Soil Conditioning', percentage: 55 },
-      { category: 'Protective Tree Guards', percentage: 30 },
-      { category: 'Watering & 1-Year Maintenance', percentage: 15 },
-    ],
+    allocationBreakdown: [],
     impactMilestones: [],
   },
 ];
@@ -536,29 +482,55 @@ async function seedData() {
   try {
     console.log('[Seed] Connected to MongoDB. Seeding verified Trust data...');
 
-    // 1. Trust Profile
-    await TrustProfile.deleteMany({});
-    const createdProfile = await TrustProfile.create(REAL_TRUST_PROFILE);
-    console.log(`[Seed] ✓ Trust Profile seeded: ${createdProfile.trustName} (${createdProfile.registrationDetails.registrationNumber})`);
+    // 1. Trust Profile (Singleton update/insert)
+    const existingProfile = await TrustProfile.findOne();
+    let createdProfile;
+    if (existingProfile) {
+      Object.assign(existingProfile, REAL_TRUST_PROFILE);
+      createdProfile = await existingProfile.save();
+    } else {
+      createdProfile = await TrustProfile.create(REAL_TRUST_PROFILE);
+    }
+    console.log(`[Seed] ✓ Trust Profile verified: ${createdProfile.trustName} (${createdProfile.registrationDetails.registrationNumber})`);
 
-    // 2. Trustees
-    await Trustee.deleteMany({});
-    const createdTrustees = await Trustee.insertMany(REAL_TRUSTEES);
-    console.log(`[Seed] ✓ ${createdTrustees.length} Verified Trustees seeded.`);
+    // 2. Trustees (Idempotent update/insert matched by name)
+    for (const trustee of REAL_TRUSTEES) {
+      await Trustee.findOneAndUpdate(
+        { name: trustee.name },
+        { $set: trustee },
+        { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true }
+      );
+    }
+    const trusteeCount = await Trustee.countDocuments();
+    console.log(`[Seed] ✓ ${trusteeCount} Verified Trustees active in database.`);
 
-    // 3. Causes
-    await Cause.deleteMany({});
-    const createdCauses = await Cause.insertMany(REAL_CAUSES);
-    console.log(`[Seed] ✓ ${createdCauses.length} Verified Trust Causes seeded.`);
+    // 3. Causes (Idempotent update/insert matched by slug)
+    for (const cause of REAL_CAUSES) {
+      await Cause.findOneAndUpdate(
+        { slug: cause.slug },
+        { $set: cause },
+        { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true }
+      );
+    }
+    const causeCount = await Cause.countDocuments();
+    console.log(`[Seed] ✓ ${causeCount} Verified Trust Causes active in database.`);
 
-    // 4. Volunteer Roles
-    await VolunteerRole.deleteMany({});
-    const createdRoles = await VolunteerRole.insertMany(REAL_VOLUNTEER_ROLES);
-    console.log(`[Seed] ✓ ${createdRoles.length} Verified Volunteer Roles seeded.`);
+    // 4. Volunteer Roles (Idempotent update/insert matched by title)
+    for (const role of REAL_VOLUNTEER_ROLES) {
+      await VolunteerRole.findOneAndUpdate(
+        { title: role.title },
+        { $set: role },
+        { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true }
+      );
+    }
+    const roleCount = await VolunteerRole.countDocuments();
+    console.log(`[Seed] ✓ ${roleCount} Verified Volunteer Roles active in database.`);
 
-    console.log('[Seed] SUCCESS: All authentic Trust information successfully seeded into MongoDB.');
+    console.log('[Seed] SUCCESS: All authentic Trust information successfully verified and seeded into MongoDB.');
   } catch (error) {
     console.error('[Seed] Error during seeding:', error);
+    await disconnectDatabase();
+    process.exit(1);
   } finally {
     await disconnectDatabase();
     process.exit(0);

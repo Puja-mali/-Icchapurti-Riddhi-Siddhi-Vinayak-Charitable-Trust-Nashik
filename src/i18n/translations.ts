@@ -1065,7 +1065,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       financialReports: "Financial Statements",
       auditReports: "Statutory Audits",
       impactReports: "Impact Dossiers",
-      utilizationReports: "80G Utilization",
+      utilizationReports: "Fund Utilization",
       otherReports: "Other Filings",
       noReports: "No Transparency Reports Published Yet",
       noReportsDesc: "Published audit dockets, statutory filings, and annual governance reports will appear here once released by the board.",
@@ -1153,7 +1153,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     contact: {
       title: "Connect with Our Secretariat & Helpdesk",
       subtitle:
-        "Have questions about donations, 80G tax exemptions, volunteering, or verified audits? Reach out to us.",
+        "Have questions about donations, official receipts, volunteering, or verified audits? Reach out to us.",
       sendMessage: "Send an Official Inquiry",
       subject: "Subject",
       message: "Your Message",
@@ -1163,11 +1163,11 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     dashboard: {
-      donorTitle: "Donor Personal Portal & 80G Receipts",
+      donorTitle: "Donor Personal Portal & Official Receipts",
       donorSubtitle:
-        "View your lifetime philanthropic record, download tax deduction certificates, and track allocated impact.",
+        "View your lifetime philanthropic record, download official donation receipts, and track allocated impact.",
       myDonations: "Donation History",
-      downloadReceipt: "Download 80G Receipt",
+      downloadReceipt: "Download Official Receipt",
       volunteerPortalTitle: "Volunteer Field Command Desk",
       adminTitle: "Trust Governance & Administrative Control",
       adminSubtitle:
@@ -1184,7 +1184,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       online: "Trust Helpdesk Online",
       greeting:
         "Namaste! I am SevaSahayak, your verified assistant for Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik. How may I assist your charitable journey today?",
-      prompt1: "How do 80G tax receipts work?",
+      prompt1: "How do official donation receipts work?",
       prompt2: "How can I track my donation?",
       prompt3: "How to volunteer?",
       prompt4: "Where is the trust office?",
@@ -2394,7 +2394,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
 
     contact: {
       title: "संपर्क करें • मुख्य कार्यालय",
-      subtitle: "दान, 80G कर छूट या सेवा कार्य से जुड़े प्रश्नों के लिए संपर्क करें।",
+      subtitle: "दान, अधिकृत रसीद या सेवा कार्य से जुड़े प्रश्नों के लिए संपर्क करें।",
       sendMessage: "संदेश भेजें",
       subject: "विषय",
       message: "आपका संदेश",
@@ -2404,10 +2404,10 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     dashboard: {
-      donorTitle: "दाता पोर्टल एवं 80G रसीदें",
-      donorSubtitle: "दान इतिहास देखें, कर छूट रसीदें डाउनलोड करें और प्रभाव ट्रैक करें।",
+      donorTitle: "दाता पोर्टल एवं अधिकृत रसीदें",
+      donorSubtitle: "दान इतिहास देखें, अधिकृत रसीदें डाउनलोड करें और प्रभाव ट्रैक करें।",
       myDonations: "दान इतिहास",
-      downloadReceipt: "80G रसीद डाउनलोड करें",
+      downloadReceipt: "अधिकृत रसीद डाउनलोड करें",
       volunteerPortalTitle: "स्वयंसेवक नियंत्रण डेस्क",
       adminTitle: "ट्रस्ट प्रशासनिक प्रबंधन",
       adminSubtitle: "सहायता अनुरोध सत्यापन, क्रय बिल स्वीकृति और कुंभ व्यवस्था।",
@@ -2422,7 +2422,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       title: "सेवा सहायक • वर्चुअल असिस्टेंट",
       online: "मदद डेस्क ऑनलाइन",
       greeting: "नमस्ते! मैं इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट का 'सेवा सहायक' हूँ। आज मैं आपकी क्या सहायता कर सकता हूँ?",
-      prompt1: "80G कर छूट रसीद कैसे मिलेगी?",
+      prompt1: "अधिकृत दान रसीद कैसे मिलेगी?",
       prompt2: "मैं अपने दान को कैसे ट्रैक कर सकता हूँ?",
       prompt3: "स्वयंसेवक कैसे बनें?",
       prompt4: "ट्रस्ट का कार्यालय कहाँ है?",

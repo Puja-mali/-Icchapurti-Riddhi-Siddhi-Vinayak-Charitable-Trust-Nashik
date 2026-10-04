@@ -206,9 +206,6 @@ export const Navbar: React.FC = () => {
                     )}
                   >
                     <span>{link.label}</span>
-                    <span className="text-[9px] uppercase px-1 py-0.2 bg-amber-600 text-white rounded font-bold">
-                      Audit
-                    </span>
                   </NavLink>
                 );
               }
@@ -376,11 +373,6 @@ export const Navbar: React.FC = () => {
                     )}
                   >
                     <span>{link.label}</span>
-                    {link.special && (
-                      <span className="text-[10px] uppercase font-bold text-[#14532d] bg-emerald-100 px-2 py-0.5 rounded">
-                        Audited
-                      </span>
-                    )}
                   </Link>
                 );
               })}

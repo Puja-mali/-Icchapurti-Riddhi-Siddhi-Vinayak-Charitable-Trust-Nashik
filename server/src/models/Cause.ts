@@ -66,8 +66,8 @@ const causeSchema = new Schema<ICause>(
     },
     targetAmount: {
       type: Number,
-      required: [true, 'Target funding amount is required'],
-      min: [1, 'Target amount must be at least ₹1'],
+      default: 0,
+      min: [0, 'Target amount cannot be negative'],
     },
     raisedAmount: {
       type: Number,

@@ -36,7 +36,9 @@ export const createCauseSchema = z.object({
     .trim(),
   targetAmount: z
     .number()
-    .min(1, 'Target amount must be at least ₹1'),
+    .min(0, 'Target amount cannot be negative')
+    .optional()
+    .default(0),
   raisedAmount: z.number().min(0, 'Raised amount cannot be negative').optional().default(0),
   category: z.enum(
     [

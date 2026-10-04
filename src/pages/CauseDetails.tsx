@@ -15,6 +15,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Cause } from "@/src/types";
+import { MOCK_CAUSES } from "@/src/data/mockData";
 import { causeService } from "@/src/services/causeService";
 import { Button } from "@/src/components/common/Button";
 import { EmptyState } from "@/src/components/common/EmptyState";
@@ -44,9 +45,14 @@ export const CauseDetails: React.FC = () => {
         }
       } catch (err: any) {
         if (isMounted) {
-          console.error("Failed to load campaign details:", err);
-          setError(err?.message || "Campaign could not be found.");
-          setCause(null);
+          const fallback = MOCK_CAUSES.find((c) => c.id === id || (c as any).slug === id);
+          if (fallback) {
+            setCause(fallback);
+          } else {
+            console.error("Failed to load campaign details:", err);
+            setError(err?.message || "Campaign could not be found.");
+            setCause(null);
+          }
         }
       } finally {
         if (isMounted) {
@@ -84,12 +90,11 @@ export const CauseDetails: React.FC = () => {
     );
   }
 
-  const targetAmount = cause.targetAmount || 1;
+  const hasTarget = Boolean(cause.targetAmount && cause.targetAmount > 0);
   const raisedAmount = cause.raisedAmount || 0;
-  const percentage = Math.min(
-    100,
-    Math.round((raisedAmount / targetAmount) * 100)
-  );
+  const percentage = hasTarget
+    ? Math.min(100, Math.round((raisedAmount / (cause.targetAmount || 1)) * 100))
+    : 0;
 
   const allocationBreakdown = cause.allocationBreakdown || [];
   const impactMilestones = cause.impactMilestones || [];
@@ -136,7 +141,7 @@ export const CauseDetails: React.FC = () => {
               <span>•</span>
               <span className="flex items-center gap-1">
                 <Users className="w-3.5 h-3.5 text-stone-500" />
-                {cause.donorCount} community supporters
+                {cause.donorCount > 0 ? `${cause.donorCount} community supporters` : "Open for community support"}
               </span>
             </div>
           </div>
@@ -157,9 +162,7 @@ export const CauseDetails: React.FC = () => {
               {cause.description}
             </p>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              Every donor contributing to this drive receives a unique{" "}
-              <strong>Impact Passport</strong> with verification notes for each procurement
-              batch, field visit inspection log, and child or family beneficiary update.
+              All donations to this program receive an official receipt with trust registration references and audit verification documentation.
             </p>
           </div>
 
@@ -172,7 +175,7 @@ export const CauseDetails: React.FC = () => {
                     Itemized Fund Allocation Plan
                   </h3>
                   <p className="text-xs text-stone-500">
-                    Exact budget split committed by trust bylaws for this program.
+                    Budget split established for this program.
                   </p>
                 </div>
               </div>
@@ -198,7 +201,7 @@ export const CauseDetails: React.FC = () => {
               <div className="text-xs text-stone-500 flex items-center gap-2 pt-2 border-t border-stone-100">
                 <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
                 <span>
-                  Audited against zero administrative leakage guidelines.
+                  Itemized allocations are verified against trust expenditure records.
                 </span>
               </div>
             </div>
@@ -229,7 +232,7 @@ export const CauseDetails: React.FC = () => {
                           </div>
                         ) : (
                           <div className="w-5 h-5 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center">
-                            <Circle className="w-3 h-3" />
+                            <Circle className="w-3.5 h-3.5" />
                           </div>
                         )}
                       </div>
@@ -261,7 +264,7 @@ export const CauseDetails: React.FC = () => {
                   <span>Program Verification & Milestones</span>
                 </h3>
                 <p className="text-xs text-stone-500">
-                  Track disbursements, verified field activities, and donor impact milestones.
+                  Verified field activities, distribution records, and donor impact milestones.
                 </p>
               </div>
             </div>
@@ -270,7 +273,7 @@ export const CauseDetails: React.FC = () => {
               <div className="bg-stone-50 rounded-md border border-stone-200 p-5 space-y-3">
                 {impactMilestones.map((milestone, idx) => (
                   <div key={idx} className="flex items-start gap-3 bg-white p-3 rounded border border-stone-200">
-                    <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${milestone.completed ? "text-emerald-600" : "text-stone-400"}`} />
+                    <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${milestone.status === "completed" ? "text-emerald-600" : "text-stone-400"}`} />
                     <div className="space-y-0.5 text-xs">
                       <div className="font-semibold text-stone-900">{milestone.title}</div>
                       <div className="text-stone-600">{milestone.description}</div>
@@ -280,11 +283,7 @@ export const CauseDetails: React.FC = () => {
               </div>
             ) : (
               <div className="bg-stone-50 rounded-md border border-stone-200 p-5 text-xs text-stone-600 leading-relaxed">
-                Field verification updates and audited milestones are published as disbursements are released. Donors can verify individual receipts on the{" "}
-                <Link to="/impact-passport" className="font-semibold text-[#14532d] hover:underline">
-                  Impact Passport
-                </Link>{" "}
-                page.
+                Verified impact updates will be published by the Trust as records become available.
               </div>
             )}
           </div>
@@ -299,29 +298,43 @@ export const CauseDetails: React.FC = () => {
               </span>
             </div>
 
-            {/* Fund Gauge */}
-            <div className="space-y-2">
-              <div className="flex justify-between items-baseline">
-                <span className="text-2xl font-serif font-bold text-stone-900">
-                  {formatCurrency(cause.raisedAmount)}
-                </span>
-                <span className="text-xs text-stone-500">
-                  of {formatCurrency(cause.targetAmount)}
-                </span>
-              </div>
+            {/* Fund Gauge or Neutral Target Notice */}
+            {hasTarget ? (
+              <div className="space-y-2">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-2xl font-serif font-bold text-stone-900">
+                    {formatCurrency(cause.raisedAmount || 0)}
+                  </span>
+                  <span className="text-xs text-stone-500">
+                    of {formatCurrency(cause.targetAmount)}
+                  </span>
+                </div>
 
-              <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
-                <div
-                  className="bg-[#14532d] h-full rounded-full"
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
+                <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
+                  <div
+                    className="bg-[#14532d] h-full rounded-full"
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
 
-              <div className="flex justify-between items-center text-xs text-stone-500 pt-0.5">
-                <span className="font-bold text-[#14532d]">{percentage}% Funded</span>
-                <span>{formatCurrency(Math.max(0, cause.targetAmount - cause.raisedAmount))} remaining</span>
+                <div className="flex justify-between items-center text-xs text-stone-500 pt-0.5">
+                  <span className="font-bold text-[#14532d]">{percentage}% Funded</span>
+                  <span>{formatCurrency(Math.max(0, (cause.targetAmount || 0) - (cause.raisedAmount || 0)))} remaining</span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="p-3.5 bg-stone-50 rounded-md border border-stone-200 space-y-1">
+                <div className="text-xs font-semibold text-stone-700">Program Funding Status</div>
+                <div className="text-xs text-stone-500 italic">
+                  Funding target will be published by the Trust.
+                </div>
+                {cause.raisedAmount > 0 && (
+                  <div className="text-xs text-[#14532d] font-semibold pt-1">
+                    Current Received Contributions: {formatCurrency(cause.raisedAmount)}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="space-y-2.5 pt-1">

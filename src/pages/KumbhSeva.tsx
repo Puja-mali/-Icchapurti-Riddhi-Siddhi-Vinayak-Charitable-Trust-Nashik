@@ -180,9 +180,9 @@ export const KumbhSeva: React.FC = () => {
           {t.kumbh.disabledDesc}
         </p>
         <div className="pt-2">
-          <Link to="/admin">
+          <Link to="/">
             <Button variant="outline" size="md">
-              {t.kumbh.adminSettingsBtn}
+              Return to Home
             </Button>
           </Link>
         </div>

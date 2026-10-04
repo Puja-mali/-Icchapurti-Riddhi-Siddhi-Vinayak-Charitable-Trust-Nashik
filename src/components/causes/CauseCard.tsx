@@ -13,10 +13,10 @@ interface CauseCardProps {
 
 export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
   const shouldReduceMotion = useReducedMotion();
-  const percentage = Math.min(
-    100,
-    Math.round((cause.raisedAmount / cause.targetAmount) * 100)
-  );
+  const hasTarget = Boolean(cause.targetAmount && cause.targetAmount > 0);
+  const percentage = hasTarget
+    ? Math.min(100, Math.round(((cause.raisedAmount || 0) / (cause.targetAmount || 1)) * 100))
+    : 0;
 
   return (
     <motion.div
@@ -68,34 +68,52 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
             {cause.tagline}
           </p>
 
-          {/* Funding Progress Bar */}
-          <div className="mt-4 space-y-1.5">
-            <div className="flex justify-between items-baseline text-xs">
-              <span className="font-bold text-stone-900">
-                {formatCurrency(cause.raisedAmount)}
-              </span>
-              <span className="text-stone-500">
-                of {formatCurrency(cause.targetAmount)} target
-              </span>
-            </div>
+          {/* Funding Target or Neutral Status */}
+          <div className="mt-4 pt-3 border-t border-stone-100 space-y-2">
+            {hasTarget ? (
+              <>
+                <div className="flex justify-between items-baseline text-xs">
+                  <span className="font-bold text-stone-900">
+                    {formatCurrency(cause.raisedAmount || 0)}
+                  </span>
+                  <span className="text-stone-500">
+                    of {formatCurrency(cause.targetAmount)} target
+                  </span>
+                </div>
 
-            <div className="w-full bg-stone-100 h-1.5 rounded overflow-hidden">
-              <motion.div
-                className="bg-[#14532d] h-full rounded"
-                initial={{ width: 0 }}
-                whileInView={{ width: `${percentage}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              />
-            </div>
+                <div className="w-full bg-stone-100 h-1.5 rounded overflow-hidden">
+                  <motion.div
+                    className="bg-[#14532d] h-full rounded"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${percentage}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                  />
+                </div>
 
-            <div className="flex justify-between items-center text-[11px] text-stone-500 pt-0.5">
-              <span className="font-semibold text-[#14532d]">{percentage}% Accounted</span>
-              <span className="flex items-center gap-1">
-                <Users className="w-3 h-3 text-stone-400" />
-                {cause.donorCount} contributions
-              </span>
-            </div>
+                <div className="flex justify-between items-center text-[11px] text-stone-500 pt-0.5">
+                  <span className="font-semibold text-[#14532d]">{percentage}% Accounted</span>
+                  {cause.donorCount > 0 ? (
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3 text-stone-400" />
+                      {cause.donorCount} contributions
+                    </span>
+                  ) : (
+                    <span>Open for contributions</span>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="text-[11px] text-stone-500 flex items-center justify-between">
+                <span className="italic text-stone-500">Funding target will be published by the Trust.</span>
+                {cause.donorCount > 0 && (
+                  <span className="flex items-center gap-1 font-medium text-stone-700">
+                    <Users className="w-3 h-3 text-stone-400" />
+                    {cause.donorCount}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

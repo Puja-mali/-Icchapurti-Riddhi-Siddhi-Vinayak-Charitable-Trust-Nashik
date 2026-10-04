@@ -11,6 +11,8 @@
     "clean": "rm -rf dist server.js",
     "create-admin": "tsx server/src/scripts/createAdmin.ts",
     "seed-trust-data": "tsx server/src/scripts/seedRealTrustData.ts",
+    "test:e2e": "tsx server/src/scripts/runE2EReadinessSuite.ts",
+    "test:admin": "tsx server/src/scripts/testAdminSummary.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

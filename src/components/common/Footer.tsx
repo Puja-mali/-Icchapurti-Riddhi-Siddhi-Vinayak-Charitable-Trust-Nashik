@@ -132,11 +132,6 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/admin" className="text-stone-400 hover:text-white transition-colors">
-                  {t.footer.auditorDesk}
-                </Link>
-              </li>
-              <li>
                 <Link to="/login" className="text-stone-400 hover:text-white transition-colors">
                   {t.navLogin}
                 </Link>

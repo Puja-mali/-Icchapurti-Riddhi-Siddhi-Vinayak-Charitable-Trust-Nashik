@@ -241,7 +241,7 @@ export const Chatbot: React.FC = () => {
                 type="text"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
-                placeholder="Ask about 80G, passport, timings..."
+                placeholder="Ask about receipts, passport, timings..."
                 className="flex-1 px-3 py-2 text-xs border border-stone-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-700 bg-stone-50/50"
               />
               <button
