@@ -1,0 +1,47 @@
+{
+  "name": "siddhivinayak-charitable-trust-backend",
+  "version": "1.0.0",
+  "description": "Production-ready backend foundation for Siddhivinayak Charitable Trust",
+  "main": "dist/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.5.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.5",
+    "multer": "^1.4.5-lts.1",
+    "zod": "^4.6.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.14.0",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2"
+  },
+  "keywords": [
+    "siddhivinayak",
+    "charitable-trust",
+    "express",
+    "mongodb",
+    "mongoose",
+    "jwt",
+    "rbac"
+  ],
+  "author": "Siddhivinayak Charitable Trust",
+  "license": "ISC"
+}

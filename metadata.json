@@ -1,0 +1,6 @@
+{
+  "name": "Siddhivinayak Charitable Trust",
+  "description": "A modern, transparent charitable platform featuring the Impact Passport — tracking donations through allocation, verification, and real-world impact.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
