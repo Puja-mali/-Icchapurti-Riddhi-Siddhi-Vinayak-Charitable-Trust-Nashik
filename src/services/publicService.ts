@@ -23,6 +23,7 @@ export interface PublicHomeStats {
 
 export interface GalleryPreviewItem {
   url: string;
+  imageUrl?: string;
   title: string;
   location?: string;
   category?: string;

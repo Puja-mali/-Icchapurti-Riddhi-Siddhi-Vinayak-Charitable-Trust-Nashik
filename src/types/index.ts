@@ -52,6 +52,7 @@ export interface PassportStage {
   evidenceDocNumber?: string;
   verifiedBy?: string;
   details?: { label: string; value: string }[];
+  proofDocuments?: string[];
 }
 
 export interface ImpactPassportRecord {
@@ -116,6 +117,12 @@ export interface EventRegistrationItem {
   attendeeCount: number;
   status: 'CONFIRMED' | 'CANCELLED';
   notes?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  city?: string;
+  emergencyContact?: string;
+  registeredAt?: string;
   createdAt: string;
 }
 
