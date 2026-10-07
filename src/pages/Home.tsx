@@ -34,7 +34,6 @@ import { ImpactTimeline } from "@/src/components/impact/ImpactTimeline";
 import { ImpactJourneyInteractive } from "@/src/components/impact/ImpactJourneyInteractive";
 import { HumanImpactStory } from "@/src/components/impact/HumanImpactStory";
 import { AnimatedCounter } from "@/src/components/common/AnimatedCounter";
-import { HeroNamaste } from "@/src/components/home/HeroNamaste";
 import { KumbhHomeBanner } from "@/src/components/kumbh/KumbhHomeBanner";
 import { Cause, BlogPost, EventItem, TransparencyReport, ImpactPassportRecord } from "@/src/types";
 import { publicService, PublicHomeData } from "@/src/services/publicService";
@@ -133,7 +132,72 @@ export const Home: React.FC = () => {
   return (
     <div className="space-y-10 sm:space-y-16 md:space-y-24 pb-16 sm:pb-20 overflow-x-hidden w-full max-w-full">
       {/* 1. HERO SECTION & WELCOME SEVA HUB */}
-      <HeroNamaste />
+<section className="relative min-h-[78vh] sm:min-h-[82vh] overflow-hidden bg-stone-950">
+  <video
+    className="absolute inset-0 w-full h-full object-cover"
+    autoPlay
+    muted
+    loop
+    playsInline
+    preload="metadata"
+  >
+    <source src="public\assets\aistudio\video\gemini_generated_video_8fc7097b.mp4" type="video/mp4" />
+  </video>
+
+  <div className="absolute inset-0 bg-gradient-to-r from-stone-950/80 via-stone-950/45 to-stone-950/20" />
+  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-transparent to-stone-950/20" />
+
+  <div className="relative z-10 min-h-[78vh] sm:min-h-[82vh] max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 flex items-center">
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 25 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="max-w-2xl text-white"
+    >
+      <div className="inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-xs sm:text-sm">
+        <MapPin className="w-3.5 h-3.5 text-amber-300" />
+        <span>Nashik, Maharashtra</span>
+      </div>
+
+      <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif font-bold leading-[1.05] tracking-tight">
+        सेवा, विश्वास आणि
+        <span className="block text-amber-200">
+          समाजासाठी योगदान
+        </span>
+      </h1>
+
+      <p className="mt-5 max-w-xl text-sm sm:text-base lg:text-lg text-stone-100/90 leading-relaxed">
+        Icchapurti Riddhi Siddhi Vinayak Charitable Trust
+        <br />
+        समाजाच्या गरजांशी जोडलेली सेवा आणि सहभाग.
+      </p>
+
+      <div className="mt-7 flex flex-wrap gap-3">
+        <Link to="/donate">
+          <Button
+            size="md"
+            className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold border-0"
+            rightIcon={<ArrowRight className="w-4 h-4" />}
+          >
+            Donate
+          </Button>
+        </Link>
+
+        <Link to="/about">
+          <Button
+            size="md"
+            variant="outline"
+            className="bg-white/5 hover:bg-white/15 text-white border-white/40 backdrop-blur-sm"
+          >
+            Our Work
+          </Button>
+        </Link>
+      </div>
+    </motion.div>
+  </div>
+
+  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-stone-950 to-transparent pointer-events-none" />
+</section>
 
       {/* CONDITIONAL SIMHASTHA KUMBH 2027 BANNER */}
       <KumbhHomeBanner />
