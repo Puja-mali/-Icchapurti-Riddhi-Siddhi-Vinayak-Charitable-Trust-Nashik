@@ -27,6 +27,7 @@ import { DonationService, PaymentConfigResponse } from "@/src/services/donationS
 import { useAuth } from "@/src/context/AuthContext";
 import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
+import { PageHeader } from "@/src/components/common/PageHeader";
 import { formatCurrency } from "@/src/lib/utils";
 import { useLanguage } from "@/src/context/LanguageContext";
 
@@ -218,33 +219,21 @@ export const Donate: React.FC = () => {
   const isGatewayReady = Boolean(paymentConfig?.isConfigured);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
-      {/* Header */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
-            Trust Contribution Portal
-          </span>
-          <span className="text-xs font-semibold uppercase tracking-wider text-stone-600 bg-stone-100 px-2 py-0.5 rounded border border-stone-200 flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            Razorpay Secure
-          </span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 tracking-tight">
-          Support Our Community Initiatives
-        </h1>
-        <p className="text-sm sm:text-base text-stone-600 max-w-xl mx-auto leading-relaxed">
-          Every contribution is recorded transparently in the trust database, allocated to verified program requirements,
-          and issued an official electronic receipt.
-        </p>
-      </div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10">
+      {/* 1. Page Header */}
+      <PageHeader
+        badge="Trust Contribution Portal • Razorpay Secure"
+        badgeIcon={<ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />}
+        title="Support Our Community Initiatives"
+        description="Every contribution is recorded transparently in the trust database, allocated to verified program requirements, and issued an official electronic receipt."
+      />
 
       {/* Gateway Status Alert if not configured */}
       {!isCheckingConfig && !isGatewayReady && (
-        <div className="p-4 rounded-md bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-3 shadow-xs">
-          <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+        <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-200/90 text-xs text-amber-900 flex items-start gap-3.5 shadow-xs">
+          <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <p className="font-semibold text-amber-950">Payment Gateway Setup Required</p>
+            <p className="font-semibold text-amber-950 text-sm">Payment Gateway Setup Notice</p>
             <p className="leading-relaxed">
               Razorpay credentials (<code className="bg-amber-100 px-1 py-0.5 rounded text-[11px]">RAZORPAY_KEY_ID</code> &{" "}
               <code className="bg-amber-100 px-1 py-0.5 rounded text-[11px]">RAZORPAY_KEY_SECRET</code>) are not configured in the server environment.
@@ -256,7 +245,7 @@ export const Donate: React.FC = () => {
 
       {/* Payment Cancelled Banner */}
       {flowState === "cancelled" && (
-        <div className="p-4 rounded-md bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start justify-between gap-3 shadow-xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start justify-between gap-3 shadow-xs">
           <div className="flex items-start gap-2.5">
             <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
             <div className="space-y-1">
@@ -273,7 +262,7 @@ export const Donate: React.FC = () => {
               setFlowState("idle");
               setErrorMessage(null);
             }}
-            className="text-amber-800 hover:text-amber-950 font-bold text-xs underline shrink-0"
+            className="text-amber-800 hover:text-amber-950 font-bold text-xs underline shrink-0 cursor-pointer"
           >
             Try Again
           </button>
@@ -282,7 +271,7 @@ export const Donate: React.FC = () => {
 
       {/* Payment Pending Banner */}
       {flowState === "pending" && (
-        <div className="p-4 rounded-md bg-sky-50 border border-sky-200 text-xs text-sky-900 flex items-start justify-between gap-3 shadow-xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-sky-50 border border-sky-200 text-xs text-sky-900 flex items-start justify-between gap-3 shadow-xs">
           <div className="flex items-start gap-2.5">
             <Clock className="w-4 h-4 text-sky-700 shrink-0 mt-0.5" />
             <div className="space-y-1">
@@ -299,7 +288,7 @@ export const Donate: React.FC = () => {
               setFlowState("idle");
               setErrorMessage(null);
             }}
-            className="text-sky-800 hover:text-sky-950 font-bold text-xs underline shrink-0"
+            className="text-sky-800 hover:text-sky-950 font-bold text-xs underline shrink-0 cursor-pointer"
           >
             Dismiss
           </button>
@@ -308,7 +297,7 @@ export const Donate: React.FC = () => {
 
       {/* Payment Failed / Error Banner */}
       {(flowState === "failed" || (errorMessage && flowState !== "cancelled" && flowState !== "pending")) && (
-        <div className="p-4 rounded-md bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start justify-between gap-3 shadow-xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start justify-between gap-3 shadow-xs">
           <div className="flex items-start gap-2.5">
             <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
@@ -322,7 +311,7 @@ export const Donate: React.FC = () => {
               setFlowState("idle");
               setErrorMessage(null);
             }}
-            className="text-rose-600 hover:text-rose-900 font-bold text-xs underline shrink-0"
+            className="text-rose-600 hover:text-rose-900 font-bold text-xs underline shrink-0 cursor-pointer"
           >
             Retry
           </button>
@@ -330,8 +319,8 @@ export const Donate: React.FC = () => {
       )}
 
       {/* Main Donation Card */}
-      <div className="bg-white rounded-md border border-stone-200 shadow-xs overflow-hidden">
-        <form onSubmit={handleInitiateDonation} className="p-6 sm:p-8 space-y-7">
+      <div className="bg-white rounded-2xl border border-stone-200/90 shadow-sm overflow-hidden">
+        <form onSubmit={handleInitiateDonation} className="p-6 sm:p-10 space-y-8">
           {/* 1. Select Program */}
           <div className="space-y-2">
             <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
@@ -343,7 +332,7 @@ export const Donate: React.FC = () => {
                 <span>Loading verified programs...</span>
               </div>
             ) : causes.length === 0 ? (
-              <div className="p-3 bg-stone-50 border border-stone-200 rounded-md text-xs text-stone-600">
+              <div className="p-3.5 bg-stone-50 border border-stone-200 rounded-xl text-xs text-stone-600">
                 General Trust Corpus (No separate campaigns currently active)
               </div>
             ) : (
@@ -351,7 +340,7 @@ export const Donate: React.FC = () => {
                 value={selectedCauseId}
                 onChange={(e) => setSelectedCauseId(e.target.value)}
                 disabled={flowState !== "idle" && flowState !== "failed"}
-                className="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm font-medium text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-600 disabled:opacity-50"
+                className="w-full px-4 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm font-medium text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/30 disabled:opacity-50 cursor-pointer"
               >
                 {causes.map((cause) => (
                   <option key={cause.id} value={cause.id}>
@@ -363,7 +352,7 @@ export const Donate: React.FC = () => {
             {selectedCause && (
               <div className="flex items-center justify-between text-xs text-stone-500 pt-1">
                 <span>Location: {selectedCause.location}</span>
-                <span className="font-medium text-emerald-700">
+                <span className="font-semibold text-emerald-800">
                   Raised so far: {formatCurrency(selectedCause.raisedAmount)}
                 </span>
               </div>
@@ -371,17 +360,18 @@ export const Donate: React.FC = () => {
           </div>
 
           {/* 2. Select Amount */}
-          <div className="space-y-2.5">
-            <div className="flex items-center justify-between">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
                 2. Choose Contribution Amount (INR)
               </label>
-              <span className="text-xs text-emerald-700 font-medium">
+              <span className="text-xs text-emerald-800 font-semibold flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                 Official Digital Receipt Included
               </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
               {PRESET_AMOUNTS.map((amt) => {
                 const isSelected = selectedAmount === amt && !customAmount;
                 return (
@@ -390,10 +380,10 @@ export const Donate: React.FC = () => {
                     type="button"
                     disabled={flowState !== "idle" && flowState !== "failed"}
                     onClick={() => handleAmountClick(amt)}
-                    className={`py-2 px-3 rounded-md text-xs font-bold border transition-colors cursor-pointer disabled:opacity-50 ${
+                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-bold border transition-all cursor-pointer disabled:opacity-50 ${
                       isSelected
-                        ? "bg-emerald-700 text-white border-emerald-700"
-                        : "bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-200"
+                        ? "bg-[#14532d] text-white border-[#14532d] shadow-xs"
+                        : "bg-stone-50/80 hover:bg-stone-100 text-stone-800 border-stone-200"
                     }`}
                   >
                     {formatCurrency(amt)}
@@ -405,7 +395,7 @@ export const Donate: React.FC = () => {
             {/* Custom Amount */}
             <div className="pt-1">
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 font-bold text-xs">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 font-bold text-sm">
                   ₹
                 </span>
                 <input
@@ -416,7 +406,7 @@ export const Donate: React.FC = () => {
                   disabled={flowState !== "idle" && flowState !== "failed"}
                   min="1"
                   step="1"
-                  className="w-full pl-7 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm font-medium text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:border-emerald-600 disabled:opacity-50"
+                  className="w-full pl-8 pr-4 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm font-medium text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/30 disabled:opacity-50"
                 />
               </div>
             </div>
@@ -440,7 +430,7 @@ export const Donate: React.FC = () => {
                   value={donorName}
                   onChange={(e) => setDonorName(e.target.value)}
                   placeholder="e.g. Ramesh K. Joshi"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm text-stone-900 disabled:opacity-50 focus:bg-white focus:outline-none focus:border-emerald-600"
+                  className="w-full px-3.5 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 disabled:opacity-50 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/30"
                 />
               </div>
 
@@ -455,7 +445,7 @@ export const Donate: React.FC = () => {
                   value={donorEmail}
                   onChange={(e) => setDonorEmail(e.target.value)}
                   placeholder="donor@example.com"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm text-stone-900 disabled:opacity-50 focus:bg-white focus:outline-none focus:border-emerald-600"
+                  className="w-full px-3.5 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 disabled:opacity-50 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/30"
                 />
               </div>
 
@@ -469,7 +459,7 @@ export const Donate: React.FC = () => {
                   value={donorPhone}
                   onChange={(e) => setDonorPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm text-stone-900 disabled:opacity-50 focus:bg-white focus:outline-none focus:border-emerald-600"
+                  className="w-full px-3.5 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 disabled:opacity-50 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/30"
                 />
               </div>
             </div>
@@ -481,7 +471,7 @@ export const Donate: React.FC = () => {
                 checked={isAnonymous}
                 onChange={(e) => setIsAnonymous(e.target.checked)}
                 disabled={flowState !== "idle" && flowState !== "failed"}
-                className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-stone-300"
+                className="w-4 h-4 rounded text-[#14532d] focus:ring-[#14532d] border-stone-300"
               />
               <label htmlFor="anon" className="text-xs text-stone-600 cursor-pointer">
                 Display as &quot;Anonymous Well-Wisher&quot; in public audits
@@ -490,58 +480,58 @@ export const Donate: React.FC = () => {
           </div>
 
           {/* 4. Payment Gateway Channels */}
-          <div className="space-y-2.5 pt-3 border-t border-stone-100">
+          <div className="space-y-3 pt-3 border-t border-stone-100">
             <div className="flex items-center justify-between">
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
                 4. Payment Gateways Handled via Razorpay
               </label>
-              <span className="text-[11px] text-stone-500">256-Bit SSL Encrypted</span>
+              <span className="text-[11px] text-stone-500 font-medium">256-Bit SSL Encrypted</span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2.5 text-stone-600">
-              <div className="p-3 rounded-md border border-stone-200 bg-stone-50 text-left">
-                <Smartphone className="w-4 h-4 mb-1 text-emerald-700" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-stone-600">
+              <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50/70 text-left">
+                <Smartphone className="w-4 h-4 mb-1.5 text-[#14532d]" />
                 <div className="text-xs font-bold text-stone-900">UPI / QR</div>
-                <div className="text-[10px] text-stone-500">Google Pay, PhonePe, Paytm, BHIM</div>
+                <div className="text-[10px] text-stone-500 mt-0.5">Google Pay, PhonePe, Paytm, BHIM</div>
               </div>
 
-              <div className="p-3 rounded-md border border-stone-200 bg-stone-50 text-left">
-                <CreditCard className="w-4 h-4 mb-1 text-emerald-700" />
+              <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50/70 text-left">
+                <CreditCard className="w-4 h-4 mb-1.5 text-[#14532d]" />
                 <div className="text-xs font-bold text-stone-900">Cards</div>
-                <div className="text-[10px] text-stone-500">RuPay, Visa, MasterCard</div>
+                <div className="text-[10px] text-stone-500 mt-0.5">RuPay, Visa, MasterCard</div>
               </div>
 
-              <div className="p-3 rounded-md border border-stone-200 bg-stone-50 text-left">
-                <Building className="w-4 h-4 mb-1 text-emerald-700" />
+              <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50/70 text-left">
+                <Building className="w-4 h-4 mb-1.5 text-[#14532d]" />
                 <div className="text-xs font-bold text-stone-900">Net Banking</div>
-                <div className="text-[10px] text-stone-500">SBI, HDFC, ICICI, Axis & 50+ Banks</div>
+                <div className="text-[10px] text-stone-500 mt-0.5">SBI, HDFC, ICICI, Axis & 50+ Banks</div>
               </div>
             </div>
           </div>
 
           {/* Legal/Receipt Disclaimer */}
-          <div className="p-3.5 rounded-md bg-stone-50 border border-stone-200 text-[11px] text-stone-600 space-y-1">
+          <div className="p-4 rounded-xl bg-stone-50/80 border border-stone-200 text-[11px] text-stone-600 space-y-1">
             <p className="font-semibold text-stone-800">Donation Transparency & Receipt Policy:</p>
-            <p>
+            <p className="leading-relaxed">
               Official receipts are generated only after cryptographic verification of payment capture from the banking network.
               Tax deductibility under section 80G is subject to trust registration status and annual regulatory filings.
             </p>
           </div>
 
           {/* Submit Action */}
-          <div className="pt-2 space-y-2.5">
+          <div className="pt-2 space-y-3">
             <Button
               type="submit"
               size="lg"
               variant="primary"
               disabled={!isGatewayReady || (flowState !== "idle" && flowState !== "failed")}
               isLoading={flowState === "creating_order" || flowState === "verifying"}
-              className="w-full text-sm font-semibold bg-emerald-700 hover:bg-emerald-800 text-white border-emerald-700"
+              className="w-full text-sm font-semibold bg-[#14532d] hover:bg-[#0f4023] text-white py-3.5 rounded-xl shadow-xs"
               leftIcon={
                 flowState === "verifying" ? (
-                  <RefreshCw className="w-4 h-4 animate-spin text-emerald-200" />
+                  <RefreshCw className="w-4 h-4 animate-spin text-amber-200" />
                 ) : (
-                  <Heart className="w-4 h-4 fill-current text-emerald-200" />
+                  <Heart className="w-4 h-4 fill-current text-amber-300" />
                 )
               }
             >
@@ -555,9 +545,9 @@ export const Donate: React.FC = () => {
             </Button>
 
             <div className="flex items-center justify-center gap-3 text-xs text-stone-500">
-              <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-                Secure Razorpay Checkout
+              <span className="flex items-center gap-1.5 font-medium">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#14532d]" />
+                Secure Razorpay Checkout • Verified Ledger
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">

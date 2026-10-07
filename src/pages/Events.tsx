@@ -22,6 +22,7 @@ import { authService } from "@/src/services/authService";
 import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
 import { EmptyState } from "@/src/components/common/EmptyState";
+import { PageHeader } from "@/src/components/common/PageHeader";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
 
@@ -142,34 +143,25 @@ export const Events: React.FC = () => {
   const categories = ["All", "Community Outreach", "Health Camp", "Environment", "Education", "Kumbh Seva"];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#14532d] bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-700/20">
-            Community Outreach
-          </span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 tracking-tight">
-          Trust Events & Field Drives
-        </h1>
-        <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
-          Participate in ground-level field events: free diagnostic health camps, indigenous plantation drives,
-          and educational distribution assemblies.
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10">
+      {/* 1. Page Header */}
+      <PageHeader
+        badge="Community Outreach & Assemblies"
+        title="Trust Events & Field Drives"
+        description="Participate in ground-level field events: free diagnostic health camps, indigenous plantation drives, and educational distribution assemblies across Nashik."
+      />
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-4">
+      <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-xs space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-4">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search events by title, keyword, location..."
-            className="w-full pl-9 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d]"
+            className="w-full pl-10 pr-4 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all"
           />
         </div>
 
@@ -179,7 +171,7 @@ export const Events: React.FC = () => {
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             aria-label="Filter events by category"
-            className="px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs font-medium text-stone-700 focus:bg-white focus:outline-none focus:border-[#14532d]"
+            className="px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs font-semibold text-stone-700 focus:bg-white focus:outline-none focus:border-[#14532d] cursor-pointer"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
@@ -192,10 +184,10 @@ export const Events: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowKumbhOnly((prev) => !prev)}
-              className={`px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
+              className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer border ${
                 showKumbhOnly
-                  ? "bg-amber-100 text-amber-900 border border-amber-300"
-                  : "bg-stone-50 text-stone-600 border border-stone-200 hover:bg-stone-100"
+                  ? "bg-amber-50 text-amber-900 border-amber-300 shadow-2xs"
+                  : "bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100"
               }`}
             >
               <Flame className={`w-3.5 h-3.5 ${showKumbhOnly ? "text-amber-700 fill-amber-700" : "text-stone-400"}`} />
@@ -303,39 +295,39 @@ export const Events: React.FC = () => {
               return (
                 <div
                   key={event.id}
-                  className="bg-white rounded-xl border border-stone-200 shadow-2xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow"
+                  className="bg-white rounded-2xl border border-stone-200/90 shadow-xs overflow-hidden flex flex-col justify-between hover:border-emerald-700/40 hover:shadow-md transition-all duration-300"
                 >
                   <div>
                     <Link to={`/events/${event.slug || event.id}`} className="block relative aspect-16/10 w-full overflow-hidden bg-stone-100 group">
                       <img
                         src={event.imageUrl}
                         alt={event.title}
-                        className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                       />
-                      <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-stone-900/85 text-white shadow-xs">
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-stone-950/85 text-stone-100 shadow-2xs backdrop-blur-xs border border-white/10">
                           {event.category}
                         </span>
                         {event.isKumbhRelated && (
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500 text-white shadow-xs flex items-center gap-1">
+                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-600 text-white shadow-2xs flex items-center gap-1 border border-amber-400/40">
                             <Flame className="w-3 h-3 fill-white" />
                             Kumbh
                           </span>
                         )}
                         {isCompleted ? (
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-stone-600 text-white shadow-xs">
+                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-stone-700 text-white shadow-2xs">
                             Concluded
                           </span>
                         ) : isCancelled ? (
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-rose-600 text-white shadow-xs">
+                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-rose-700 text-white shadow-2xs">
                             Cancelled
                           </span>
                         ) : isOngoing ? (
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-700 text-white shadow-xs">
+                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-700 text-white shadow-2xs">
                             Ongoing
                           </span>
                         ) : (
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-[#14532d] text-white shadow-xs">
+                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#14532d] text-white shadow-2xs">
                             Upcoming
                           </span>
                         )}

@@ -185,7 +185,7 @@ export const BlogPost: React.FC = () => {
       </header>
 
       {/* Hero Image */}
-      <div className="rounded-xl overflow-hidden aspect-16/9 bg-stone-100 border border-stone-200 shadow-xs">
+      <div className="rounded-2xl overflow-hidden aspect-16/9 bg-stone-100 border border-stone-200/90 shadow-sm">
         <img
           src={post.coverImage || post.imageUrl}
           alt={post.title}
@@ -201,7 +201,7 @@ export const BlogPost: React.FC = () => {
       {/* Article Content */}
       <div className="prose prose-stone max-w-none text-stone-700 text-sm sm:text-base leading-relaxed space-y-5">
         {post.excerpt && (
-          <p className="font-serif text-lg sm:text-xl text-stone-900 leading-snug border-l-4 border-emerald-800 pl-4 py-1.5 italic bg-emerald-50/40 rounded-r">
+          <p className="font-serif text-lg sm:text-xl text-stone-900 leading-snug border-l-4 border-amber-400 pl-4 py-2 italic bg-amber-50/40 rounded-r-xl">
             "{post.excerpt}"
           </p>
         )}
@@ -230,13 +230,13 @@ export const BlogPost: React.FC = () => {
       </div>
 
       {/* Footer Trust Seal */}
-      <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-emerald-950">
-        <div className="flex items-center gap-2">
+      <div className="p-5 sm:p-6 bg-gradient-to-br from-emerald-50/90 via-emerald-50/50 to-amber-50/30 rounded-2xl border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-emerald-950 shadow-2xs">
+        <div className="flex items-center gap-2.5">
           <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0" />
-          <span>Verified Field Chronicle • Siddhivinayak Public Charitable Trust</span>
+          <span className="font-medium">Verified Field Chronicle • Icchapurti Riddhi Siddhi Vinayak Charitable Trust</span>
         </div>
         <Link to="/causes" className="shrink-0">
-          <Button size="sm" className="bg-[#14532d] hover:bg-[#0f4023] text-white text-xs">
+          <Button size="sm" className="bg-[#14532d] hover:bg-[#0f4023] text-white text-xs px-4 py-2">
             Support Our Programs
           </Button>
         </Link>

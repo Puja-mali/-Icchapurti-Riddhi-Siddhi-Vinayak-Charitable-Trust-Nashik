@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Heart,
   ShieldCheck,
   Mail,
   Phone,
@@ -10,6 +9,7 @@ import {
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
+import { TrustEmblem } from "./TrustEmblem";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useTrust } from "@/src/context/TrustContext";
 
@@ -44,9 +44,7 @@ export const Footer: React.FC = () => {
           {/* Trust Branding & Mission */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-md bg-[#14532d] text-white flex items-center justify-center border border-emerald-700/40">
-                <Heart className="w-5 h-5 fill-current text-amber-300 stroke-none" />
-              </div>
+              <TrustEmblem size="sm" isTransparent={true} showRibbonTab={false} />
               <div>
                 <span className="text-base font-serif font-bold text-white tracking-tight block">
                   {t.trustName}

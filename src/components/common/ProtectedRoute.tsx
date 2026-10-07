@@ -34,7 +34,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       <div className="min-h-[65vh] flex flex-col items-center justify-center p-6 text-center">
         <div className="w-12 h-12 rounded-full border-3 border-emerald-200 border-t-[#14532d] animate-spin mb-4" />
         <div className="flex items-center gap-2 text-sm font-serif font-bold text-stone-900">
-          <Heart className="w-4 h-4 text-[#7b1824] fill-[#7b1824]" />
+          <Heart className="w-4 h-4 text-[#14532d] fill-[#14532d]" />
           <span>{t.common?.loading || 'Verifying credentials...'}</span>
         </div>
         <p className="text-xs text-stone-500 mt-1 max-w-xs">

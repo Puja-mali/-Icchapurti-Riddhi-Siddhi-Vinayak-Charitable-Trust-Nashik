@@ -147,7 +147,7 @@ export const CauseDetails: React.FC = () => {
           </div>
 
           {/* Hero Banner Image */}
-          <div className="relative aspect-16/9 rounded-md overflow-hidden bg-stone-100 border border-stone-200 shadow-2xs">
+          <div className="relative aspect-16/9 rounded-2xl overflow-hidden bg-stone-100 border border-stone-200 shadow-xs">
             <img
               src={cause.imageUrl}
               alt={cause.title}
@@ -156,25 +156,26 @@ export const CauseDetails: React.FC = () => {
           </div>
 
           {/* Project Narrative */}
-          <div className="space-y-3">
-            <h2 className="text-lg sm:text-xl font-serif font-bold text-stone-900">About This Program</h2>
-            <p className="text-sm text-stone-700 leading-relaxed font-normal">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200/90 shadow-xs space-y-4">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-stone-900">About This Program</h2>
+            <p className="text-sm sm:text-base text-stone-700 leading-relaxed font-normal">
               {cause.description}
             </p>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              All donations to this program receive an official receipt with trust registration references and audit verification documentation.
-            </p>
+            <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/60 rounded-xl text-xs text-stone-700 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-[#14532d] shrink-0" />
+              <span>All contributions to this program receive an official receipt with trust registration references and audit verification documentation.</span>
+            </div>
           </div>
 
           {/* Allocation Breakdown (Transparency Plan) */}
           {allocationBreakdown.length > 0 && (
-            <div className="bg-white rounded-md p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200/90 shadow-xs space-y-5">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
-                  <h3 className="text-base font-serif font-bold text-stone-900">
+                  <h3 className="text-lg font-serif font-bold text-stone-900">
                     Itemized Fund Allocation Plan
                   </h3>
-                  <p className="text-xs text-stone-500">
+                  <p className="text-xs text-stone-500 mt-0.5">
                     Budget split established for this program.
                   </p>
                 </div>
@@ -291,9 +292,9 @@ export const CauseDetails: React.FC = () => {
 
         {/* Right 4 Cols: Sticky Donation Action Card */}
         <div className="lg:col-span-4">
-          <div className="sticky top-24 bg-white rounded-md border border-stone-200 shadow-2xs p-5 space-y-5">
+          <div className="sticky top-24 bg-white rounded-2xl border border-stone-200/90 shadow-xs p-6 space-y-6">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#14532d] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-700/20">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#14532d] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-700/20 shadow-2xs">
                 Contribution Desk
               </span>
             </div>

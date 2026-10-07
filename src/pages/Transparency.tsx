@@ -82,14 +82,22 @@ export const Transparency: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-200">
+        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3.5 py-1 rounded-full text-xs font-semibold border border-emerald-200 shadow-2xs">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
           <span>Statutory Governance & Open Ledgers</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-serif font-bold text-stone-900 tracking-tight leading-[1.15]">
           {t.transparency.title}
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+
+        {/* Warm Subtle Decorative Divider */}
+        <div className="flex items-center justify-center gap-2 mt-3.5 mb-2">
+          <span className="w-8 h-px bg-amber-400/60" />
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <span className="w-8 h-px bg-amber-400/60" />
+        </div>
+
+        <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl mx-auto">
           {t.transparency.subtitle}
         </p>
       </div>
@@ -251,11 +259,11 @@ export const Transparency: React.FC = () => {
 
         {/* Reports Grid */}
         {!isLoading && !error && reports.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {reports.map((rep) => (
               <div
                 key={rep.id}
-                className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs space-y-3 flex flex-col justify-between hover:border-emerald-700/40 transition-colors"
+                className="bg-white p-6 rounded-2xl border border-stone-200/90 shadow-xs space-y-3.5 flex flex-col justify-between hover:border-emerald-700/40 hover:shadow-md transition-all duration-300"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2 flex-wrap">

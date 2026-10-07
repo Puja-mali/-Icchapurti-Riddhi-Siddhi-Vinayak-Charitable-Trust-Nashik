@@ -34,7 +34,7 @@ export const ImpactStat: React.FC<ImpactStatProps> = ({
       )}
     >
       <div className="flex items-start justify-between mb-3">
-        <div className="w-10 h-10 rounded bg-[#faf0f1] text-[#7b1824] flex items-center justify-center border border-[#7b1824]/20 group-hover:bg-[#f6e4e6] transition-colors">
+        <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#14532d] flex items-center justify-center border border-emerald-200/80 group-hover:bg-emerald-100/60 transition-colors">
           <IconComponent className="w-5 h-5" />
         </div>
       </div>

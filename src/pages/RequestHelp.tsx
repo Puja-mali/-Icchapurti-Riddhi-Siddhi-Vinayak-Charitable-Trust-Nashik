@@ -234,14 +234,22 @@ export const RequestHelp: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10">
       {/* Page Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-200">
+        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3.5 py-1 rounded-full text-xs font-semibold border border-emerald-200 shadow-2xs">
           <HeartHandshake className="w-3.5 h-3.5 text-emerald-700" />
           <span>Direct Beneficiary Assistance Program</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-serif font-bold text-stone-900 tracking-tight leading-[1.15]">
           {t.helpRequest?.title || "Community Aid & Hardship Assistance Portal"}
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-2xl mx-auto">
+
+        {/* Warm Subtle Decorative Divider */}
+        <div className="flex items-center justify-center gap-2 mt-3.5 mb-2">
+          <span className="w-8 h-px bg-amber-400/60" />
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <span className="w-8 h-px bg-amber-400/60" />
+        </div>
+
+        <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl mx-auto">
           {t.helpRequest?.subtitle ||
             "Families facing medical emergencies, educational fees, or urgent nutrition needs can submit applications for verified trust assistance."}
         </p>
@@ -249,16 +257,16 @@ export const RequestHelp: React.FC = () => {
 
       {/* Tabs Switcher */}
       <div className="flex justify-center">
-        <div className="inline-flex p-1 bg-stone-100 rounded-lg border border-stone-200 text-xs sm:text-sm">
+        <div className="inline-flex p-1 bg-stone-100 rounded-full border border-stone-200 text-xs sm:text-sm">
           <button
             type="button"
             onClick={() => {
               setActiveTab("apply");
               setCreatedRequest(null);
             }}
-            className={`px-5 py-2 rounded-md font-semibold transition-all cursor-pointer ${
+            className={`px-5 py-2 rounded-full font-semibold transition-all cursor-pointer ${
               activeTab === "apply"
-                ? "bg-white text-emerald-900 shadow-2xs border border-stone-200"
+                ? "bg-white text-emerald-900 shadow-xs border border-stone-200/80"
                 : "text-stone-600 hover:text-stone-900"
             }`}
           >
@@ -267,9 +275,9 @@ export const RequestHelp: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab("track")}
-            className={`px-5 py-2 rounded-md font-semibold transition-all cursor-pointer ${
+            className={`px-5 py-2 rounded-full font-semibold transition-all cursor-pointer ${
               activeTab === "track"
-                ? "bg-white text-emerald-900 shadow-2xs border border-stone-200"
+                ? "bg-white text-emerald-900 shadow-xs border border-stone-200/80"
                 : "text-stone-600 hover:text-stone-900"
             }`}
           >
@@ -279,15 +287,15 @@ export const RequestHelp: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveTab("my-requests")}
-              className={`px-5 py-2 rounded-md font-semibold transition-all cursor-pointer ${
+              className={`px-5 py-2 rounded-full font-semibold transition-all cursor-pointer ${
                 activeTab === "my-requests"
-                  ? "bg-white text-emerald-900 shadow-2xs border border-stone-200"
-                  : "text-stone-600 hover:text-stone-900"
+                  ? "bg-white text-emerald-900 shadow-xs border border-stone-200/80"
+                : "text-stone-600 hover:text-stone-900"
               }`}
             >
               {t.helpRequest?.myRequestsTab || "My Submitted Requests"}
               {myRequests.length > 0 && (
-                <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                <span className="ml-1.5 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
                   {myRequests.length}
                 </span>
               )}

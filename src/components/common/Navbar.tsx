@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "./Button";
 import { NotificationBell } from "./NotificationBell";
+import { TrustEmblem } from "./TrustEmblem";
 import { cn } from "@/src/lib/utils";
 import { useLanguage, Language } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
@@ -205,44 +206,92 @@ export const Navbar: React.FC = () => {
           <Link
             to="/"
             onClick={closeMobileMenu}
-            className="flex items-center gap-2.5 sm:gap-3 group min-w-0 flex-1 sm:flex-initial"
+            className="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 sm:flex-initial"
           >
-            {/* Dignified Indian Trust Seal */}
+            {/* Sacred Bappa Vertical Plaque Emblem */}
             <motion.div
               whileHover={!shouldReduceMotion ? { scale: 1.05 } : undefined}
               transition={{ duration: 0.2 }}
-              className={cn(
-                "w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center border shadow-xs transition-colors shrink-0",
-                isTransparent
-                  ? "bg-[#14532d]/90 text-amber-200 border-amber-400/40"
-                  : "bg-[#14532d] text-amber-100 border-emerald-900/40 group-hover:bg-[#0f4023]"
-              )}
+              className="shrink-0 flex items-center justify-center"
             >
-              <Heart className="w-5 h-5 fill-current text-amber-300 stroke-none" />
+              {/* Desktop Emblem */}
+              <TrustEmblem
+                size="md"
+                isTransparent={isTransparent}
+                className="hidden sm:flex"
+              />
+              {/* Mobile Compact Emblem */}
+              <TrustEmblem
+                size="sm"
+                isTransparent={isTransparent}
+                className="flex sm:hidden"
+              />
             </motion.div>
 
-            <div className="flex flex-col min-w-0">
+            <div className="flex flex-col min-w-0 justify-center">
+              {/* Desktop & Tablet Full Official Trust Title */}
               <span
                 className={cn(
-                  "text-sm xs:text-base sm:text-lg font-serif font-bold leading-tight tracking-tight transition-colors truncate",
+                  "hidden sm:block text-sm md:text-base lg:text-[17px] font-serif font-bold leading-snug tracking-tight transition-colors truncate",
                   isTransparent
-                    ? "text-white group-hover:text-amber-200"
+                    ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
                     : "text-stone-900 group-hover:text-[#14532d]"
                 )}
               >
                 {t.trustName}
               </span>
-              <span className="text-[11px] hidden sm:flex items-center gap-1.5 mt-0.5">
-                <span className={cn(isTransparent ? "text-amber-200/90 font-medium" : "text-stone-600 font-medium")}>
-                  {t.trustShort}
-                </span>
-                <span className={cn("w-1 h-1 rounded-full inline-block", isTransparent ? "bg-stone-400" : "bg-stone-300")} />
-                <span className={cn("truncate", isTransparent ? "text-stone-300" : "text-emerald-700 font-medium")}>
+
+              {/* Mobile Shortened & Compact Title */}
+              <span
+                className={cn(
+                  "block sm:hidden text-xs xs:text-sm font-serif font-bold leading-tight tracking-tight transition-colors truncate",
+                  isTransparent
+                    ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
+                    : "text-stone-900 group-hover:text-[#14532d]"
+                )}
+              >
+                {language === "mr"
+                  ? "इच्छापूर्ती विनायक ट्रस्ट"
+                  : language === "hi"
+                  ? "इच्छापूर्ति विनायक ट्रस्ट"
+                  : "Icchapurti Vinayak Trust"}
+              </span>
+
+              {/* Official Registration & Nashik Identity */}
+              <span className="text-[10px] sm:text-[11px] flex items-center gap-1.5 mt-0.5 min-w-0">
+                <span
+                  className={cn(
+                    "font-semibold tracking-wide shrink-0",
+                    isTransparent
+                      ? "text-amber-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]"
+                      : "text-[#14532d]"
+                  )}
+                >
                   {language === "mr"
-                    ? "सार्वजनिक पारदर्शकता नोंदवही"
+                    ? "नाशिक • नोंदणी क्र. E-9389"
                     : language === "hi"
-                    ? "सार्वजनिक पारदर्शिता पंजी"
-                    : "Public Transparency Registry"}
+                    ? "नासिक • पंजीकरण सं. E-9389"
+                    : "Nashik • Reg. E-9389"}
+                </span>
+                <span
+                  className={cn(
+                    "w-1 h-1 rounded-full hidden md:inline-block shrink-0",
+                    isTransparent ? "bg-amber-400/80" : "bg-stone-300"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "hidden md:inline truncate text-[10px] sm:text-[11px]",
+                    isTransparent
+                      ? "text-stone-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]"
+                      : "text-stone-500"
+                  )}
+                >
+                  {language === "mr"
+                    ? "सार्वजनिक धर्मादाय विश्वस्त संस्था"
+                    : language === "hi"
+                    ? "सार्वजनिक धर्मार्थ न्यास"
+                    : "Public Charitable Trust"}
                 </span>
               </span>
             </div>
@@ -453,6 +502,36 @@ export const Navbar: React.FC = () => {
                 : "bg-white border-stone-200 text-stone-900"
             )}
           >
+            {/* Trust Identity Header in Mobile Drawer */}
+            <div
+              className={cn(
+                "p-2.5 rounded-lg border flex items-center gap-3",
+                isTransparent
+                  ? "bg-white/5 border-white/10"
+                  : "bg-emerald-50/50 border-emerald-100"
+              )}
+            >
+              <TrustEmblem size="sm" isTransparent={isTransparent} />
+              <div className="flex flex-col min-w-0">
+                <span
+                  className={cn(
+                    "text-xs font-serif font-bold leading-tight",
+                    isTransparent ? "text-white" : "text-stone-900"
+                  )}
+                >
+                  {t.trustName}
+                </span>
+                <span
+                  className={cn(
+                    "text-[10px] mt-0.5 font-medium",
+                    isTransparent ? "text-amber-300" : "text-[#14532d]"
+                  )}
+                >
+                  {language === "mr" ? "नाशिक • नोंदणी क्र. E-9389" : language === "hi" ? "नासिक • पंजीकरण सं. E-9389" : "Nashik • Reg. E-9389"}
+                </span>
+              </div>
+            </div>
+
             {/* Language Selector in Mobile Drawer */}
             <div
               className={cn(

@@ -170,24 +170,32 @@ export const ImpactPassport: React.FC = () => {
         className="text-center max-w-3xl mx-auto space-y-3"
       >
         <div className="inline-flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#7b1824] bg-[#fbf0f1] px-2.5 py-0.5 rounded border border-[#7b1824]/20">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#14532d] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-2xs">
             Cryptographic Transparency Ledger
           </span>
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-300 shadow-2xs">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
             MongoDB Audited
           </span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-serif font-bold text-stone-900 tracking-tight leading-[1.15]">
           Impact Passport Explorer
         </h1>
-        <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
+
+        {/* Warm Subtle Decorative Divider */}
+        <div className="flex items-center justify-center gap-2 mt-3.5 mb-2">
+          <span className="w-8 h-px bg-amber-400/60" />
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <span className="w-8 h-px bg-amber-400/60" />
+        </div>
+
+        <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl mx-auto">
           {t.passportJourneySubtitle}
         </p>
       </motion.div>
 
       {/* Trust Transparency Statement */}
-      <div className="p-4 rounded-md bg-stone-50 border border-stone-200 text-xs text-stone-700 flex items-start gap-3 shadow-2xs">
+      <div className="p-4 sm:p-5 rounded-2xl bg-stone-50/80 border border-stone-200/90 text-xs text-stone-700 flex items-start gap-3 shadow-2xs">
         <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
         <div className="space-y-1 leading-relaxed">
           <p>
@@ -203,8 +211,8 @@ export const ImpactPassport: React.FC = () => {
 
       {/* Unauthenticated Guest Notification */}
       {!isAuthLoading && !isAuthenticated && (
-        <div className="bg-white rounded-md border border-stone-200 p-8 text-center max-w-2xl mx-auto shadow-2xs space-y-4">
-          <div className="w-12 h-12 rounded-full bg-[#fbf0f1] text-[#7b1824] flex items-center justify-center mx-auto">
+        <div className="bg-white rounded-2xl border border-stone-200/90 p-8 sm:p-10 text-center max-w-2xl mx-auto shadow-xs space-y-4">
+          <div className="w-12 h-12 rounded-full bg-emerald-50 text-[#14532d] flex items-center justify-center mx-auto border border-emerald-200">
             <Lock className="w-6 h-6" />
           </div>
           <div className="space-y-1.5">
@@ -219,7 +227,7 @@ export const ImpactPassport: React.FC = () => {
           </div>
           <div className="pt-2 flex justify-center gap-3">
             <Link to="/login?redirect=/impact-passport">
-              <Button size="md" variant="primary" className="inline-flex items-center gap-2">
+              <Button size="md" variant="primary" className="inline-flex items-center gap-2 bg-[#14532d] hover:bg-[#0f4023] text-white">
                 <LogIn className="w-4 h-4" />
                 <span>Sign In to Donor Portal</span>
               </Button>
@@ -237,7 +245,7 @@ export const ImpactPassport: React.FC = () => {
       {isAuthenticated && (
         <div className="space-y-8">
           {/* Search & Quick Selector */}
-          <div className="bg-white rounded-md p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/90 shadow-xs space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-100 pb-3">
               <div>
                 <h3 className="text-sm font-serif font-bold text-stone-900">
@@ -272,7 +280,7 @@ export const ImpactPassport: React.FC = () => {
                   placeholder="Search by Passport ID, Receipt No., or Cause Title..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:border-[#7b1824] transition-colors"
+                  className="w-full pl-9 pr-3 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all"
                 />
               </div>
               <Button
@@ -280,7 +288,7 @@ export const ImpactPassport: React.FC = () => {
                 size="md"
                 variant="primary"
                 disabled={isSearchingId}
-                className="shrink-0 text-xs sm:text-sm inline-flex items-center gap-2"
+                className="shrink-0 text-xs sm:text-sm inline-flex items-center gap-2 bg-[#14532d] hover:bg-[#0f4023] text-white"
               >
                 {isSearchingId ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
@@ -293,7 +301,7 @@ export const ImpactPassport: React.FC = () => {
 
             {/* Error Message with Retry */}
             {error && (
-              <div className="p-3.5 rounded-md bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start justify-between gap-3">
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start justify-between gap-3">
                 <div className="flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
                   <div>
@@ -327,14 +335,14 @@ export const ImpactPassport: React.FC = () => {
                         type="button"
                         onClick={() => handleSelectPassport(p)}
                         whileHover={!shouldReduceMotion ? { y: -2 } : undefined}
-                        className={`p-3 rounded-md border text-left transition-all cursor-pointer ${
+                        className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-[#faf0f1] border-[#7b1824] text-stone-900 shadow-xs ring-1 ring-[#7b1824]/20"
+                            ? "bg-emerald-50/80 border-[#14532d] text-stone-900 shadow-xs ring-1 ring-[#14532d]/25"
                             : "bg-stone-50/70 hover:bg-stone-100 border-stone-200 text-stone-700 hover:border-stone-300"
                         }`}
                       >
                         <div className="flex items-center justify-between text-[11px] mb-1">
-                          <span className="font-mono font-semibold text-[#7b1824]">
+                          <span className="font-mono font-semibold text-[#14532d]">
                             #{p.passportNumber}
                           </span>
                           <span className="font-medium text-stone-500">{p.category}</span>
@@ -344,7 +352,7 @@ export const ImpactPassport: React.FC = () => {
                         </div>
                         <div className="text-[11px] text-stone-500 mt-1 flex items-center justify-between">
                           <span>₹{p.amount.toLocaleString("en-IN")}</span>
-                          <span className="font-semibold text-emerald-700">
+                          <span className="font-semibold text-[#14532d]">
                             {p.overallStatus}
                           </span>
                         </div>
@@ -358,8 +366,8 @@ export const ImpactPassport: React.FC = () => {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="bg-white rounded-md border border-stone-200 p-12 text-center shadow-2xs space-y-3">
-              <div className="w-10 h-10 border-3 border-stone-200 border-t-[#7b1824] rounded-full animate-spin mx-auto" />
+            <div className="bg-white rounded-2xl border border-stone-200 p-12 text-center shadow-xs space-y-3">
+              <div className="w-10 h-10 border-3 border-stone-200 border-t-[#14532d] rounded-full animate-spin mx-auto" />
               <div className="text-sm font-serif font-bold text-stone-900">
                 Retrieving Verified Impact Records from MongoDB...
               </div>
@@ -371,9 +379,9 @@ export const ImpactPassport: React.FC = () => {
 
           {/* Empty State: Authenticated donor has 0 verified donations */}
           {!isLoading && passports.length === 0 && !activePassport && !error && (
-            <div className="bg-white rounded-md border border-stone-200 p-10 text-center shadow-2xs max-w-2xl mx-auto space-y-4">
+            <div className="bg-white rounded-2xl border border-stone-200 p-10 text-center shadow-xs max-w-2xl mx-auto space-y-4">
               <div className="w-12 h-12 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center mx-auto">
-                <HeartHandshake className="w-6 h-6 text-[#7b1824]" />
+                <HeartHandshake className="w-6 h-6 text-[#14532d]" />
               </div>
               <div className="space-y-1.5">
                 <h3 className="text-lg font-serif font-bold text-stone-900">

@@ -77,10 +77,18 @@ export const Blog: React.FC = () => {
           <Newspaper className="w-3.5 h-3.5 text-emerald-700" />
           <span>{t.blog.recentPosts}</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-serif font-bold text-stone-900 tracking-tight leading-[1.15]">
           {t.blog.title}
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-2xl mx-auto">
+
+        {/* Warm Subtle Decorative Divider */}
+        <div className="flex items-center justify-center gap-2 mt-3.5 mb-2">
+          <span className="w-8 h-px bg-amber-400/60" />
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <span className="w-8 h-px bg-amber-400/60" />
+        </div>
+
+        <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl mx-auto">
           {t.blog.subtitle}
         </p>
       </div>
@@ -88,19 +96,19 @@ export const Blog: React.FC = () => {
       {/* Search & Category Filter Bar */}
       <div className="space-y-4">
         <div className="max-w-md mx-auto relative">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search news, field reports, authors, tags..."
-            className="w-full pl-9.5 pr-4 py-2 text-xs sm:text-sm bg-white border border-stone-200 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all shadow-2xs"
+            className="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm bg-white border border-stone-200/90 rounded-full focus:outline-none focus:ring-2 focus:ring-[#14532d]/20 focus:border-[#14532d] transition-all shadow-xs"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery("")}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-stone-400 hover:text-stone-700"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-stone-400 hover:text-stone-700 cursor-pointer"
             >
               Clear
             </button>
@@ -114,10 +122,10 @@ export const Blog: React.FC = () => {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
                 selectedCategory === cat
-                  ? "bg-[#14532d] text-white shadow-2xs"
-                  : "bg-stone-100 hover:bg-stone-200 text-stone-700"
+                  ? "bg-[#14532d] text-white border-[#14532d] shadow-2xs"
+                  : "bg-white hover:bg-stone-50 text-stone-700 border-stone-200/80 shadow-2xs"
               }`}
             >
               {cat === "Kumbh Seva" ? (
@@ -196,7 +204,7 @@ export const Blog: React.FC = () => {
           {posts.map((post) => (
             <article
               key={post.id || post.slug}
-              className="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group"
+              className="bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:border-emerald-700/40 hover:shadow-md transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
                 <div className="relative aspect-16/10 overflow-hidden bg-stone-100">

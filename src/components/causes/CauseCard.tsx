@@ -21,10 +21,10 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
   return (
     <motion.div
       className={cn(
-        "group bg-white rounded-md border border-stone-200/90 shadow-2xs hover:border-stone-400 hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between",
+        "group bg-white rounded-xl sm:rounded-2xl border border-stone-200/90 shadow-xs hover:border-emerald-700/40 hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between",
         className
       )}
-      whileHover={!shouldReduceMotion ? { y: -5 } : undefined}
+      whileHover={!shouldReduceMotion ? { y: -4 } : undefined}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
       <div>
@@ -38,38 +38,38 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
           />
 
           {/* Smooth subtle overlay on hover */}
-          <div className="absolute inset-0 bg-stone-900/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          <div className="absolute inset-0 bg-stone-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
           {/* Top badges */}
-          <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-stone-900/85 text-white shadow-2xs backdrop-blur-xs">
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-950/85 text-emerald-100 shadow-2xs backdrop-blur-xs border border-emerald-800/40">
               {cause.category}
             </span>
             {cause.urgent && (
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[#991b1b] text-white shadow-2xs">
-                Urgent Need
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-600 text-white shadow-2xs border border-amber-400/40">
+                Urgent Seva
               </span>
             )}
           </div>
 
           {/* Location pill on bottom left */}
-          <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1 text-white text-xs font-medium bg-stone-900/75 px-2 py-0.5 rounded backdrop-blur-xs">
+          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white text-xs font-medium bg-stone-950/80 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10 shadow-xs">
             <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
             <span className="truncate max-w-[200px] text-[11px]">{cause.location}</span>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-5 pb-4">
-          <h3 className="text-base font-serif font-bold text-stone-900 group-hover:text-[#14532d] transition-colors line-clamp-2 leading-snug">
+        <div className="p-5 sm:p-6 pb-4">
+          <h3 className="text-base sm:text-lg font-serif font-bold text-stone-900 group-hover:text-[#14532d] transition-colors line-clamp-2 leading-snug">
             <Link to={`/causes/${cause.id}`}>{cause.title}</Link>
           </h3>
-          <p className="text-xs sm:text-sm text-stone-600 mt-1.5 line-clamp-2 leading-relaxed">
+          <p className="text-xs sm:text-sm text-stone-600 mt-2 line-clamp-2 leading-relaxed">
             {cause.tagline}
           </p>
 
           {/* Funding Target or Neutral Status */}
-          <div className="mt-4 pt-3 border-t border-stone-100 space-y-2">
+          <div className="mt-4 pt-3.5 border-t border-stone-100 space-y-2">
             {hasTarget ? (
               <>
                 <div className="flex justify-between items-baseline text-xs">
@@ -81,9 +81,9 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
                   </span>
                 </div>
 
-                <div className="w-full bg-stone-100 h-1.5 rounded overflow-hidden">
+                <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
                   <motion.div
-                    className="bg-[#14532d] h-full rounded"
+                    className="bg-gradient-to-r from-emerald-700 to-emerald-600 h-full rounded-full"
                     initial={{ width: 0 }}
                     whileInView={{ width: `${percentage}%` }}
                     viewport={{ once: true }}
@@ -99,13 +99,13 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
                       {cause.donorCount} contributions
                     </span>
                   ) : (
-                    <span>Open for contributions</span>
+                    <span>Open for seva support</span>
                   )}
                 </div>
               </>
             ) : (
               <div className="text-[11px] text-stone-500 flex items-center justify-between">
-                <span className="italic text-stone-500">Funding target will be published by the Trust.</span>
+                <span className="italic text-stone-500">Target allocation verified per program drive.</span>
                 {cause.donorCount > 0 && (
                   <span className="flex items-center gap-1 font-medium text-stone-700">
                     <Users className="w-3 h-3 text-stone-400" />
@@ -119,7 +119,7 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
       </div>
 
       {/* Footer Actions */}
-      <div className="px-5 py-3 bg-[#faf8f5] border-t border-stone-100 flex items-center justify-between gap-3">
+      <div className="px-5 sm:px-6 py-3.5 bg-stone-50/70 border-t border-stone-100 flex items-center justify-between gap-3">
         <Link
           to={`/causes/${cause.id}`}
           className="text-xs font-semibold text-stone-700 hover:text-[#14532d] flex items-center gap-1.5 transition-colors group/link"
@@ -132,8 +132,8 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
           <Button
             size="sm"
             variant="primary"
-            className="text-xs px-3 py-1 h-8"
-            leftIcon={<Heart className="w-3 h-3 fill-current text-amber-200" />}
+            className="text-xs px-3.5 py-1.5 h-8 bg-[#14532d] hover:bg-[#0f4023] text-white"
+            leftIcon={<Heart className="w-3 h-3 fill-current text-amber-300" />}
           >
             Support
           </Button>
