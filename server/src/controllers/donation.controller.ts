@@ -357,7 +357,7 @@ export class DonationController {
           amount: updatedDonation.amount,
           receiptNumber: updatedDonation.receiptNumber!,
           causeTitle,
-          receiptUrl: updatedDonation.receiptUrl,
+          receiptUrl: updatedDonation.receiptUrl ?? undefined,
           paymentId: updatedDonation.razorpayPaymentId,
         }).catch((err) => logger.error(`Error sending donation success email: ${err.message}`));
       }
@@ -500,7 +500,7 @@ export class DonationController {
                   amount: updatedDonation.amount,
                   receiptNumber: updatedDonation.receiptNumber!,
                   causeTitle,
-                  receiptUrl: updatedDonation.receiptUrl,
+                  receiptUrl: updatedDonation.receiptUrl ?? undefined,
                   paymentId: updatedDonation.razorpayPaymentId,
                 }).catch((err) => logger.error(`[Webhook] Email error: ${err.message}`));
               }

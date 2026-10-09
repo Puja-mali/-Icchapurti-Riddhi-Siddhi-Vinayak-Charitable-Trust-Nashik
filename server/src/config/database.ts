@@ -65,7 +65,7 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
   }
 
   const isProd = process.env.NODE_ENV === 'production' || env.isProduction;
-  let uri = options.uri || process.env.MONGODB_URI || env.MONGODB_URI;
+  let uri = options.uri !== undefined ? options.uri : (process.env.MONGODB_URI || env.MONGODB_URI);
 
   // 1. Production Validation: Real MongoDB connection strictly required
   if (isProd) {

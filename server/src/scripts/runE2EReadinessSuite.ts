@@ -820,17 +820,17 @@ async function runE2ESuite() {
     // 4. Executable rejection - Windows PE MZ
     const mzExeBuffer = Buffer.from([0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00]);
     const exeCheck = validateFileSignature(mzExeBuffer, 'IMAGE');
-    recordCheck('11', 'Security: Windows PE/MZ executables strictly rejected', !exeCheck.isValid && exeCheck.error?.includes('Executable'));
+    recordCheck('11', 'Security: Windows PE/MZ executables strictly rejected', !exeCheck.isValid && (exeCheck.error?.includes('Executable') ?? false));
 
     // 5. Executable rejection - Linux ELF
     const elfBuffer = Buffer.from([0x7f, 0x45, 0x4c, 0x46, 0x02, 0x01, 0x01, 0x00]);
     const elfCheck = validateFileSignature(elfBuffer, 'DOCUMENT');
-    recordCheck('11', 'Security: Linux ELF binary executables strictly rejected', !elfCheck.isValid && elfCheck.error?.includes('ELF'));
+   recordCheck('11', 'Security: Linux ELF binary executables strictly rejected', !elfCheck.isValid && (elfCheck.error?.includes('ELF') ?? false));
 
     // 6. Polyglot script rejection
     const polyglotBuffer = Buffer.from('<html><script>alert("xss")</script></html>');
     const polyCheck = validateFileSignature(polyglotBuffer, 'IMAGE');
-    recordCheck('11', 'Security: HTML/SVG script polyglots strictly rejected', !polyCheck.isValid && polyCheck.error?.includes('Scripts'));
+recordCheck('11', 'Security: HTML/SVG script polyglots strictly rejected', !polyCheck.isValid && (polyCheck.error?.includes('Scripts') ?? false));
 
     // 7. Filename sanitization (Path traversal & null bytes)
     const unsafeFilename = '../../../etc/passwd\0.jpg';
