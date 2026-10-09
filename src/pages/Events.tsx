@@ -6,22 +6,21 @@ import {
   MapPin,
   Users,
   CheckCircle2,
-  Tag,
   ArrowRight,
-  ExternalLink,
   Search,
-  Filter,
   Loader2,
   AlertCircle,
   RefreshCw,
   Flame,
+  Sparkles,
+  SlidersHorizontal,
 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { EventItem } from "@/src/types";
 import { eventService } from "@/src/services/eventService";
 import { authService } from "@/src/services/authService";
 import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
-import { EmptyState } from "@/src/components/common/EmptyState";
 import { PageHeader } from "@/src/components/common/PageHeader";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
@@ -30,6 +29,7 @@ export const Events: React.FC = () => {
   const { t } = useLanguage();
   const { isKumbhMode } = useKumbhMode();
   const navigate = useNavigate();
+  const shouldReduceMotion = useReducedMotion();
 
   const [events, setEvents] = useState<EventItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -52,7 +52,6 @@ export const Events: React.FC = () => {
   const [regError, setRegError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check auth on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -81,7 +80,9 @@ export const Events: React.FC = () => {
 
       const response = await eventService.getEvents(params);
       const rawEvents = response.events || [];
-      const filtered = isKumbhMode ? rawEvents : rawEvents.filter((ev) => !ev.isKumbhRelated);
+      const filtered = isKumbhMode
+        ? rawEvents
+        : rawEvents.filter((ev) => !ev.isKumbhRelated);
       setEvents(filtered);
     } catch (err: any) {
       console.error("Failed to load events:", err);
@@ -126,7 +127,6 @@ export const Events: React.FC = () => {
       });
 
       setRegistered(true);
-      // Update event in local state
       setEvents((prev) =>
         prev.map((ev) => (ev.id === selectedEvent.id ? result.event : ev))
       );
@@ -139,286 +139,388 @@ export const Events: React.FC = () => {
     }
   };
 
-  // Extract unique categories from events or standard defaults
-  const categories = ["All", "Community Outreach", "Health Camp", "Environment", "Education", "Kumbh Seva"];
+  const categories = [
+    "All",
+    "Community Outreach",
+    "Health Camp",
+    "Environment",
+    "Education",
+    "Kumbh Seva",
+  ];
+
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("All");
+    setShowKumbhOnly(false);
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10">
-      {/* 1. Page Header */}
-      <PageHeader
-        badge="Community Outreach & Assemblies"
-        title="Trust Events & Field Drives"
-        description="Participate in ground-level field events: free diagnostic health camps, indigenous plantation drives, and educational distribution assemblies across Nashik."
-      />
+    <main className="relative min-h-screen overflow-hidden bg-[#f4efe6] text-stone-800">
+      {/* Warm editorial background — visual only */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-32 top-28 h-80 w-80 rounded-full bg-amber-400/[0.09] blur-3xl" />
+        <div className="absolute right-[-8rem] top-[28%] h-96 w-96 rounded-full bg-emerald-800/[0.07] blur-3xl" />
+        <div className="absolute left-[42%] top-[70%] h-72 w-72 rounded-full bg-orange-700/[0.05] blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.6),transparent_72%)]" />
+      </div>
 
-      {/* Filter & Search Bar */}
-      <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-xs space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-4">
-        {/* Search */}
-        <div className="relative flex-1">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search events by title, keyword, location..."
-            className="w-full pl-10 pr-4 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all"
+      <div className="relative mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+        {/* Page header */}
+        <motion.section
+          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <PageHeader
+            badge="Community Outreach & Assemblies"
+            title="Trust Events & Field Drives"
+            description="Participate in ground-level community events and field activities across Nashik."
           />
-        </div>
+        </motion.section>
 
-        {/* Category Filters */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            aria-label="Filter events by category"
-            className="px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs font-semibold text-stone-700 focus:bg-white focus:outline-none focus:border-[#14532d] cursor-pointer"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat === "All" ? "All Categories" : cat}
-              </option>
-            ))}
-          </select>
+        {/* Visual intro strip */}
+        <motion.section
+          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.75, ease: "easeOut" }}
+          className="relative overflow-hidden rounded-[2rem] border border-[#d9cfbf] bg-[#fffdf8] shadow-[0_18px_50px_rgba(70,57,38,0.08)]"
+        >
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="relative min-h-[245px] overflow-hidden bg-[#1b4935] sm:min-h-[310px]">
+              <img
+                src="/activities/Community Aid Distribution Under the Trees.png"
+                alt="Community activity"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] hover:scale-[1.035]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#102b1f]/65 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1e15]/75 via-transparent to-transparent" />
+              <div className="absolute left-5 top-5 sm:left-7 sm:top-7">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md">
+                  <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                  Moments from the field
+                </span>
+              </div>
+              <div className="absolute bottom-5 left-5 right-5 sm:bottom-7 sm:left-7 sm:right-7">
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300">
+                  Nashik • Community
+                </p>
+                <h2 className="mt-2 max-w-xl font-serif text-2xl font-bold leading-tight text-white sm:text-4xl">
+                  Real people. Shared moments. Community participation.
+                </h2>
+              </div>
+            </div>
 
-          {isKumbhMode && (
-            <button
-              type="button"
-              onClick={() => setShowKumbhOnly((prev) => !prev)}
-              className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer border ${
-                showKumbhOnly
-                  ? "bg-amber-50 text-amber-900 border-amber-300 shadow-2xs"
-                  : "bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100"
-              }`}
-            >
-              <Flame className={`w-3.5 h-3.5 ${showKumbhOnly ? "text-amber-700 fill-amber-700" : "text-stone-400"}`} />
-              <span>Kumbh Seva</span>
-            </button>
-          )}
+            <div className="flex items-center p-6 sm:p-8 lg:p-10">
+              <div>
+                <div className="flex items-center gap-2 text-emerald-800">
+                  <span className="h-px w-8 bg-amber-500" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.22em]">
+                    Join a programme
+                  </span>
+                </div>
+                <p className="mt-5 font-serif text-2xl font-bold leading-tight text-[#173b2a] sm:text-3xl">
+                  Discover what is happening, where it is happening, and how to participate.
+                </p>
+                <p className="mt-4 max-w-xl text-sm leading-6 text-stone-600">
+                  Browse published events, open the details, and register when attendance is available.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {[
+                    { icon: Calendar, label: "Dates" },
+                    { icon: MapPin, label: "Nashik" },
+                    { icon: Users, label: "Participation" },
+                  ].map(({ icon: Icon, label }) => (
+                    <span
+                      key={label}
+                      className="inline-flex items-center gap-2 rounded-full border border-[#e0d7c9] bg-[#f8f4ec] px-3 py-2 text-[11px] font-semibold text-stone-700"
+                    >
+                      <Icon className="h-3.5 w-3.5 text-emerald-800" />
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
 
-          {(searchQuery || selectedCategory !== "All" || showKumbhOnly) && (
+        {/* Filter and search */}
+        <motion.section
+          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.65, ease: "easeOut" }}
+          className="sticky top-3 z-20 rounded-[1.7rem] border border-[#ddd3c3] bg-[#fffdf8]/95 p-4 shadow-[0_14px_38px_rgba(60,52,40,0.08)] backdrop-blur-xl sm:p-5"
+        >
+          <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#7d766b]">
+            <SlidersHorizontal className="h-3.5 w-3.5 text-amber-700" />
+            Find an event
+          </div>
+
+          <div className="grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by title, keyword or location..."
+                className="w-full rounded-xl border border-[#ded6c9] bg-[#f8f5ef] py-3 pl-11 pr-4 text-sm text-stone-800 outline-none transition-all placeholder:text-stone-400 focus:border-emerald-700/60 focus:bg-white focus:ring-4 focus:ring-emerald-900/[0.05]"
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                aria-label="Filter events by category"
+                className="rounded-xl border border-[#ded6c9] bg-[#f8f5ef] px-3.5 py-3 text-xs font-semibold text-stone-700 outline-none transition-all focus:border-emerald-700/60 focus:bg-white"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat === "All" ? "All Categories" : cat}
+                  </option>
+                ))}
+              </select>
+
+              {isKumbhMode && (
+                <button
+                  type="button"
+                  onClick={() => setShowKumbhOnly((prev) => !prev)}
+                  className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-3 text-xs font-semibold transition-all ${
+                    showKumbhOnly
+                      ? "border-amber-300 bg-amber-50 text-amber-900 shadow-sm"
+                      : "border-[#ded6c9] bg-[#f8f5ef] text-stone-600 hover:bg-white"
+                  }`}
+                >
+                  <Flame className={`h-3.5 w-3.5 ${showKumbhOnly ? "fill-amber-700 text-amber-700" : "text-stone-400"}`} />
+                  Kumbh Seva
+                </button>
+              )}
+
+              {(searchQuery || selectedCategory !== "All" || showKumbhOnly) && (
+                <Button size="sm" variant="ghost" onClick={resetFilters} className="text-xs text-stone-500">
+                  Reset
+                </Button>
+              )}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Events section */}
+        <section className="space-y-6">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a6348]">
+                Published programmes
+              </p>
+              <h2 className="mt-2 font-serif text-3xl font-bold tracking-tight text-[#173b2a] sm:text-4xl">
+                Upcoming & Recent Events {events.length > 0 && `(${events.length})`}
+              </h2>
+            </div>
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => {
-                setSearchQuery("");
-                setSelectedCategory("All");
-                setShowKumbhOnly(false);
-              }}
-              className="text-xs text-stone-500"
+              onClick={loadEvents}
+              leftIcon={<RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />}
+              className="hidden text-xs text-stone-600 sm:inline-flex"
             >
-              Reset
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {/* Events Section */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-serif font-bold text-stone-900">
-            Programs & Assemblies {events.length > 0 && `(${events.length})`}
-          </h2>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={loadEvents}
-            leftIcon={<RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />}
-            className="text-xs text-stone-600"
-          >
-            Refresh
-          </Button>
-        </div>
-
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-stone-500">
-            <Loader2 className="w-8 h-8 animate-spin text-[#14532d]" />
-            <p className="text-sm font-medium">Retrieving events from trust database...</p>
-          </div>
-        ) : error ? (
-          /* Error State */
-          <div className="py-14 text-center space-y-4 max-w-md mx-auto">
-            <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
-              <AlertCircle className="w-6 h-6" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-base font-semibold text-stone-900">Unable to Load Events</h3>
-              <p className="text-xs text-stone-600">{error}</p>
-            </div>
-            <Button size="sm" variant="primary" onClick={loadEvents}>
-              Try Again
+              Refresh
             </Button>
           </div>
-        ) : events.length === 0 ? (
-          /* Empty State */
-          <div className="py-16 text-center space-y-4 bg-white rounded-xl border border-stone-200 p-8 shadow-2xs max-w-xl mx-auto">
-            <div className="w-14 h-14 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center mx-auto border border-stone-200">
-              <Calendar className="w-7 h-7" />
-            </div>
-            <div className="space-y-1.5">
-              <h3 className="text-lg font-serif font-bold text-stone-800">
-                No events available.
-              </h3>
-              <p className="text-xs sm:text-sm text-stone-600 max-w-sm mx-auto leading-relaxed">
-                {searchQuery || selectedCategory !== "All" || showKumbhOnly
-                  ? "No events matched your search criteria. Try resetting filters."
-                  : "There are no field events or community drives scheduled in the database at this time. Please check back soon."}
+
+          {isLoading ? (
+            <div className="rounded-[1.8rem] border border-[#ddd3c3] bg-[#fffdf8] py-24 text-center shadow-[0_12px_40px_rgba(60,52,40,0.05)]">
+              <Loader2 className="mx-auto h-8 w-8 animate-spin text-[#14532d]" />
+              <p className="mt-4 text-sm font-medium text-stone-500">
+                Retrieving published events...
               </p>
             </div>
-            {(searchQuery || selectedCategory !== "All" || showKumbhOnly) && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategory("All");
-                  setShowKumbhOnly(false);
-                }}
-              >
-                Clear Search & Filters
+          ) : error ? (
+            <div className="rounded-[1.8rem] border border-rose-200 bg-rose-50/80 px-6 py-16 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-rose-200 bg-white text-rose-600">
+                <AlertCircle className="h-6 w-6" />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-stone-900">Unable to Load Events</h3>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-stone-600">{error}</p>
+              <Button size="sm" variant="primary" onClick={loadEvents} className="mt-5">
+                Try Again
               </Button>
-            )}
-          </div>
-        ) : (
-          /* Events Grid */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event) => {
-              const capacity = event.capacity || event.registrationLimit || 0;
-              const registeredCount = event.registeredCount || event.registrationCount || 0;
-              const fillPercent =
-                capacity > 0 ? Math.min(100, Math.round((registeredCount / capacity) * 100)) : 0;
-              const isCompleted = event.status === "COMPLETED" || event.status === "Completed";
-              const isCancelled = event.status === "CANCELLED";
-              const isOngoing = event.status === "ONGOING";
-              const isFull = capacity > 0 && registeredCount >= capacity;
+            </div>
+          ) : events.length === 0 ? (
+            <div className="rounded-[1.8rem] border border-dashed border-[#cfc4b3] bg-[#fffdf8] px-6 py-20 text-center shadow-sm">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#ddd2c1] bg-[#f7f2e9] text-[#8e8678]">
+                <Calendar className="h-7 w-7" />
+              </div>
+              <h3 className="mt-5 font-serif text-xl font-bold text-stone-800">No events available.</h3>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-stone-600">
+                {searchQuery || selectedCategory !== "All" || showKumbhOnly
+                  ? "No events matched your search criteria. Try resetting filters."
+                  : "There are no published field events or community drives scheduled at this time. Please check back soon."}
+              </p>
+              {(searchQuery || selectedCategory !== "All" || showKumbhOnly) && (
+                <Button size="sm" variant="outline" onClick={resetFilters} className="mt-5">
+                  Clear Search & Filters
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {events.map((event, index) => {
+                const capacity = event.capacity || event.registrationLimit || 0;
+                const registeredCount = event.registeredCount || event.registrationCount || 0;
+                const fillPercent =
+                  capacity > 0 ? Math.min(100, Math.round((registeredCount / capacity) * 100)) : 0;
+                const isCompleted = event.status === "COMPLETED" || event.status === "Completed";
+                const isCancelled = event.status === "CANCELLED";
+                const isOngoing = event.status === "ONGOING";
+                const isFull = capacity > 0 && registeredCount >= capacity;
 
-              return (
-                <div
-                  key={event.id}
-                  className="bg-white rounded-2xl border border-stone-200/90 shadow-xs overflow-hidden flex flex-col justify-between hover:border-emerald-700/40 hover:shadow-md transition-all duration-300"
-                >
-                  <div>
-                    <Link to={`/events/${event.slug || event.id}`} className="block relative aspect-16/10 w-full overflow-hidden bg-stone-100 group">
-                      <img
-                        src={event.imageUrl}
-                        alt={event.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                      />
-                      <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-stone-950/85 text-stone-100 shadow-2xs backdrop-blur-xs border border-white/10">
+                return (
+                  <motion.article
+                    key={event.id}
+                    initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.08 }}
+                    transition={{ duration: 0.55, delay: Math.min(index * 0.05, 0.2), ease: "easeOut" }}
+                    whileHover={shouldReduceMotion ? undefined : { y: -7 }}
+                    className="group overflow-hidden rounded-[1.7rem] border border-[#ddd4c7] bg-[#fffdf8] shadow-[0_9px_30px_rgba(64,53,38,0.06)] transition-shadow duration-300 hover:border-emerald-800/25 hover:shadow-[0_20px_45px_rgba(64,53,38,0.12)]"
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden bg-stone-200">
+                      <Link to={`/events/${event.slug || event.id}`} className="block h-full">
+                        {event.imageUrl ? (
+                          <img
+                            src={event.imageUrl}
+                            alt={event.title}
+                            className="h-full w-full object-cover transition-transform duration-[1100ms] ease-out group-hover:scale-[1.06]"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#1c4b35] via-[#275e43] to-[#a56b4a]">
+                            <Calendar className="h-14 w-14 text-white/80" />
+                          </div>
+                        )}
+                      </Link>
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/15" />
+
+                      <div className="absolute left-3 top-3 right-3 flex flex-wrap gap-1.5">
+                        <span className="rounded-full border border-white/15 bg-black/65 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-md">
                           {event.category}
                         </span>
                         {event.isKumbhRelated && (
-                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-600 text-white shadow-2xs flex items-center gap-1 border border-amber-400/40">
-                            <Flame className="w-3 h-3 fill-white" />
+                          <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/30 bg-amber-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm">
+                            <Flame className="h-3 w-3 fill-white" />
                             Kumbh
                           </span>
                         )}
-                        {isCompleted ? (
-                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-stone-700 text-white shadow-2xs">
-                            Concluded
-                          </span>
-                        ) : isCancelled ? (
-                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-rose-700 text-white shadow-2xs">
-                            Cancelled
-                          </span>
-                        ) : isOngoing ? (
-                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-700 text-white shadow-2xs">
-                            Ongoing
-                          </span>
-                        ) : (
-                          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#14532d] text-white shadow-2xs">
-                            Upcoming
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-
-                    <div className="p-5 space-y-2.5">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-[#14532d]">
-                        <Calendar className="w-3.5 h-3.5" />
-                        <span>{event.date}</span>
-                        <span>•</span>
-                        <Clock className="w-3.5 h-3.5 text-stone-400" />
-                        <span className="text-stone-500 font-normal">{event.time}</span>
                       </div>
 
-                      <Link to={`/events/${event.slug || event.id}`} className="block group">
-                        <h3 className="text-base font-serif font-bold text-stone-900 leading-snug group-hover:text-[#14532d] transition-colors">
+                      <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-3">
+                        <div>
+                          <span className="block text-[9px] font-bold uppercase tracking-[0.2em] text-amber-200">
+                            {isCompleted ? "Concluded" : isCancelled ? "Cancelled" : isOngoing ? "Ongoing" : "Upcoming"}
+                          </span>
+                          <span className="mt-1 block font-serif text-lg font-bold text-white">
+                            {event.date}
+                          </span>
+                        </div>
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-transform duration-300 group-hover:translate-x-1">
+                          <ArrowRight className="h-4 w-4" />
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-5 sm:p-6">
+                      <div className="flex items-center gap-2 text-[11px] font-semibold text-emerald-800">
+                        <Clock className="h-3.5 w-3.5" />
+                        <span>{event.time}</span>
+                      </div>
+
+                      <Link to={`/events/${event.slug || event.id}`} className="block">
+                        <h3 className="mt-2.5 line-clamp-2 font-serif text-xl font-bold leading-tight text-[#173b2a] transition-colors group-hover:text-emerald-800">
                           {event.title}
                         </h3>
                       </Link>
 
-                      <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                      <p className="mt-2.5 line-clamp-2 text-sm leading-6 text-stone-600">
                         {event.shortDescription || event.description}
                       </p>
 
-                      <div className="flex items-start gap-1.5 text-xs text-stone-600 pt-0.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#14532d] shrink-0 mt-0.5" />
-                        <span className="line-clamp-1">{event.location}</span>
+                      <div className="mt-4 flex items-start gap-2 border-t border-[#ece5da] pt-4 text-xs text-stone-600">
+                        <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#9a6348]" />
+                        <span className="line-clamp-2">{event.location}</span>
                       </div>
 
-                      {/* Capacity status */}
                       {capacity > 0 ? (
-                        <div className="pt-2 space-y-1">
-                          <div className="flex justify-between text-[11px] text-stone-500 font-medium">
-                            <span>Attendance Quota</span>
-                            <span className={isFull ? "text-rose-700 font-semibold" : ""}>
-                              {registeredCount} / {capacity} Registered
+                        <div className="mt-4 rounded-xl border border-[#ebe3d7] bg-[#faf7f1] p-3">
+                          <div className="flex items-center justify-between gap-3 text-[10px] font-semibold text-stone-500">
+                            <span className="inline-flex items-center gap-1.5">
+                              <Users className="h-3 w-3" />
+                              Attendance Quota
+                            </span>
+                            <span className={isFull ? "font-bold text-rose-700" : "text-stone-600"}>
+                              {registeredCount} / {capacity}
                             </span>
                           </div>
-                          <div className="w-full bg-stone-100 h-1.5 rounded-full overflow-hidden">
+                          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e7dfd3]">
                             <div
-                              className={`h-full rounded-full ${
-                                isCompleted ? "bg-stone-400" : isFull ? "bg-rose-500" : "bg-[#14532d]"
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                isCompleted ? "bg-stone-400" : isFull ? "bg-rose-500" : "bg-[#236443]"
                               }`}
                               style={{ width: `${fillPercent}%` }}
                             />
                           </div>
                         </div>
                       ) : (
-                        <div className="pt-2 text-[11px] text-emerald-800 font-medium">
+                        <div className="mt-4 inline-flex rounded-full border border-emerald-100 bg-emerald-50/70 px-3 py-1.5 text-[10px] font-semibold text-emerald-800">
                           Open community attendance
                         </div>
                       )}
+
+                      <div className="mt-5 flex items-center gap-2">
+                        <Link to={`/events/${event.slug || event.id}`} className="flex-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-full text-xs font-semibold"
+                            rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
+                          >
+                            Details
+                          </Button>
+                        </Link>
+
+                        {isCompleted ? (
+                          <Button size="sm" variant="outline" disabled className="flex-1 text-xs font-semibold">
+                            Concluded
+                          </Button>
+                        ) : isCancelled ? (
+                          <Button size="sm" variant="outline" disabled className="flex-1 text-xs font-semibold text-rose-600">
+                            Cancelled
+                          </Button>
+                        ) : isFull ? (
+                          <Button size="sm" variant="outline" disabled className="flex-1 text-xs font-semibold">
+                            Full
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            className="flex-1 text-xs font-semibold"
+                            onClick={() => handleRegisterClick(event)}
+                          >
+                            Register
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="p-5 pt-0 flex items-center gap-2">
-                    <Link to={`/events/${event.slug || event.id}`} className="flex-1">
-                      <Button size="sm" variant="outline" className="w-full text-xs font-semibold">
-                        Details
-                      </Button>
-                    </Link>
-
-                    {isCompleted ? (
-                      <Button size="sm" variant="outline" disabled className="flex-1 text-xs font-semibold">
-                        Concluded
-                      </Button>
-                    ) : isCancelled ? (
-                      <Button size="sm" variant="outline" disabled className="flex-1 text-xs font-semibold text-rose-600">
-                        Cancelled
-                      </Button>
-                    ) : isFull ? (
-                      <Button size="sm" variant="outline" disabled className="flex-1 text-xs font-semibold">
-                        Full
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        className="flex-1 text-xs font-semibold"
-                        onClick={() => handleRegisterClick(event)}
-                      >
-                        Register
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                  </motion.article>
+                );
+              })}
+            </div>
+          )}
+        </section>
       </div>
 
       {/* Registration Modal */}
@@ -431,16 +533,15 @@ export const Events: React.FC = () => {
           size="md"
         >
           {registered ? (
-            <div className="py-5 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-700 mx-auto flex items-center justify-center border border-emerald-200">
-                <CheckCircle2 className="w-6 h-6" />
+            <div className="space-y-4 py-5 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
+                <CheckCircle2 className="h-7 w-7" />
               </div>
-              <h4 className="font-serif font-bold text-stone-900 text-base">Pass Confirmed</h4>
-              <p className="text-xs text-stone-600 max-w-xs mx-auto leading-relaxed">
-                Thank you, <strong>{attendeeName || "Attendee"}</strong>. Your entry pass
-                for {ticketCount} person(s) has been officially recorded in the trust database.
+              <h4 className="font-serif text-xl font-bold text-stone-900">Pass Confirmed</h4>
+              <p className="mx-auto max-w-sm text-sm leading-6 text-stone-600">
+                Thank you, <strong>{attendeeName || "Attendee"}</strong>. Your entry pass for {ticketCount} person(s) has been recorded.
               </p>
-              <div className="p-3 bg-stone-50 rounded-lg text-xs text-stone-700 border border-stone-200 text-left space-y-1">
+              <div className="space-y-1.5 rounded-xl border border-stone-200 bg-stone-50 p-4 text-left text-xs text-stone-700">
                 <div><strong>Event:</strong> {selectedEvent.title}</div>
                 <div><strong>Date & Time:</strong> {selectedEvent.date} ({selectedEvent.time})</div>
                 <div><strong>Location:</strong> {selectedEvent.location}</div>
@@ -451,17 +552,14 @@ export const Events: React.FC = () => {
               </Button>
             </div>
           ) : (
-            <form onSubmit={handleRegisterSubmit} className="space-y-3.5 text-xs sm:text-sm">
+            <form onSubmit={handleRegisterSubmit} className="space-y-4 text-xs sm:text-sm">
               {!isAuthenticated && (
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-900 flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
                   <div>
-                    <strong>Sign In Required:</strong> Please sign in to register and prevent duplicate passes.
+                    <strong>Sign In Required:</strong> Please sign in to register.
                     <div className="mt-1">
-                      <Link
-                        to="/login?redirect=/events"
-                        className="font-bold underline text-amber-900 hover:text-amber-950"
-                      >
+                      <Link to="/login?redirect=/events" className="font-bold underline">
                         Click here to Sign In →
                       </Link>
                     </div>
@@ -470,54 +568,54 @@ export const Events: React.FC = () => {
               )}
 
               {regError && (
-                <div className="p-3 bg-rose-50 border border-rose-200 rounded-md text-xs text-rose-800 flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-800">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
                   <span>{regError}</span>
                 </div>
               )}
 
               <div>
-                <label className="font-semibold text-stone-700 block mb-1">Attendee Name *</label>
+                <label className="mb-1.5 block font-semibold text-stone-700">Attendee Name *</label>
                 <input
                   type="text"
                   required
                   value={attendeeName}
                   onChange={(e) => setAttendeeName(e.target.value)}
                   placeholder="e.g. Rahul Patil"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d]"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm outline-none transition-all focus:border-[#14532d] focus:bg-white focus:ring-4 focus:ring-emerald-900/[0.05]"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="font-semibold text-stone-700 block mb-1">Email for Pass *</label>
+                  <label className="mb-1.5 block font-semibold text-stone-700">Email for Pass *</label>
                   <input
                     type="email"
                     required
                     value={attendeeEmail}
                     onChange={(e) => setAttendeeEmail(e.target.value)}
                     placeholder="rahul@example.com"
-                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d]"
+                    className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm outline-none transition-all focus:border-[#14532d] focus:bg-white focus:ring-4 focus:ring-emerald-900/[0.05]"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-stone-700 block mb-1">Phone Number</label>
+                  <label className="mb-1.5 block font-semibold text-stone-700">Phone Number</label>
                   <input
                     type="tel"
                     value={attendeePhone}
                     onChange={(e) => setAttendeePhone(e.target.value)}
                     placeholder="+91 98220 00000"
-                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d]"
+                    className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm outline-none transition-all focus:border-[#14532d] focus:bg-white focus:ring-4 focus:ring-emerald-900/[0.05]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold text-stone-700 block mb-1">Number of Attendees</label>
+                <label className="mb-1.5 block font-semibold text-stone-700">Number of Attendees</label>
                 <select
                   value={ticketCount}
                   onChange={(e) => setTicketCount(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d]"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm outline-none transition-all focus:border-[#14532d] focus:bg-white focus:ring-4 focus:ring-emerald-900/[0.05]"
                 >
                   <option value={1}>1 Person</option>
                   <option value={2}>2 People</option>
@@ -527,34 +625,24 @@ export const Events: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-semibold text-stone-700 block mb-1">Special Notes (Optional)</label>
+                <label className="mb-1.5 block font-semibold text-stone-700">Special Notes (Optional)</label>
                 <input
                   type="text"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="e.g. Accessibility or seating needs"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d]"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm outline-none transition-all focus:border-[#14532d] focus:bg-white focus:ring-4 focus:ring-emerald-900/[0.05]"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setSelectedEvent(null)}
-                >
+              <div className="flex justify-end gap-2 border-t border-stone-200 pt-4">
+                <Button type="button" variant="outline" size="sm" onClick={() => setSelectedEvent(null)}>
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  size="sm"
-                  variant="primary"
-                  disabled={isSubmitting || !isAuthenticated}
-                >
+                <Button type="submit" size="sm" variant="primary" disabled={isSubmitting || !isAuthenticated}>
                   {isSubmitting ? (
                     <span className="flex items-center gap-1.5">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       Registering...
                     </span>
                   ) : (
@@ -566,6 +654,8 @@ export const Events: React.FC = () => {
           )}
         </Modal>
       )}
-    </div>
+    </main>
   );
 };
+
+export default Events;
