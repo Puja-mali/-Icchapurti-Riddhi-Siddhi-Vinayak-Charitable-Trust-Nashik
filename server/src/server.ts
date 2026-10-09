@@ -6,7 +6,19 @@ import { logger } from './utils/logger';
 const startServer = async () => {
   try {
     // Attempt database connection
-    await connectDatabase();
+    const dbConnected = await connectDatabase();
+    if (!dbConnected) {
+      if (process.env.NODE_ENV === 'production' || env.isProduction) {
+        logger.error(
+          '[FATAL] Production startup aborted: Could not connect to real MongoDB. Set a valid MONGODB_URI in environment.'
+        );
+      } else {
+        logger.error(
+          '[FATAL] Development startup aborted: Database connection failed. Set MONGODB_URI or USE_IN_MEMORY_DB=true in .env.'
+        );
+      }
+      process.exit(1);
+    }
 
     const server = app.listen(env.PORT, '0.0.0.0', () => {
       logger.info(`=======================================================`);

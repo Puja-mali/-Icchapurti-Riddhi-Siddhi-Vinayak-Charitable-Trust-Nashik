@@ -8,6 +8,7 @@ import { apiLimiter } from './middleware/rateLimiter';
 import { errorHandler } from './middleware/errorHandler';
 import routes from './routes';
 import { sendError } from './utils/apiResponse';
+import { getDbStatus } from './config/database';
 
 export const createApp = (): Express => {
   const app = express();
@@ -96,6 +97,23 @@ export const createApp = (): Express => {
 
   // Apply general rate limiting to API routes
   app.use('/api', apiLimiter);
+
+  // Protect normal API traffic when database connection is not active
+  app.use('/api', (req: Request, res: Response, next) => {
+    // Health check endpoint is always permitted to report real system status
+    if (req.path === '/health' || req.path === '/health/') {
+      return next();
+    }
+    const db = getDbStatus();
+    if (db.status !== 'connected') {
+      return res.status(503).json({
+        success: false,
+        message: 'Database service is unavailable. Please try again later.',
+        error: 'DATABASE_UNAVAILABLE',
+      });
+    }
+    next();
+  });
 
   // Mount API modules
   app.use('/api', routes);

@@ -9,7 +9,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { authService, AuthUser, RegisterPayload, LoginPayload } from '../services/authService';
+import { authService, AuthUser, RegisterPayload, LoginPayload, isValidAuthUser } from '../services/authService';
 import { setAccessToken } from '../services/api';
 
 export interface AuthContextType {
@@ -48,8 +48,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Attempt silent refresh using secure HttpOnly cookie
         await authService.refreshToken();
         const currentUser = await authService.getMe();
-        if (isMounted && currentUser) {
+        if (isMounted && currentUser && isValidAuthUser(currentUser)) {
           setUser(currentUser);
+        } else if (isMounted) {
+          localStorage.removeItem('sct_auth_active');
+          setUser(null);
+          setAccessToken(null);
         }
       } catch {
         // Not authenticated or session expired - guest state
@@ -76,9 +80,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const response = await authService.login(credentials);
+      const user = response?.user;
+      if (!user || !isValidAuthUser(user)) {
+        throw new Error('Authentication failed: Server did not return valid user credentials.');
+      }
       localStorage.setItem('sct_auth_active', 'true');
-      setUser(response.user);
-      return response.user;
+      setUser(user);
+      return user;
     } finally {
       setIsLoading(false);
     }
@@ -88,9 +96,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const response = await authService.register(payload);
+      const user = response?.user;
+      if (!user || !isValidAuthUser(user)) {
+        throw new Error('Registration failed: Server did not return valid user credentials.');
+      }
       localStorage.setItem('sct_auth_active', 'true');
-      setUser(response.user);
-      return response.user;
+      setUser(user);
+      return user;
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +123,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshProfile = useCallback(async (): Promise<void> => {
     try {
       const updatedUser = await authService.getMe();
-      setUser(updatedUser);
+      if (updatedUser && isValidAuthUser(updatedUser)) {
+        setUser(updatedUser);
+      } else {
+        setUser(null);
+        setAccessToken(null);
+      }
     } catch {
       setUser(null);
       setAccessToken(null);

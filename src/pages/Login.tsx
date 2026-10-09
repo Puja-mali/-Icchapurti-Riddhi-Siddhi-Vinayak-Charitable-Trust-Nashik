@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Lock, Mail, Eye, EyeOff, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
@@ -10,7 +10,7 @@ import { ApiError } from "@/src/services/api";
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const { trustProfile } = useTrust();
   const { t } = useLanguage();
 
@@ -19,6 +19,22 @@ export const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // If already authenticated, redirect to destination
+  useEffect(() => {
+    if (user) {
+      const fromPath = (location.state as any)?.from?.pathname;
+      if (fromPath && fromPath !== "/login") {
+        navigate(fromPath, { replace: true });
+      } else if (user.role === "ADMIN" || user.role === "STAFF") {
+        navigate("/admin", { replace: true });
+      } else if (user.role === "VOLUNTEER") {
+        navigate("/volunteer-portal", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    }
+  }, [user, navigate, location.state]);
 
   const trustName = trustProfile?.trustName || "Siddhivinayak Charitable Trust";
 

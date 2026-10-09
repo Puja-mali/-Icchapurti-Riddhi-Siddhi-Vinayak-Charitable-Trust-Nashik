@@ -13,6 +13,12 @@ import { api, setAccessToken, getAccessToken } from './api';
 
 export type UserRole = 'ADMIN' | 'STAFF' | 'VOLUNTEER' | 'DONOR';
 
+export const VALID_ROLES: readonly UserRole[] = ['ADMIN', 'STAFF', 'VOLUNTEER', 'DONOR'] as const;
+
+export const isValidUserRole = (role: unknown): role is UserRole => {
+  return typeof role === 'string' && VALID_ROLES.includes(role as UserRole);
+};
+
 export interface AuthUser {
   id: string;
   name: string;
@@ -23,6 +29,29 @@ export interface AuthUser {
   isEmailVerified: boolean;
   createdAt?: string;
 }
+
+export const isValidAuthUser = (candidate: unknown): candidate is AuthUser => {
+  if (!candidate || typeof candidate !== 'object') return false;
+  const obj = candidate as Record<string, unknown>;
+  const id = obj.id || obj._id;
+  if (!id || typeof id !== 'string') return false;
+  if (typeof obj.email !== 'string' || !obj.email.includes('@')) return false;
+  if (!isValidUserRole(obj.role)) return false;
+  return true;
+};
+
+export const normalizeAuthUser = (candidate: any): AuthUser => {
+  return {
+    id: String(candidate.id || candidate._id || ''),
+    name: typeof candidate.name === 'string' && candidate.name.trim() ? candidate.name.trim() : 'Trust Member',
+    email: String(candidate.email || '').toLowerCase().trim(),
+    phone: typeof candidate.phone === 'string' ? candidate.phone : undefined,
+    role: isValidUserRole(candidate.role) ? candidate.role : 'DONOR',
+    isActive: candidate.isActive !== false,
+    isEmailVerified: Boolean(candidate.isEmailVerified),
+    createdAt: candidate.createdAt ? String(candidate.createdAt) : undefined,
+  };
+};
 
 export interface RegisterPayload {
   name: string;
@@ -49,7 +78,7 @@ export const authService = {
    * Register a new user (Strictly DONOR or VOLUNTEER)
    */
   async register(data: RegisterPayload): Promise<AuthResponseData> {
-    const response = await api.post<AuthResponseData>('/auth/register', {
+    const response = await api.post<any>('/auth/register', {
       name: data.name.trim(),
       email: data.email.toLowerCase().trim(),
       phone: data.phone?.trim() || '',
@@ -58,45 +87,73 @@ export const authService = {
       role: data.role,
     });
 
-    if (response?.accessToken) {
-      setAccessToken(response.accessToken);
+    const rawUser = response?.user || response?.data?.user;
+    if (!rawUser || !isValidAuthUser(rawUser)) {
+      throw new Error('Registration failed: Server did not return a valid user identity.');
     }
 
-    return response;
+    const token = response?.accessToken || response?.data?.accessToken;
+    if (token) {
+      setAccessToken(token);
+    }
+
+    return {
+      user: normalizeAuthUser(rawUser),
+      accessToken: token || '',
+      expiresIn: response?.expiresIn || response?.data?.expiresIn || '15m',
+    };
   },
 
   /**
    * Authenticate an existing user
    */
   async login(credentials: LoginPayload): Promise<AuthResponseData> {
-    const response = await api.post<AuthResponseData>('/auth/login', {
+    const response = await api.post<any>('/auth/login', {
       email: credentials.email.toLowerCase().trim(),
       password: credentials.password,
     });
 
-    if (response?.accessToken) {
-      setAccessToken(response.accessToken);
+    const rawUser = response?.user || response?.data?.user;
+    if (!rawUser || !isValidAuthUser(rawUser)) {
+      throw new Error('Authentication failed: Server did not return a valid user identity.');
     }
 
-    return response;
+    const token = response?.accessToken || response?.data?.accessToken;
+    if (token) {
+      setAccessToken(token);
+    }
+
+    return {
+      user: normalizeAuthUser(rawUser),
+      accessToken: token || '',
+      expiresIn: response?.expiresIn || response?.data?.expiresIn || '15m',
+    };
   },
 
   /**
    * Retrieve current user profile via short-lived token
    */
-  async getMe(): Promise<AuthUser> {
-    const response = await api.get<{ user: AuthUser }>('/auth/me');
-    return response.user;
+  async getMe(): Promise<AuthUser | null> {
+    const response = await api.get<any>('/auth/me');
+    if (!response) {
+      return null;
+    }
+    const rawUser = response?.user || response?.data?.user || (isValidAuthUser(response) ? response : null);
+    if (!rawUser || !isValidAuthUser(rawUser)) {
+      return null;
+    }
+    return normalizeAuthUser(rawUser);
   },
 
   /**
    * Silent token refresh using HttpOnly cookie
    */
   async refreshToken(): Promise<string> {
-    const response = await api.post<{ accessToken: string }>('/auth/refresh', {});
-    if (response?.accessToken) {
-      setAccessToken(response.accessToken);
-      return response.accessToken;
+    const response = await api.post<any>('/auth/refresh', {});
+    const token = response?.accessToken || response?.data?.accessToken;
+    if (token) {
+      setAccessToken(token);
+      return token;
     }
     throw new Error('Failed to retrieve new access token');
   },

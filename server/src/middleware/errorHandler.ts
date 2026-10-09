@@ -54,7 +54,7 @@ export const errorHandler = (
     ))
   ) {
     logger.warn(`[AI Studio] Database offline — returning fallback response: ${err.message}`);
-    if (req.method === 'GET') {
+    if (req.method === 'GET' && !req.originalUrl.includes('/api/auth/')) {
       const isPlural = req.path.endsWith('s') || req.path.endsWith('s/');
       return res.json(isPlural ? [] : {});
     }

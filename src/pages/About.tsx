@@ -112,8 +112,8 @@ const shouldReduceMotion = useReducedMotion() ?? false;
         {/* HEADER */}
         <motion.section {...reveal} transition={transition} viewport={{ once: true, amount: 0.15 }}>
           <PageHeader
-            badge={t.about}
-            badgeIcon={<ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />}
+            kicker={t.about}
+            badgeIcon={<ShieldCheck className="h-3.5 w-3.5 text-amber-700" />}
             title={t.title}
             description={t.description}
           />

@@ -13,6 +13,7 @@
     "seed-trust-data": "tsx server/src/scripts/seedRealTrustData.ts",
     "test:e2e": "tsx server/src/scripts/runE2EReadinessSuite.ts",
     "test:admin": "tsx server/src/scripts/testAdminSummary.ts",
+    "test:db": "tsx server/src/scripts/testDatabaseStartup.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

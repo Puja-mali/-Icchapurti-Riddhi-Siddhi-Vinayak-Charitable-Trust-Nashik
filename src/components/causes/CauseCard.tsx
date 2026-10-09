@@ -38,30 +38,32 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
           />
 
           {/* Smooth subtle overlay on hover */}
-          <div className="absolute inset-0 bg-stone-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          <div className="absolute inset-0 bg-stone-950/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-          {/* Top badges */}
-          <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
-            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-950/85 text-emerald-100 shadow-2xs backdrop-blur-xs border border-emerald-800/40">
-              {cause.category}
-            </span>
+          {/* Bottom gradient with authentic unboxed metadata */}
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-stone-950/85 via-stone-950/40 to-transparent p-3 pt-6 flex items-center justify-between text-white text-xs">
+            <div className="flex items-center gap-1.5 text-[11px] font-medium text-stone-200 truncate">
+              <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
+              <span className="truncate">{cause.location}</span>
+            </div>
             {cause.urgent && (
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-600 text-white shadow-2xs border border-amber-400/40">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-black/50 px-2 py-0.5 rounded border border-amber-400/40 shrink-0">
                 Urgent Seva
               </span>
             )}
-          </div>
-
-          {/* Location pill on bottom left */}
-          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white text-xs font-medium bg-stone-950/80 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10 shadow-xs">
-            <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
-            <span className="truncate max-w-[200px] text-[11px]">{cause.location}</span>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-5 sm:p-6 pb-4">
-          <h3 className="text-base sm:text-lg font-serif font-bold text-stone-900 group-hover:text-[#14532d] transition-colors line-clamp-2 leading-snug">
+          {/* Unboxed category kicker */}
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-800/90 mb-1.5 flex items-center gap-2">
+            <span>{cause.category}</span>
+            <span aria-hidden="true" className="text-stone-300">·</span>
+            <span className="text-stone-500 font-normal normal-case">Verified Initiative</span>
+          </div>
+
+          <h3 className="text-base sm:text-lg font-serif font-bold text-stone-900 group-hover:text-stone-950 transition-colors line-clamp-2 leading-snug">
             <Link to={`/causes/${cause.id}`}>{cause.title}</Link>
           </h3>
           <p className="text-xs sm:text-sm text-stone-600 mt-2 line-clamp-2 leading-relaxed">
@@ -83,7 +85,7 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
 
                 <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
                   <motion.div
-                    className="bg-gradient-to-r from-emerald-700 to-emerald-600 h-full rounded-full"
+                    className="bg-gradient-to-r from-amber-600 via-amber-500 to-emerald-700 h-full rounded-full"
                     initial={{ width: 0 }}
                     whileInView={{ width: `${percentage}%` }}
                     viewport={{ once: true }}
@@ -92,7 +94,7 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
                 </div>
 
                 <div className="flex justify-between items-center text-[11px] text-stone-500 pt-0.5">
-                  <span className="font-semibold text-[#14532d]">{percentage}% Accounted</span>
+                  <span className="font-semibold text-stone-800">{percentage}% Accounted</span>
                   {cause.donorCount > 0 ? (
                     <span className="flex items-center gap-1">
                       <Users className="w-3 h-3 text-stone-400" />

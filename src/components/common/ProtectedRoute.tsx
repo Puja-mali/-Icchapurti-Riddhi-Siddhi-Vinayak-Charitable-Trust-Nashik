@@ -46,7 +46,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // If not authenticated, redirect to Login preserving redirect path
   if (!isAuthenticated || !user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    const loginTarget = location.pathname.startsWith('/admin') ? '/admin/login' : '/login';
+    return <Navigate to={loginTarget} state={{ from: location }} replace />;
   }
 
   // Check Role authorization if specific roles are required

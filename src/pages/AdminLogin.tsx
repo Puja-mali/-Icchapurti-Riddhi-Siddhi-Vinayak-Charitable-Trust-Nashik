@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Lock, Mail, Eye, EyeOff, ArrowRight, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
@@ -9,7 +9,7 @@ import { ApiError } from "@/src/services/api";
 export const AdminLogin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, user } = useAuth();
+  const { login, logout, user } = useAuth();
   const { trustProfile } = useTrust();
 
   const [email, setEmail] = useState("");
@@ -17,6 +17,14 @@ export const AdminLogin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // If already logged in as ADMIN or STAFF, redirect immediately
+  useEffect(() => {
+    if (user && (user.role === "ADMIN" || user.role === "STAFF")) {
+      const fromPath = (location.state as any)?.from?.pathname;
+      navigate(fromPath && fromPath !== "/admin/login" ? fromPath : "/admin", { replace: true });
+    }
+  }, [user, navigate, location.state]);
 
   const trustName = trustProfile?.trustName || "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik";
 
@@ -39,10 +47,11 @@ export const AdminLogin: React.FC = () => {
         const fromPath = (location.state as any)?.from?.pathname;
         navigate(fromPath && fromPath !== "/admin/login" ? fromPath : "/admin", { replace: true });
       } else {
+        await logout();
         setErrorMessage(
           "Access denied: Your account is registered with the role of '" +
             loggedUser.role +
-            "', which does not have administration privileges. Please sign in at the standard donor dashboard."
+            "', which does not have administrative privileges. Please sign in at the standard donor dashboard."
         );
       }
     } catch (err: any) {
@@ -61,28 +70,28 @@ export const AdminLogin: React.FC = () => {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-stone-900 text-amber-200 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-900 text-amber-200 text-xs font-semibold shadow-xs">
             <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
             <span>Trust Administration Desk</span>
           </div>
-          <h1 className="text-2xl font-serif font-bold text-stone-900 pt-1">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-stone-900 pt-1">
             Secretariat & Board Login
           </h1>
-          <p className="text-xs text-stone-600 max-w-sm mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-stone-600 max-w-sm mx-auto leading-relaxed">
             Private management portal for {trustName}. Authorized personnel and trustees only.
           </p>
         </div>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-md text-xs text-rose-800 flex items-start gap-2.5">
+          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-start gap-2.5 shadow-2xs">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <div className="leading-relaxed">{errorMessage}</div>
           </div>
         )}
 
         {/* Card */}
-        <div className="bg-white rounded-md p-6 sm:p-7 border border-stone-200 shadow-2xs">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200/90 shadow-sm">
           <form onSubmit={handleAdminLogin} className="space-y-4 text-xs sm:text-sm">
             <div>
               <label className="font-semibold text-stone-700 block mb-1">
@@ -97,7 +106,7 @@ export const AdminLogin: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@trust.org"
-                  className="w-full pl-8 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] disabled:opacity-60"
+                  className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all disabled:opacity-60"
                 />
               </div>
             </div>
@@ -115,7 +124,7 @@ export const AdminLogin: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-8 pr-9 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] disabled:opacity-60"
+                  className="w-full pl-8 pr-9 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all disabled:opacity-60"
                 />
                 <button
                   type="button"
@@ -133,7 +142,7 @@ export const AdminLogin: React.FC = () => {
                 size="md"
                 variant="primary"
                 disabled={isLoading}
-                className="w-full font-semibold bg-[#14532d] hover:bg-[#0f4023]"
+                className="w-full font-semibold rounded-xl bg-[#14532d] hover:bg-[#0f4023] shadow-xs"
                 rightIcon={isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
               >
                 {isLoading ? "Verifying Credentials..." : "Authenticate as Admin"}

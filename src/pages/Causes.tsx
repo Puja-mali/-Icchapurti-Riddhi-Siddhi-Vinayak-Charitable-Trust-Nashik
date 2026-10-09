@@ -145,60 +145,22 @@ export const Causes: React.FC = () => {
   ]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#F7F3E9]">
-      {/* ================================================================ */}
-      {/* Pinterest-style soft background                                  */}
-      {/* ================================================================ */}
+    <div className="relative min-h-screen overflow-hidden bg-[#faf8f5]">
+      {/* Subtle warm stone architectural texture overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d6c9b3_1px,transparent_1px)] [background-size:24px_24px] opacity-25" />
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Soft sage glow - top left */}
-        <div className="absolute -left-40 top-10 h-[420px] w-[420px] rounded-full bg-[#DDE9D8]/50 blur-3xl" />
-
-        {/* Soft warm gold glow - top right */}
-        <div className="absolute -right-40 top-40 h-[460px] w-[460px] rounded-full bg-[#EBDDBD]/40 blur-3xl" />
-
-        {/* Soft green glow - middle */}
-        <div className="absolute left-[35%] top-[42%] h-[360px] w-[360px] rounded-full bg-[#E7EEE1]/45 blur-3xl" />
-
-        {/* Soft gold glow - bottom */}
-        <div className="absolute -bottom-40 right-[10%] h-[420px] w-[420px] rounded-full bg-[#EFE2C5]/35 blur-3xl" />
-
-        {/* ============================================================ */}
-        {/* Subtle botanical decorations                                  */}
-        {/* ============================================================ */}
-
-        <Leaf className="absolute left-4 top-40 h-32 w-32 -rotate-12 text-[#789270]/10 sm:left-8 sm:h-44 sm:w-44" />
-
-        <Leaf className="absolute left-16 top-[48%] h-24 w-24 rotate-[35deg] text-[#789270]/[0.07]" />
-
-        <Leaf className="absolute right-4 top-[28%] h-40 w-40 rotate-[18deg] text-[#9B844C]/[0.08] sm:right-10 sm:h-52 sm:w-52" />
-
-        <Leaf className="absolute right-20 bottom-[18%] h-32 w-32 -rotate-[25deg] text-[#789270]/[0.07]" />
-
-        <Leaf className="absolute bottom-10 left-[42%] h-28 w-28 rotate-[15deg] text-[#9B844C]/[0.06]" />
-
-        {/* Very subtle curved decorative rings */}
-        <div className="absolute -left-24 top-[35%] h-72 w-72 rounded-full border border-[#7E9477]/[0.07]" />
-
-        <div className="absolute -right-28 bottom-[28%] h-80 w-80 rounded-full border border-[#B89A55]/[0.07]" />
-      </div>
-
-      {/* ================================================================ */}
-      {/* Main Content                                                      */}
-      {/* ================================================================ */}
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-14 lg:px-8">
-        {/* ============================================================ */}
-        {/* 1. Page Header                                                */}
-        {/* ============================================================ */}
-
+      {/* Main Content */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        {/* 1. Cinematic Page Header with authentic Nashik field photo */}
         <PageHeader
-          badge={
+          variant="cinematic"
+          backgroundImage="/activities/Community Aid Distribution Under the Trees.png"
+          kicker={
             language === "mr"
-              ? "सक्रिय सेवा प्रकल्प"
+              ? "नाशिक सेवा प्रकल्प · नोंदणी क्र. E-9389"
               : language === "hi"
-              ? "सक्रिय सेवा प्रकल्प"
-              : "Active Service Programs"
+              ? "नासिक सेवा प्रकल्प · पंजीकरण सं. E-9389"
+              : "Nashik Community Seva · Reg. E-9389 / Nashik"
           }
           title={
             language === "mr"
@@ -212,19 +174,13 @@ export const Causes: React.FC = () => {
               ? "खालीलपैकी कोणत्याही सामाजिक उपक्रमासाठी थेट सहकार्य करा. सर्व देणग्यांचे अधिकृत रेकॉर्ड व पावती प्रदान केली जाते."
               : language === "hi"
               ? "ट्रस्ट के विभिन्न सेवा उपक्रमों में सहभागी बनें। सभी योगदानों की आधिकारिक रसीद एवं पारदर्शी हिसाब उपलब्ध रहता है।"
-              : "Select an active community initiative below. Contributions support direct program procurement and community assistance in Nashik."
+              : "Direct, transparent grassroots programs across Nashik district. Every contribution is allocated to verified procurement, field execution, and auditable donor receipts."
           }
         />
 
-        {/* ============================================================ */}
-        {/* 2. Search & Filter                                            */}
-        {/* ============================================================ */}
-
-        <div className="relative overflow-hidden rounded-2xl border border-[#E4DDCF] bg-[#FFFDF8]/90 p-5 shadow-[0_10px_35px_rgba(72,86,63,0.06)] backdrop-blur-sm sm:p-6">
-          {/* tiny decorative background */}
-          <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#E6EDDF]/50 blur-2xl" />
-
-          <div className="relative z-10 space-y-4">
+        {/* 2. Editorial Search & Segmented Filter Bar */}
+        <div className="relative overflow-hidden rounded-2xl border border-stone-200/90 bg-white/95 p-4 sm:p-5 shadow-xs backdrop-blur-sm">
+          <div className="relative z-10 space-y-3.5">
             {/* Search input & Urgent toggle */}
             <div className="flex flex-col items-center gap-3 sm:flex-row">
               <div className="relative w-full flex-1">
@@ -241,7 +197,7 @@ export const Causes: React.FC = () => {
                   onChange={(e) =>
                     setSearchQuery(e.target.value)
                   }
-                  className="w-full rounded-xl border border-[#E3DDD2] bg-[#F8F5ED]/80 py-2.5 pl-10 pr-4 text-xs text-stone-900 placeholder:text-stone-400 transition-all focus:border-[#718D6B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#14532d]/20 sm:text-sm"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50/70 py-2.5 pl-10 pr-4 text-xs text-stone-900 placeholder:text-stone-400 transition-all focus:border-stone-400 focus:bg-white focus:outline-none focus:ring-1 focus:ring-amber-500/30 sm:text-sm"
                 />
               </div>
 
@@ -252,8 +208,8 @@ export const Causes: React.FC = () => {
                 }
                 className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-semibold transition-all sm:w-auto ${
                   urgentOnly
-                    ? "border-amber-300 bg-amber-50 text-amber-900 shadow-sm"
-                    : "border-[#E3DDD2] bg-[#F8F5ED] text-stone-700 hover:bg-[#F1EEE6]"
+                    ? "border-amber-400 bg-amber-50 text-amber-950 shadow-xs"
+                    : "border-stone-200 bg-stone-50/80 text-stone-700 hover:bg-stone-100"
                 }`}
               >
                 <AlertCircle
@@ -272,8 +228,8 @@ export const Causes: React.FC = () => {
               </button>
             </div>
 
-            {/* Category Pills */}
-            <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+            {/* Category Segmented Tabs */}
+            <div className="no-scrollbar flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
               {CATEGORIES.map((cat) => {
                 const isSelected =
                   selectedCategory === cat;
@@ -285,10 +241,10 @@ export const Causes: React.FC = () => {
                     onClick={() =>
                       setSelectedCategory(cat)
                     }
-                    className={`whitespace-nowrap rounded-full border px-4 py-1.5 font-medium transition-all ${
+                    className={`whitespace-nowrap rounded-xl px-3.5 py-1.5 font-medium transition-all cursor-pointer ${
                       isSelected
-                        ? "border-[#14532d] bg-[#14532d] font-semibold text-white shadow-sm"
-                        : "border-[#E3DDD2] bg-[#FAF8F2]/90 text-stone-700 hover:border-[#B9CBB3] hover:bg-[#EDF3E9] hover:text-[#285B3D]"
+                        ? "bg-stone-900 font-semibold text-white shadow-xs"
+                        : "bg-stone-100/80 text-stone-700 hover:bg-stone-200/80 hover:text-stone-900"
                     }`}
                   >
                     {getCategoryLabel(cat)}

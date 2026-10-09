@@ -11,6 +11,7 @@ export const env = {
   PORT: parseInt(process.env.PORT || '5000', 10),
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
   MONGODB_URI: process.env.MONGODB_URI || '',
+  USE_IN_MEMORY_DB: process.env.USE_IN_MEMORY_DB === 'true',
   JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || 'dev_jwt_access_fallback_secret_key_siddhivinayak',
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || 'dev_jwt_refresh_fallback_secret_key_siddhivinayak',
   JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
