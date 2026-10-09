@@ -117,15 +117,15 @@ export const Transparency: React.FC = () => {
               hospital payment, and grain delivery note is cross-checked against independent field inspections.
             </p>
             <div className="grid grid-cols-3 gap-3 pt-2 text-xs">
-              <div className="bg-white/10 p-2.5 rounded border border-emerald-700/40">
+              <div className="bg-white/10 p-2.5 rounded-xl border border-emerald-700/40">
                 <div className="font-bold text-amber-300">92.4%</div>
                 <div className="text-[11px] text-emerald-200">Programs & Beneficiaries</div>
               </div>
-              <div className="bg-white/10 p-2.5 rounded border border-emerald-700/40">
+              <div className="bg-white/10 p-2.5 rounded-xl border border-emerald-700/40">
                 <div className="font-bold text-white">4.8%</div>
                 <div className="text-[11px] text-emerald-200">Audits & Inspections</div>
               </div>
-              <div className="bg-white/10 p-2.5 rounded border border-emerald-700/40">
+              <div className="bg-white/10 p-2.5 rounded-xl border border-emerald-700/40">
                 <div className="font-bold text-white">2.8%</div>
                 <div className="text-[11px] text-emerald-200">{t.transparency.adminExpenses}</div>
               </div>
@@ -267,17 +267,17 @@ export const Transparency: React.FC = () => {
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                         {rep.financialYear}
                       </span>
                       {rep.reportType && (
-                        <span className="text-[10px] font-semibold text-stone-600 bg-stone-100 px-2 py-0.5 rounded border border-stone-200">
+                        <span className="text-[10px] font-semibold text-stone-600 bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200">
                           {rep.reportType}
                         </span>
                       )}
                       {rep.isFeatured && (
-                        <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                        <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
                           ★ Featured
                         </span>
                       )}
@@ -341,7 +341,7 @@ export const Transparency: React.FC = () => {
                         href={rep.fileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs px-3 h-8 rounded-md bg-[#14532d] hover:bg-[#0f4023] text-white font-medium shadow-xs transition-colors"
+                        className="inline-flex items-center gap-1 text-xs px-3 h-8 rounded-xl bg-[#14532d] hover:bg-[#0f4023] text-white font-medium shadow-xs transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>{t.transparency.viewDocument}</span>

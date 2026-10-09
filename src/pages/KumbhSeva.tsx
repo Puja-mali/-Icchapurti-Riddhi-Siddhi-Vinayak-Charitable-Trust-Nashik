@@ -288,8 +288,8 @@ export const KumbhSeva: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-cyan-50 text-cyan-700 flex items-center justify-center border border-cyan-200">
+          <div className="bg-white p-6 rounded-2xl border border-stone-200/90 shadow-xs hover:border-emerald-700/40 hover:shadow-md transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center border border-cyan-200">
               <Droplets className="w-5 h-5" />
             </div>
             <h3 className="font-serif font-bold text-base text-stone-900">
@@ -300,8 +300,8 @@ export const KumbhSeva: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200">
+          <div className="bg-white p-6 rounded-2xl border border-stone-200/90 shadow-xs hover:border-amber-700/40 hover:shadow-md transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200">
               <Utensils className="w-5 h-5" />
             </div>
             <h3 className="font-serif font-bold text-base text-stone-900">
@@ -312,8 +312,8 @@ export const KumbhSeva: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center border border-rose-200">
+          <div className="bg-white p-6 rounded-2xl border border-stone-200/90 shadow-xs hover:border-rose-700/40 hover:shadow-md transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center border border-rose-200">
               <Heart className="w-5 h-5" />
             </div>
             <h3 className="font-serif font-bold text-base text-stone-900">
@@ -324,8 +324,8 @@ export const KumbhSeva: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200">
+          <div className="bg-white p-6 rounded-2xl border border-stone-200/90 shadow-xs hover:border-emerald-700/40 hover:shadow-md transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h3 className="font-serif font-bold text-base text-stone-900">
@@ -474,7 +474,7 @@ export const KumbhSeva: React.FC = () => {
             {events.map((event) => (
               <div
                 key={event.id || event._id}
-                className="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-2xs flex flex-col sm:flex-row"
+                className="bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:shadow-md hover:border-emerald-700/40 transition-all flex flex-col sm:flex-row"
               >
                 {event.imageUrl && (
                   <div className="sm:w-2/5 aspect-16/10 sm:aspect-auto">
@@ -511,7 +511,7 @@ export const KumbhSeva: React.FC = () => {
                       {event.registeredCount || event.registrationCount || 0} / {event.capacity || event.registrationLimit || "Open"} {t.kumbh.registeredCount}
                     </span>
                     <Link to={`/events/${event.slug || event.id || event._id}`}>
-                      <Button size="sm" variant="outline" className="text-xs px-3 h-8">
+                      <Button size="sm" variant="outline" className="text-xs px-3 h-8 rounded-xl">
                         {t.kumbh.eventDetails}
                       </Button>
                     </Link>
@@ -549,7 +549,7 @@ export const KumbhSeva: React.FC = () => {
             {announcements.map((post) => (
               <article
                 key={post.id || post._id}
-                className="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-2xs flex flex-col justify-between"
+                className="bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:shadow-md hover:border-emerald-700/40 transition-all flex flex-col justify-between"
               >
                 <div>
                   {post.coverImage && (
@@ -564,7 +564,7 @@ export const KumbhSeva: React.FC = () => {
                   )}
                   <div className="p-5 space-y-2">
                     <div className="flex items-center gap-2 text-xs text-stone-500">
-                      <span className="font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      <span className="font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                         {post.category || "Kumbh Seva"}
                       </span>
                       <span>•</span>
@@ -598,7 +598,7 @@ export const KumbhSeva: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="py-12 px-4 bg-stone-50 rounded-xl border border-stone-200 text-center space-y-2">
+          <div className="py-12 px-4 bg-stone-50 rounded-2xl border border-stone-200 text-center space-y-2">
             <Newspaper className="w-6 h-6 text-stone-400 mx-auto" />
             <p className="text-xs text-stone-600 max-w-sm mx-auto">
               {t.kumbh.emptyAnnouncements}
@@ -633,7 +633,7 @@ export const KumbhSeva: React.FC = () => {
             {gallery.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-2xs group"
+                className="bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:shadow-md hover:border-emerald-700/40 transition-all group"
               >
                 <div className="aspect-16/10 overflow-hidden bg-stone-100">
                   <img

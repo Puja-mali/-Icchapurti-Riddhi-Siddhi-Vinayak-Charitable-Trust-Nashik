@@ -12,19 +12,19 @@ const router = Router();
 router.get(
   '/dashboard/summary',
   authenticate,
-  authorize('ADMIN'),
+  authorize('ADMIN', 'STAFF'),
   AdminController.getDashboardSummary
 );
 
 /**
  * @route   GET /api/admin/settings
  * @desc    Retrieve site settings including module configuration
- * @access  Private (Strictly ADMIN only)
+ * @access  Private (ADMIN or STAFF)
  */
 router.get(
   '/settings',
   authenticate,
-  authorize('ADMIN'),
+  authorize('ADMIN', 'STAFF'),
   AdminController.getSettings
 );
 
@@ -36,7 +36,7 @@ router.get(
 router.patch(
   '/settings/kumbh-mode',
   authenticate,
-  authorize('ADMIN'),
+  authorize('ADMIN', 'STAFF'),
   AdminController.updateKumbhMode
 );
 

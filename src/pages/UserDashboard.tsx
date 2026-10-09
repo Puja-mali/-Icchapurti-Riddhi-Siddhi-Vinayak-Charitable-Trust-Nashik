@@ -67,13 +67,13 @@ export const UserDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-8">
       {/* Donor Welcome Banner */}
-      <div className="bg-gradient-to-r from-[#143d2c] to-[#0c271c] text-white rounded-xl p-6 sm:p-8 border border-emerald-800 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-md">
+      <div className="bg-gradient-to-r from-[#143d2c] to-[#0c271c] text-white rounded-2xl p-6 sm:p-8 border border-emerald-800 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-md">
         <div className="space-y-2 z-10 max-w-xl">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber-300 bg-black/40 px-2.5 py-0.5 rounded border border-amber-300/30">
+            <span className="text-xs font-semibold uppercase tracking-wider text-amber-300 bg-black/40 px-2.5 py-0.5 rounded-full border border-amber-300/30">
               Donor Portal
             </span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-700/60 flex items-center gap-1">
+            <span className="text-xs font-semibold uppercase tracking-wider text-emerald-300 bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-700/60 flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               Verified Profile
             </span>
@@ -91,7 +91,7 @@ export const UserDashboard: React.FC = () => {
             <Button
               size="md"
               variant="outline"
-              className="bg-black/30 hover:bg-black/50 text-amber-300 hover:text-amber-200 font-semibold text-xs border border-amber-300/40 cursor-pointer"
+              className="bg-black/30 hover:bg-black/50 text-amber-300 hover:text-amber-200 font-semibold text-xs border border-amber-300/40 cursor-pointer rounded-xl"
               leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
             >
               AI Allocation Advisor
@@ -100,7 +100,7 @@ export const UserDashboard: React.FC = () => {
           <Link to="/donate">
             <Button
               size="md"
-              className="bg-[#14532d] hover:bg-[#0f4023] text-white font-semibold text-xs border border-emerald-600/40 cursor-pointer"
+              className="bg-[#14532d] hover:bg-[#0f4023] text-white font-semibold text-xs border border-emerald-600/40 cursor-pointer rounded-xl"
               leftIcon={<Heart className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />}
             >
               Make New Contribution
@@ -111,7 +111,7 @@ export const UserDashboard: React.FC = () => {
 
       {/* Metric Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-md border border-stone-200 shadow-2xs">
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-xs">
           <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
             Total Contributions
           </div>
@@ -124,7 +124,7 @@ export const UserDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-md border border-stone-200 shadow-2xs">
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-xs">
           <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
             Verified Receipts
           </div>
@@ -136,7 +136,7 @@ export const UserDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-md border border-stone-200 shadow-2xs">
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-xs">
           <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
             Eligible Contribution Total
           </div>
@@ -148,7 +148,7 @@ export const UserDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-md border border-stone-200 shadow-2xs">
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-xs">
           <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
             Audit Reconciliation
           </div>
@@ -163,7 +163,7 @@ export const UserDashboard: React.FC = () => {
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4 rounded-md bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center gap-2">
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
           <span>{error}</span>
         </div>
@@ -175,7 +175,7 @@ export const UserDashboard: React.FC = () => {
       </section>
 
       {/* Historical Contribution Table */}
-      <div className="bg-white rounded-md border border-stone-200 shadow-2xs overflow-hidden">
+      <div className="bg-white rounded-2xl border border-stone-200/90 shadow-xs overflow-hidden">
         <div className="p-5 border-b border-stone-100 flex justify-between items-center bg-white">
           <div>
             <h2 className="text-base font-serif font-bold text-stone-900">

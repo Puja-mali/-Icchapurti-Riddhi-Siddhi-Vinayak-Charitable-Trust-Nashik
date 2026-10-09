@@ -180,7 +180,7 @@ export const VolunteerPortal: React.FC = () => {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-serif font-bold text-white">{volunteerName}</h1>
-                <span className="bg-emerald-950 text-emerald-300 text-[11px] px-2 py-0.5 rounded border border-emerald-700 font-medium">
+                <span className="bg-emerald-950 text-emerald-300 text-[11px] px-2.5 py-0.5 rounded-full border border-emerald-700 font-medium">
                   Verified Sevadar
                 </span>
               </div>
@@ -188,9 +188,9 @@ export const VolunteerPortal: React.FC = () => {
                 Volunteer ID: <span className="font-mono text-amber-300 font-semibold">{volunteerCode}</span> • Member Since {user?.createdAt ? new Date(user.createdAt).getFullYear() : "2025"}
               </p>
               <div className="flex items-center gap-2 pt-1 text-xs">
-                <span className="bg-white/10 px-2 py-0.5 rounded text-[11px]">Primary: {primaryFocus}</span>
+                <span className="bg-white/10 px-2.5 py-0.5 rounded-full text-[11px]">Primary: {primaryFocus}</span>
                 {isKumbh && (
-                  <span className="bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded text-[11px]">
+                  <span className="bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-0.5 rounded-full text-[11px]">
                     Kumbh 2027 Registered Sevadar
                   </span>
                 )}
@@ -282,10 +282,10 @@ export const VolunteerPortal: React.FC = () => {
               {shifts.map((s) => (
                 <div
                   key={s.id || s._id}
-                  className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs flex items-center justify-between hover:border-emerald-700/40 transition-colors text-xs"
+                  className="bg-white p-4.5 rounded-2xl border border-stone-200/90 shadow-xs flex items-center justify-between hover:border-emerald-700/40 hover:shadow-md transition-all text-xs"
                 >
                   <div className="space-y-1">
-                    <div className="font-semibold text-stone-900 text-sm">{s.roleTitle || s.role}</div>
+                    <div className="font-semibold text-stone-900 text-sm font-serif">{s.roleTitle || s.role}</div>
                     <div className="text-stone-500 flex items-center gap-2">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3 text-stone-400" />
@@ -309,7 +309,7 @@ export const VolunteerPortal: React.FC = () => {
                       +{s.hours} Hours
                     </div>
                     <span
-                      className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                      className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${
                         s.status === "COMPLETED" || s.status === "Completed & Verified" || s.status === "Completed"
                           ? "text-emerald-800 bg-emerald-50 border-emerald-200"
                           : s.status === "SCHEDULED" || s.status === "Scheduled"
@@ -355,7 +355,7 @@ export const VolunteerPortal: React.FC = () => {
               {certificates.map((cert) => (
                 <div
                   key={cert.id || cert._id}
-                  className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs space-y-2 hover:border-amber-400/60 transition-colors"
+                  className="bg-white p-4.5 rounded-2xl border border-stone-200/90 shadow-xs space-y-2 hover:border-amber-400/60 hover:shadow-md transition-all"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -366,7 +366,7 @@ export const VolunteerPortal: React.FC = () => {
                         Awarded: {cert.issuedDate || cert.issueDate} • #{cert.certificateNumber}
                       </div>
                     </div>
-                    <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
+                    <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shrink-0">
                       {cert.totalHours || cert.hoursRecorded} Hrs
                     </span>
                   </div>

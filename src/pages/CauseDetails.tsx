@@ -220,19 +220,19 @@ export const CauseDetails: React.FC = () => {
                   return (
                     <div
                       key={idx}
-                      className="flex items-start gap-3.5 p-4 rounded-md border border-stone-200 bg-white shadow-2xs"
+                      className="flex items-start gap-3.5 p-4 rounded-xl border border-stone-200/90 bg-white/90 shadow-2xs hover:border-emerald-700/30 transition-colors"
                     >
                       <div className="mt-0.5 shrink-0">
                         {isCompleted ? (
-                          <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                          <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-300">
                             <CheckCircle2 className="w-3.5 h-3.5" />
                           </div>
                         ) : isInProgress ? (
-                          <div className="w-5 h-5 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center">
+                          <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center border border-amber-300">
                             <Clock className="w-3.5 h-3.5" />
                           </div>
                         ) : (
-                          <div className="w-5 h-5 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center">
+                          <div className="w-6 h-6 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center border border-stone-200">
                             <Circle className="w-3.5 h-3.5" />
                           </div>
                         )}
@@ -271,9 +271,9 @@ export const CauseDetails: React.FC = () => {
             </div>
 
             {impactMilestones.length > 0 ? (
-              <div className="bg-stone-50 rounded-md border border-stone-200 p-5 space-y-3">
+              <div className="bg-stone-50/80 rounded-2xl border border-stone-200/90 p-5 space-y-3">
                 {impactMilestones.map((milestone, idx) => (
-                  <div key={idx} className="flex items-start gap-3 bg-white p-3 rounded border border-stone-200">
+                  <div key={idx} className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-stone-200/80 shadow-2xs">
                     <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${milestone.status === "completed" ? "text-emerald-600" : "text-stone-400"}`} />
                     <div className="space-y-0.5 text-xs">
                       <div className="font-semibold text-stone-900">{milestone.title}</div>
@@ -283,7 +283,7 @@ export const CauseDetails: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="bg-stone-50 rounded-md border border-stone-200 p-5 text-xs text-stone-600 leading-relaxed">
+              <div className="bg-stone-50/80 rounded-2xl border border-stone-200/90 p-5 text-xs text-stone-600 leading-relaxed">
                 Verified impact updates will be published by the Trust as records become available.
               </div>
             )}
@@ -324,7 +324,7 @@ export const CauseDetails: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="p-3.5 bg-stone-50 rounded-md border border-stone-200 space-y-1">
+              <div className="p-3.5 bg-stone-50 rounded-xl border border-stone-200/80 space-y-1">
                 <div className="text-xs font-semibold text-stone-700">Program Funding Status</div>
                 <div className="text-xs text-stone-500 italic">
                   Funding target will be published by the Trust.
@@ -343,8 +343,8 @@ export const CauseDetails: React.FC = () => {
                 <Button
                   size="md"
                   variant="primary"
-                  className="w-full text-xs sm:text-sm font-semibold"
-                  leftIcon={<Heart className="w-3.5 h-3.5 fill-current" />}
+                  className="w-full text-xs sm:text-sm font-semibold bg-[#14532d] hover:bg-[#0f4023] text-white shadow-xs rounded-xl"
+                  leftIcon={<Heart className="w-3.5 h-3.5 fill-current text-amber-300" />}
                 >
                   Donate to this Program
                 </Button>
@@ -354,7 +354,7 @@ export const CauseDetails: React.FC = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full text-xs"
+                  className="w-full text-xs rounded-xl"
                   leftIcon={<FileCheck className="w-3.5 h-3.5 text-[#14532d]" />}
                 >
                   Lookup Existing Passport
@@ -379,7 +379,7 @@ export const CauseDetails: React.FC = () => {
             </div>
 
             {/* Contribution info */}
-            <div className="p-3 bg-emerald-50/60 rounded text-[11px] text-emerald-900 border border-emerald-200/60">
+            <div className="p-3 bg-emerald-50/70 rounded-xl text-[11px] text-emerald-900 border border-emerald-200/60">
               All contributions are recorded in the trust database and tracked for transparent program impact.
             </div>
           </div>

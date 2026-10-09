@@ -126,16 +126,16 @@ export const BlogPost: React.FC = () => {
       {/* Header */}
       <header className="space-y-4">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+          <span className="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
             {post.category}
           </span>
           {post.isFeatured && (
-            <span className="bg-emerald-800 text-white text-xs font-semibold px-2.5 py-0.5 rounded">
+            <span className="bg-emerald-800 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">
               Featured Story
             </span>
           )}
           {post.isKumbhRelated && (
-            <span className="bg-amber-100 text-amber-900 border border-amber-300 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center gap-1">
+            <span className="bg-amber-100 text-amber-900 border border-amber-300 text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1">
               <Flame className="w-3.5 h-3.5 text-amber-600" />
               <span>Simhastha Kumbh 2027</span>
             </span>

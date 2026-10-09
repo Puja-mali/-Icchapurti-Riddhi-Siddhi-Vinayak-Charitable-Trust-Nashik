@@ -569,7 +569,7 @@ export const Donate: React.FC = () => {
           size="lg"
         >
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3.5 bg-emerald-50 rounded-md border border-emerald-200">
+            <div className="flex items-center gap-3 p-3.5 bg-emerald-50 rounded-xl border border-emerald-200">
               <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0" />
               <div>
                 <h4 className="font-serif font-bold text-stone-900 text-sm">
