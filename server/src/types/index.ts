@@ -4,6 +4,10 @@
 
 export type UserRole = 'ADMIN' | 'STAFF' | 'VOLUNTEER' | 'DONOR';
 
+export type InvitationRole = 'ADMIN' | 'STAFF';
+
+export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'REVOKED' | 'EXPIRED';
+
 export type CampaignStatus = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'ARCHIVED';
 
 export type CauseStatus = 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'ARCHIVED';

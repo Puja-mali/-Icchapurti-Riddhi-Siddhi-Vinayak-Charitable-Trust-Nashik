@@ -552,4 +552,65 @@ export class EmailService {
     const html = this.wrapTemplate(subject, body);
     return this.sendMail({ to: data.email, subject, html });
   }
+
+  /**
+   * 9. Administrative Invitation Email (ADMIN / STAFF Onboarding)
+   */
+  public static async sendAdminInvitationEmail(data: {
+    email: string;
+    name?: string;
+    role: 'ADMIN' | 'STAFF';
+    inviteUrl: string;
+    expiresInHours?: number;
+    invitedByName?: string;
+  }): Promise<EmailSendResult> {
+    const roleTitle = data.role === 'ADMIN' ? 'Trust Administrator' : 'Trust Staff Officer';
+    const hours = data.expiresInHours || 72;
+    const subject = `Official Trust Invitation: Authorized ${roleTitle} Access`;
+
+    const body = `
+      <div style="margin-bottom: 16px;">
+        <span class="badge" style="background-color: #fef3c7; color: #92400e;">Administrative Authorization</span>
+      </div>
+      <h2 style="margin: 0 0 16px 0; color: #0f172a; font-size: 18px;">Namaste${
+        data.name ? ` ${escapeHtml(data.name)}` : ''
+      },</h2>
+      <p>You have been formally invited${
+        data.invitedByName ? ` by <strong>${escapeHtml(data.invitedByName)}</strong>` : ''
+      } to access the administrative operations platform of <strong>Icchapurti Riddhi Siddhi Vinayak Charitable Trust</strong> as an authorized <strong>${escapeHtml(
+      roleTitle
+    )}</strong> (${data.role}).</p>
+
+      <div class="card" style="border-left: 4px solid #14532d;">
+        <p style="margin: 0; font-size: 13px;"><strong>Assigned Role:</strong> <span style="color: #14532d; font-weight: 700;">${escapeHtml(
+          roleTitle
+        )}</span></p>
+        <p style="margin: 6px 0 0 0; font-size: 13px; color: #475569;"><strong>Authorized Email:</strong> <code>${escapeHtml(
+          data.email
+        )}</code></p>
+        <p style="margin: 6px 0 0 0; font-size: 12px; color: #b45309;"><strong>Link Validity:</strong> Single-use activation valid for ${hours} hours</p>
+      </div>
+
+      <p style="font-size: 13px; color: #334155;">To activate your administrative profile and choose your secure password, click the button below:</p>
+
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${escapeHtml(
+          data.inviteUrl
+        )}" class="btn" style="color: #ffffff !important; background-color: #14532d; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Activate Account & Set Password</a>
+      </div>
+
+      <p style="font-size: 12px; color: #64748b; margin-top: 20px;">If the button does not work, copy and paste this verified link into your browser:</p>
+      <p style="font-size: 11px; word-break: break-all; color: #1e40af; background: #f1f5f9; padding: 10px; border-radius: 4px; font-family: monospace;">
+        ${escapeHtml(data.inviteUrl)}
+      </p>
+
+      <p style="font-size: 11px; color: #94a3b8; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+        Security Notice: Never forward this invitation link. Trust administrators will never ask for your password. If you did not expect this invitation, please notify trust security at contact@siddhivinayaktrust.org immediately.
+      </p>
+    `;
+
+    const html = this.wrapTemplate(subject, body);
+    return this.sendMail({ to: data.email, subject, html });
+  }
 }
+

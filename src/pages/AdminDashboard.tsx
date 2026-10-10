@@ -57,6 +57,7 @@ import { adminService, AdminDashboardSummary, AdminActivityItem } from "@/src/se
 import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
 import { TrustManagementTab } from "@/src/components/admin/TrustManagementTab";
+import { UsersManagementTab } from "@/src/components/admin/UsersManagementTab";
 import { FileUploadField } from "@/src/components/common/FileUploadField";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
@@ -118,7 +119,7 @@ export const AdminDashboard: React.FC = () => {
   const { highContrast, toggleHighContrast, userRole, setUserRole } = useTheme();
   const { user } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<"overview" | "audits" | "causes" | "events" | "blog" | "transparency" | "help" | "volunteers" | "donations" | "notifications" | "trust" | "settings">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "audits" | "causes" | "events" | "blog" | "transparency" | "help" | "volunteers" | "donations" | "notifications" | "trust" | "users" | "settings">("overview");
   const [queue, setQueue] = useState<AuditQueueItem[]>(INITIAL_QUEUE);
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
@@ -1339,6 +1340,23 @@ export const AdminDashboard: React.FC = () => {
         >
           <Building className="w-3.5 h-3.5" />
           <span>Trust Profile & Trustees</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("users")}
+          className={`pb-3 px-4 font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+            activeTab === "users"
+              ? "border-emerald-800 text-emerald-900"
+              : "border-transparent text-stone-500 hover:text-stone-800"
+          }`}
+        >
+          <Users className="w-3.5 h-3.5" />
+          <span>Users & Roles</span>
+          {user?.role === 'ADMIN' && (
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 font-bold border border-amber-300">
+              Admin
+            </span>
+          )}
         </button>
         <button
           type="button"
@@ -3962,6 +3980,11 @@ export const AdminDashboard: React.FC = () => {
             setTimeout(() => setSuccessToast(null), 3500);
           }}
         />
+      )}
+
+      {/* ================= TAB 7: USERS & ROLES MANAGEMENT ================= */}
+      {activeTab === "users" && (
+        <UsersManagementTab />
       )}
 
       {/* Help Request Review Modal */}

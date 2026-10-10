@@ -20,6 +20,22 @@ export class UserController {
         query.role = roleFilter;
       }
 
+      const statusFilter = req.query.status as string | undefined;
+      if (statusFilter === 'active') {
+        query.isActive = true;
+      } else if (statusFilter === 'deactivated') {
+        query.isActive = false;
+      }
+
+      const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+      if (search) {
+        const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        query.$or = [
+          { name: { $regex: escaped, $options: 'i' } },
+          { email: { $regex: escaped, $options: 'i' } },
+        ];
+      }
+
       const [users, total] = await Promise.all([
         User.find(query)
           .select('_id name email phone role isActive isEmailVerified createdAt')

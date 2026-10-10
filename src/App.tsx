@@ -35,6 +35,7 @@ import { VolunteerPortal } from "@/src/pages/VolunteerPortal";
 import { Gallery } from "@/src/pages/Gallery";
 import { Blog } from "@/src/pages/Blog";
 import { BlogPost } from "@/src/pages/BlogPost";
+import { AcceptInvitation } from "@/src/pages/AcceptInvitation";
 
 const AnimatedRoutes: React.FC = () => {
   const location = useLocation();
@@ -71,6 +72,7 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/accept-invitation" element={<AcceptInvitation />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route
             path="/admin"

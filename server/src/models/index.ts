@@ -15,3 +15,4 @@ export * from './SiteSettings';
 export * from './BlogPost';
 export * from './TransparencyReport';
 export * from './Notification';
+export * from './Invitation';

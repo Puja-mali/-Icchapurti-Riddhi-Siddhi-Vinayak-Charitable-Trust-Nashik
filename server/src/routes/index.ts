@@ -17,6 +17,7 @@ import publicRoutes from './public.routes';
 import aiRoutes from './ai.routes';
 import notificationRoutes from './notification.routes';
 import uploadRoutes from './upload.routes';
+import invitationRoutes from './invitation.routes';
 
 const router = Router();
 
@@ -30,6 +31,7 @@ router.use('/notifications', notificationRoutes);
 router.use('/health', healthRoutes);
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
+router.use('/invitations', invitationRoutes);
 router.use('/causes', causeRoutes);
 router.use('/events', eventRoutes);
 router.use('/blog', blogRoutes);
