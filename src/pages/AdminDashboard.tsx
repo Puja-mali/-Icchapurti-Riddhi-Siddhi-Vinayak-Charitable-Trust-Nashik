@@ -1186,14 +1186,14 @@ export const AdminDashboard: React.FC = () => {
         <div className="space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-semibold uppercase tracking-wider text-amber-300 bg-black/40 px-2.5 py-0.5 rounded border border-amber-300/30">
-              Admin & Governance Console
+              {user?.role === "STAFF" ? "Staff Operations Console" : "Admin & Governance Console"}
             </span>
             <span className="text-xs text-emerald-200">
-              Role: <strong className="font-semibold text-white uppercase">{user?.role || "ADMIN"}</strong>
+              Role: <strong className="font-semibold text-white uppercase">{user?.role || "UNVERIFIED"}</strong>
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-            Trust Operations & Verification Desk
+            {user?.role === "STAFF" ? "Staff Operations & Activity Desk" : "Trust Operations & Verification Desk"}
           </h1>
           <p className="text-xs sm:text-sm text-emerald-100/90 max-w-xl leading-relaxed">
             Authorized portal for audit certifications, direct beneficiary relief applications,
@@ -1344,23 +1344,23 @@ export const AdminDashboard: React.FC = () => {
           <Building className="w-3.5 h-3.5" />
           <span>Trust Profile & Trustees</span>
         </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("users")}
-          className={`pb-3 px-4 font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
-            activeTab === "users"
-              ? "border-emerald-800 text-emerald-900"
-              : "border-transparent text-stone-500 hover:text-stone-800"
-          }`}
-        >
-          <Users className="w-3.5 h-3.5" />
-          <span>Users & Roles</span>
-          {user?.role === 'ADMIN' && (
+        {user?.role === 'ADMIN' && (
+          <button
+            type="button"
+            onClick={() => setActiveTab("users")}
+            className={`pb-3 px-4 font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+              activeTab === "users"
+                ? "border-emerald-800 text-emerald-900"
+                : "border-transparent text-stone-500 hover:text-stone-800"
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Users & Roles</span>
             <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 font-bold border border-amber-300">
-              Admin
+              Admin Only
             </span>
-          )}
-        </button>
+          </button>
+        )}
         <button
           type="button"
           onClick={() => setActiveTab("settings")}
@@ -3962,13 +3962,13 @@ export const AdminDashboard: React.FC = () => {
               Active Session & Access Level
             </h3>
             <p className="text-xs text-stone-600">
-              Your session is authenticated with the verified database role of <span className="font-mono font-bold text-[#14532d]">{user?.role || "ADMIN"}</span>. Administrative privileges and access boundaries are strictly enforced server-side.
+              Your session is authenticated with the verified database role of <span className="font-mono font-bold text-[#14532d]">{user?.role || "UNVERIFIED"}</span>. Administrative privileges and access boundaries are strictly enforced server-side.
             </p>
             <div className="flex items-center gap-2 pt-1 text-xs text-stone-700">
               <span className="font-medium">Authenticated Account:</span>
               <span className="font-mono bg-stone-100 px-2 py-0.5 rounded border border-stone-200">{user?.email}</span>
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                Verified {user?.role || 'ADMIN'}
+                Verified {user?.role || 'User'}
               </span>
             </div>
           </div>

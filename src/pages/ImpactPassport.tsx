@@ -342,129 +342,131 @@ export const ImpactPassport: React.FC = () => {
         </div>
 
         {/* ============================================================
-            FOUR-STAGE ACCOUNTABILITY LIFECYCLE
+            FOUR-STAGE ACCOUNTABILITY LIFECYCLE (GUEST EDUCATION ONLY)
             ============================================================ */}
 
-        <motion.div
-          initial={
-            shouldReduceMotion
-              ? { opacity: 1 }
-              : { opacity: 0, y: 18 }
-          }
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.2,
-          }}
-          transition={{
-            duration: 0.55,
-          }}
-          className="relative mt-8 overflow-hidden rounded-2xl border border-[#d9d0bd] bg-gradient-to-br from-[#fffdf8] via-[#faf7ee] to-[#edf3e9] p-5 shadow-xs sm:p-7"
-        >
-          <div className="relative z-10">
-            {/* Heading */}
-            <div className="mb-6 text-center">
-              <div className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7c6840]">
-                <span className="h-px w-6 bg-[#c5a45b]/60" />
-                Donation Lifecycle
-                <span className="h-px w-6 bg-[#c5a45b]/60" />
+        {!isAuthenticated && (
+          <motion.div
+            initial={
+              shouldReduceMotion
+                ? { opacity: 1 }
+                : { opacity: 0, y: 18 }
+            }
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.55,
+            }}
+            className="relative mt-8 overflow-hidden rounded-2xl border border-[#d9d0bd] bg-gradient-to-br from-[#fffdf8] via-[#faf7ee] to-[#edf3e9] p-5 shadow-xs sm:p-7"
+          >
+            <div className="relative z-10">
+              {/* Heading */}
+              <div className="mb-6 text-center">
+                <div className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7c6840]">
+                  <span className="h-px w-6 bg-[#c5a45b]/60" />
+                  Donation Lifecycle
+                  <span className="h-px w-6 bg-[#c5a45b]/60" />
+                </div>
+
+                <h2 className="font-serif text-xl font-bold text-[#25372b] sm:text-2xl">
+                  From Your Support to Real-World Impact
+                </h2>
+
+                <p className="mx-auto mt-1.5 max-w-2xl text-xs leading-relaxed text-[#73766e] sm:text-sm">
+                  Each donor's contribution is pooled with others into an approved Trust cause, progressing through four verified stages.
+                </p>
               </div>
 
-              <h2 className="font-serif text-xl font-bold text-[#25372b] sm:text-2xl">
-                From Your Support to Real-World Impact
-              </h2>
+              {/* 4 Stages Responsive Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* STAGE 1 */}
+                <div className="rounded-xl border border-[#ded7c8] bg-white/90 p-4 text-center shadow-2xs">
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
+                    <HeartHandshake className="h-5 w-5" />
+                  </div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
+                    Stage 01
+                  </p>
+                  <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
+                    1. Donation Received
+                  </h3>
+                  <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
+                    Payment confirmed. Official Trust donation receipt and private tracking record created.
+                  </p>
+                </div>
 
-              <p className="mx-auto mt-1.5 max-w-2xl text-xs leading-relaxed text-[#73766e] sm:text-sm">
-                Each donor's contribution is pooled with others into an approved Trust cause, progressing through four verified stages.
-              </p>
+                {/* STAGE 2 */}
+                <div className="rounded-xl border border-[#d7e1d4] bg-white/90 p-4 text-center shadow-2xs">
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#c6d8c1] bg-[#edf4eb] text-[#356846]">
+                    <Layers className="h-5 w-5" />
+                  </div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
+                    Stage 02
+                  </p>
+                  <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
+                    2. Campaign Allocation
+                  </h3>
+                  <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
+                    Pooled donor contributions allocated to approved community cause budget lines.
+                  </p>
+                </div>
+
+                {/* STAGE 3 */}
+                <div className="rounded-xl border border-[#ded7c8] bg-white/90 p-4 text-center shadow-2xs">
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
+                    <FileCheck className="h-5 w-5" />
+                  </div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
+                    Stage 03
+                  </p>
+                  <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
+                    3. Verification and Supporting Evidence
+                  </h3>
+                  <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
+                    Trust officers inspect vendor receipts, weighment slips, and execution records.
+                  </p>
+                </div>
+
+                {/* STAGE 4 */}
+                <div className="rounded-xl border border-[#9fbd9d] bg-[#eaf3e7]/80 p-4 text-center shadow-2xs">
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#a9c4a5] bg-white text-[#28563b]">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#668064]">
+                    Stage 04
+                  </p>
+                  <h3 className="mt-1 font-serif text-sm font-bold text-[#24412f]">
+                    4. Field Impact and Completed Milestones
+                  </h3>
+                  <p className="mt-1 text-xs leading-relaxed text-[#61705f]">
+                    Completed program milestones, beneficiary support delivered, and verified metrics published.
+                  </p>
+                </div>
+              </div>
             </div>
-
-            {/* 4 Stages Responsive Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* STAGE 1 */}
-              <div className="rounded-xl border border-[#ded7c8] bg-white/90 p-4 text-center shadow-2xs">
-                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
-                  <HeartHandshake className="h-5 w-5" />
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
-                  Stage 01
-                </p>
-                <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  1. Donation Received
-                </h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
-                  Payment confirmed. Official Trust donation receipt and private tracking record created.
-                </p>
-              </div>
-
-              {/* STAGE 2 */}
-              <div className="rounded-xl border border-[#d7e1d4] bg-white/90 p-4 text-center shadow-2xs">
-                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#c6d8c1] bg-[#edf4eb] text-[#356846]">
-                  <Layers className="h-5 w-5" />
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
-                  Stage 02
-                </p>
-                <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  2. Campaign Allocation
-                </h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
-                  Pooled donor contributions allocated to approved community cause budget lines.
-                </p>
-              </div>
-
-              {/* STAGE 3 */}
-              <div className="rounded-xl border border-[#ded7c8] bg-white/90 p-4 text-center shadow-2xs">
-                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
-                  <FileCheck className="h-5 w-5" />
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
-                  Stage 03
-                </p>
-                <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  3. Verification and Supporting Evidence
-                </h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
-                  Trust officers inspect vendor receipts, weighment slips, and execution records.
-                </p>
-              </div>
-
-              {/* STAGE 4 */}
-              <div className="rounded-xl border border-[#9fbd9d] bg-[#eaf3e7]/80 p-4 text-center shadow-2xs">
-                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#a9c4a5] bg-white text-[#28563b]">
-                  <CheckCircle2 className="h-5 w-5" />
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-[#668064]">
-                  Stage 04
-                </p>
-                <h3 className="mt-1 font-serif text-sm font-bold text-[#24412f]">
-                  4. Field Impact and Completed Milestones
-                </h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#61705f]">
-                  Completed program milestones, beneficiary support delivered, and verified metrics published.
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* ============================================================
             GUEST NOTIFICATION
             ============================================================ */}
 
         {!isAuthLoading && !isAuthenticated && (
-          <div className="mx-auto mt-8 max-w-2xl space-y-4 rounded-[2rem] border border-[#ded6c6] bg-[#fffdf8]/95 p-8 text-center shadow-[0_12px_40px_rgba(55,70,54,0.06)] sm:p-10">
+          <div className="mx-auto mt-8 max-w-2xl space-y-4 rounded-[2rem] border border-[#ded6c6] bg-[#fffdf8]/95 p-6 sm:p-10 text-center shadow-[0_12px_40px_rgba(55,70,54,0.06)]">
 
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#c6d8c1] bg-[#edf4eb] text-[#28563b]">
-              <Lock className="h-6 w-6" />
+            <div className="mx-auto flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-[#c6d8c1] bg-[#edf4eb] text-[#28563b]">
+              <Lock className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
 
             <div className="space-y-1.5">
 
-              <h3 className="font-serif text-lg font-bold text-[#29372d]">
+              <h3 className="font-serif text-base sm:text-lg font-bold text-[#29372d]">
                 Sign In to View Your Verified Impact Passport
               </h3>
 
@@ -478,30 +480,27 @@ export const ImpactPassport: React.FC = () => {
 
             </div>
 
-            <div className="flex justify-center gap-3 pt-2">
-
-              <Link to="/login?redirect=/impact-passport">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 pt-2">
+              <Link to="/login?redirect=/impact-passport" className="w-full sm:w-auto">
                 <Button
-                  size="md"
+                  size="sm"
                   variant="primary"
-                  className="inline-flex items-center gap-2 bg-[#28563b] text-white hover:bg-[#1d452e]"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#28563b] text-white hover:bg-[#1d452e] text-xs font-semibold px-4 py-2 h-9 sm:h-10"
                 >
-                  <LogIn className="h-4 w-4" />
-                  <span>
-                    Sign In to Donor Portal
-                  </span>
+                  <LogIn className="h-3.5 w-3.5" />
+                  <span>Sign In to Donor Portal</span>
                 </Button>
               </Link>
 
-              <Link to="/causes">
+              <Link to="/causes" className="w-full sm:w-auto">
                 <Button
-                  size="md"
+                  size="sm"
                   variant="outline"
+                  className="w-full sm:w-auto text-xs px-4 py-2 h-9 sm:h-10 justify-center border-stone-300 text-stone-700 hover:bg-stone-50 font-medium"
                 >
                   Explore Trust Causes
                 </Button>
               </Link>
-
             </div>
           </div>
         )}
@@ -772,19 +771,14 @@ export const ImpactPassport: React.FC = () => {
                   <div className="pt-2">
 
                     <Link to="/causes">
-
                       <Button
-                        size="md"
+                        size="sm"
                         variant="primary"
-                        className="inline-flex items-center gap-2 bg-[#28563b] text-white hover:bg-[#1d452e]"
+                        className="inline-flex items-center gap-1.5 bg-[#28563b] text-white hover:bg-[#1d452e] text-xs font-semibold px-3.5 py-2 h-9 sm:h-10"
                       >
-                        <span>
-                          Explore Verified Causes to Support
-                        </span>
-
-                        <ArrowRight className="h-4 w-4" />
+                        <span>Explore Verified Causes to Support</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
                       </Button>
-
                     </Link>
 
                   </div>

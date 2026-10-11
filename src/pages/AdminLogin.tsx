@@ -153,30 +153,9 @@ export const AdminLogin: React.FC = () => {
             </div>
           </form>
 
-          {/* Quick Demo Access Helper */}
-          <div className="mt-4 p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl text-left text-xs">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-amber-950">Default Admin Account</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail("admin@trust.org");
-                  setPassword("Admin@123456");
-                }}
-                className="text-[11px] font-semibold text-amber-800 hover:text-amber-950 underline cursor-pointer"
-              >
-                Auto-fill
-              </button>
-            </div>
-            <div className="text-[11px] text-stone-600 mt-1 space-y-0.5 font-mono">
-              <div>Email: admin@trust.org</div>
-              <div>Password: Admin@123456</div>
-            </div>
-          </div>
-
-          <div className="mt-5 pt-4 border-t border-stone-100 text-center text-[11px] text-stone-500">
-            Trust Governance • Role-Based Access Control Strictly Enforced
-          </div>
+              <div className="mt-5 pt-4 border-t border-stone-100 text-center text-[11px] text-stone-500">
+                Trust Governance • Role-Based Access Control Strictly Enforced
+              </div>
         </div>
       </div>
     </div>

@@ -294,7 +294,7 @@ export const Register: React.FC = () => {
                 size="md"
                 variant="primary"
                 disabled={isLoading}
-                className="w-full font-semibold"
+                className="w-full font-semibold h-9 sm:h-10 text-xs sm:text-sm justify-center cursor-pointer"
                 rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               >
                 {isLoading

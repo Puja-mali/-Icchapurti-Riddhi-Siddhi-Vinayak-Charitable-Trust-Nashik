@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Lock, Mail, Eye, EyeOff, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
+import { Lock, Mail, Eye, EyeOff, ArrowRight, AlertCircle, Loader2, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
 import { useAuth } from "@/src/context/AuthContext";
 import { useTrust } from "@/src/context/TrustContext";
@@ -10,7 +10,7 @@ import { ApiError } from "@/src/services/api";
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, user } = useAuth();
+  const { login, logout, user } = useAuth();
   const { trustProfile } = useTrust();
   const { t } = useLanguage();
 
@@ -20,42 +20,39 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  /**
-   * Computes authoritative and safe redirect destination based on verified role
-   * Strictly prevents non-administrative roles (DONOR, VOLUNTEER) from entering /admin or /admin/login
-   */
-  const getSafeDestination = (role: string, targetPath?: string): string => {
-    const isAdminOrStaff = role === "ADMIN" || role === "STAFF";
+  // Administrative account notification state
+  const [adminNotice, setAdminNotice] = useState<{
+    role: string;
+    email: string;
+  } | null>(null);
 
-    if (targetPath && typeof targetPath === "string" && targetPath !== "/login" && targetPath !== "/admin/login") {
-      // If candidate path is administrative, verify caller has elevated role
-      if (targetPath.startsWith("/admin")) {
-        return isAdminOrStaff ? targetPath : (role === "VOLUNTEER" ? "/volunteer-portal" : "/dashboard");
-      }
-      // For ordinary user-facing paths (e.g. /donate, /causes/123, /request-help, /impact-passport), allow return
-      return targetPath;
-    }
-
-    // Role-authoritative defaults
-    if (isAdminOrStaff) return "/admin";
-    if (role === "VOLUNTEER") return "/volunteer-portal";
-    return "/dashboard";
-  };
-
-  // If already authenticated, redirect to role-safe destination
+  // If already authenticated:
+  // - DONOR and VOLUNTEER are safely directed to their portal or requested non-administrative path.
+  // - ADMIN and STAFF are NOT redirected automatically into /admin; instead they are shown session status with options.
   useEffect(() => {
     if (user) {
-      const fromPath = (location.state as any)?.from?.pathname;
-      const destination = getSafeDestination(user.role, fromPath);
-      navigate(destination, { replace: true });
+      if (user.role === "DONOR") {
+        const fromPath = (location.state as any)?.from?.pathname;
+        const target = fromPath && typeof fromPath === "string" && !fromPath.startsWith("/admin") && fromPath !== "/login" && fromPath !== "/admin/login"
+          ? fromPath
+          : "/dashboard";
+        navigate(target, { replace: true });
+      } else if (user.role === "VOLUNTEER") {
+        const fromPath = (location.state as any)?.from?.pathname;
+        const target = fromPath && typeof fromPath === "string" && !fromPath.startsWith("/admin") && fromPath !== "/login" && fromPath !== "/admin/login"
+          ? fromPath
+          : "/volunteer-portal";
+        navigate(target, { replace: true });
+      }
     }
   }, [user, navigate, location.state]);
 
-  const trustName = trustProfile?.trustName || "Siddhivinayak Charitable Trust";
+  const trustName = trustProfile?.trustName || "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+    setAdminNotice(null);
 
     const cleanEmail = email.trim();
     if (!cleanEmail || !password) {
@@ -67,9 +64,34 @@ export const Login: React.FC = () => {
 
     try {
       const authenticatedUser = await login({ email: cleanEmail, password });
+
+      // SECURITY & UX SEPARATION:
+      // If someone enters valid ADMIN or STAFF credentials through normal user login,
+      // do not silently route them into the Admin Dashboard.
+      // Cleanly terminate the public session and provide the administrative sign-in guidance.
+      if (authenticatedUser.role === "ADMIN" || authenticatedUser.role === "STAFF") {
+        await logout();
+        setAdminNotice({
+          role: authenticatedUser.role,
+          email: cleanEmail,
+        });
+        return;
+      }
+
+      // Safe return path for legitimate public users (DONOR / VOLUNTEER)
       const fromPath = (location.state as any)?.from?.pathname;
-      const destination = getSafeDestination(authenticatedUser.role, fromPath);
-      navigate(destination, { replace: true });
+      const target =
+        fromPath &&
+        typeof fromPath === "string" &&
+        !fromPath.startsWith("/admin") &&
+        fromPath !== "/login" &&
+        fromPath !== "/admin/login"
+          ? fromPath
+          : authenticatedUser.role === "VOLUNTEER"
+          ? "/volunteer-portal"
+          : "/dashboard";
+
+      navigate(target, { replace: true });
     } catch (err: any) {
       if (err instanceof ApiError) {
         setErrorMessage(err.message);
@@ -82,35 +104,104 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md space-y-5">
+    <div className="min-h-[75vh] flex items-center justify-center px-4 py-8 sm:py-12">
+      <div className="w-full max-w-md space-y-4 sm:space-y-5">
         {/* Branding header */}
         <div className="text-center space-y-1.5">
           <Link to="/" className="inline-flex items-center gap-2">
             <div className="w-8 h-8 rounded bg-[#14532d] text-white flex items-center justify-center font-serif font-bold text-sm">
               IT
             </div>
-            <span className="text-lg font-serif font-bold text-stone-900 tracking-tight">
+            <span className="text-base sm:text-lg font-serif font-bold text-stone-900 tracking-tight">
               {trustName}
             </span>
           </Link>
-          <h1 className="text-2xl font-serif font-bold text-stone-900 pt-1">Sign In to Trust Portal</h1>
-          <p className="text-xs text-stone-600">
-            Access your verified Impact Passports, tax receipts, and volunteer records.
+          <h1 className="text-xl sm:text-2xl font-serif font-bold text-stone-900 pt-1">
+            Sign In to Donor & Volunteer Portal
+          </h1>
+          <p className="text-xs text-stone-600 max-w-sm mx-auto">
+            Access your personal donation receipts, verified Impact Passports, and volunteer service dockets.
           </p>
         </div>
 
+        {/* Existing Administrative Session Notice (shown if already logged in as ADMIN/STAFF) */}
+        {user && (user.role === "ADMIN" || user.role === "STAFF") && (
+          <div className="p-3.5 sm:p-4 bg-stone-100 border border-stone-300 rounded-lg text-xs text-stone-800 space-y-2.5 shadow-2xs">
+            <div className="flex items-start gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-[#14532d] shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-stone-900">Active Administrative Session</p>
+                <p className="text-stone-600 mt-0.5 leading-relaxed">
+                  You are currently logged in with administrative access ({user.role}: <span className="font-mono font-medium">{user.email}</span>). Normal public login is reserved for donors and volunteers.
+                </p>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-stone-200/80 flex items-center justify-between gap-2">
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#14532d] text-white hover:bg-[#0f4023] font-semibold text-xs shadow-2xs"
+              >
+                <span>Open Admin Desk</span>
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+              <button
+                type="button"
+                onClick={async () => {
+                  await logout();
+                  navigate("/login", { replace: true });
+                }}
+                className="text-xs font-semibold text-rose-700 hover:text-rose-900 underline cursor-pointer"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Administrative Account Detected Warning (when ADMIN/STAFF logs in here) */}
+        {adminNotice && (
+          <div className="p-3.5 sm:p-4 bg-amber-50 border border-amber-300 rounded-lg text-xs text-amber-950 space-y-2.5 shadow-2xs">
+            <div className="flex items-start gap-2.5">
+              <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-amber-900">
+                  Administrative Account Detected ({adminNotice.role})
+                </p>
+                <p className="text-amber-800 mt-0.5 leading-relaxed">
+                  The account <strong className="font-mono">{adminNotice.email}</strong> holds administrative privileges. For security and governance separation, administrative access must be authenticated through the dedicated Secretariat Desk.
+                </p>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-amber-200/80 flex items-center justify-between gap-2">
+              <Link
+                to="/admin/login"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-900 text-amber-200 hover:bg-stone-800 font-semibold text-xs shadow-2xs transition-colors"
+              >
+                <span>Proceed to Admin Login</span>
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => setAdminNotice(null)}
+                className="text-[11px] text-amber-800 hover:underline cursor-pointer"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Error Alert */}
         {errorMessage && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-md text-xs text-rose-800 flex items-start gap-2.5">
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-md text-xs text-rose-800 flex items-start gap-2.5">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <div className="leading-relaxed">{errorMessage}</div>
           </div>
         )}
 
         {/* Login Card */}
-        <div className="bg-white rounded-md p-6 sm:p-7 border border-stone-200 shadow-2xs">
-          <form onSubmit={handleLogin} className="space-y-4 text-xs sm:text-sm">
+        <div className="bg-white rounded-md p-5 sm:p-7 border border-stone-200 shadow-2xs">
+          <form onSubmit={handleLogin} className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm">
             <div>
               <label className="font-semibold text-stone-700 block mb-1">Email Address</label>
               <div className="relative">
@@ -161,13 +252,13 @@ export const Login: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-1.5">
               <Button
                 type="submit"
                 size="md"
                 variant="primary"
                 disabled={isLoading}
-                className="w-full font-semibold cursor-pointer"
+                className="w-full font-semibold cursor-pointer h-9 sm:h-10 text-xs sm:text-sm justify-center"
                 rightIcon={isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
               >
                 {isLoading ? "Verifying Credentials..." : "Sign In"}
@@ -175,30 +266,9 @@ export const Login: React.FC = () => {
             </div>
           </form>
 
-          {/* Quick Demo Donor Account Helper */}
-          <div className="mt-4 p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl text-left text-xs">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-amber-950">Demo Donor Account</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail("donor@example.com");
-                  setPassword("Donor@123456");
-                }}
-                className="text-[11px] font-semibold text-amber-800 hover:text-amber-950 underline cursor-pointer"
-              >
-                Auto-fill
-              </button>
-            </div>
-            <div className="text-[11px] text-stone-600 mt-1 space-y-0.5 font-mono">
-              <div>Email: donor@example.com</div>
-              <div>Password: Donor@123456</div>
-            </div>
-          </div>
-
-          <div className="mt-5 pt-4 border-t border-stone-100 text-center text-xs text-stone-600">
+          <div className="mt-4 pt-3 border-t border-stone-100 text-center text-xs text-stone-600">
             Don't have a donor or volunteer account yet?{" "}
-            <Link to="/register" className="font-semibold text-[#14532d] hover:underline">
+            <Link to="/register" className="font-semibold text-[#14532d] hover:underline inline-block py-1">
               Create Account
             </Link>
           </div>
@@ -207,3 +277,5 @@ export const Login: React.FC = () => {
     </div>
   );
 };
+
+export default Login;
