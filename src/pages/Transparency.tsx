@@ -113,22 +113,22 @@ export const Transparency: React.FC = () => {
                 {t.transparency.directUtilization}
               </h2>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-xl">
-                Strict governance guidelines cap administrative overhead at under 8%. Every vendor invoice,
-                hospital payment, and grain delivery note is cross-checked against independent field inspections.
+                The Trust maintains institutional stewardship under the Maharashtra Public Trusts Act (Reg. No. E-9389 / Nashik).
+                All program expenditures, vendor vouchers, and relief distributions are maintained by the Treasurer and reviewed by the Board of Trustees.
               </p>
               
-              <div className="grid grid-cols-3 gap-3.5 pt-2 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2 text-xs">
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
-                  <div className="font-serif font-bold text-xl text-stone-900">92.4%</div>
-                  <div className="text-[11px] text-stone-600 font-medium">Programs & Beneficiaries</div>
+                  <div className="font-serif font-bold text-base text-stone-900">Direct Aid</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Education, healthcare, and family relief drives</div>
                 </div>
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
-                  <div className="font-serif font-bold text-xl text-amber-800">4.8%</div>
-                  <div className="text-[11px] text-stone-600 font-medium">Audits & Inspections</div>
+                  <div className="font-serif font-bold text-base text-amber-900">Governance</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Secretariat oversight & verified bookkeeping</div>
                 </div>
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
-                  <div className="font-serif font-bold text-xl text-stone-700">2.8%</div>
-                  <div className="text-[11px] text-stone-600 font-medium">{t.transparency.adminExpenses}</div>
+                  <div className="font-serif font-bold text-base text-stone-800">Public Record</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Compliance filings accessible to stakeholders</div>
                 </div>
               </div>
             </div>

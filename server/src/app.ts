@@ -106,8 +106,8 @@ export const createApp = (): Express => {
     }
     const db = getDbStatus();
     if (db.status === 'connecting') {
-      // Brief wait up to 3 seconds for initial connection during server boot
-      for (let i = 0; i < 30; i++) {
+      // Brief wait up to 6 seconds for initial connection during server boot
+      for (let i = 0; i < 60; i++) {
         await new Promise((r) => setTimeout(r, 100));
         if (getDbStatus().status === 'connected') break;
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Lock, Mail, Eye, EyeOff, ArrowRight, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
 import { useAuth } from "@/src/context/AuthContext";
@@ -81,6 +81,39 @@ export const AdminLogin: React.FC = () => {
             Private management portal for {trustName}. Authorized personnel and trustees only.
           </p>
         </div>
+
+        {/* Active Public Session Notice (shown if already logged in as DONOR/VOLUNTEER) */}
+        {user && (user.role === "DONOR" || user.role === "VOLUNTEER") && (
+          <div className="p-3.5 bg-stone-100 border border-stone-300 rounded-xl text-xs text-stone-800 space-y-2.5 shadow-2xs">
+            <div className="flex items-start gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-[#14532d] shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-stone-900">Signed in as {user.role}</p>
+                <p className="text-stone-600 mt-0.5 leading-relaxed">
+                  You are currently authenticated with a public supporter account (<span className="font-mono font-medium">{user.email}</span>). Administrative login requires authorized Secretariat or Trustee credentials.
+                </p>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-stone-200/80 flex items-center justify-between gap-2">
+              <Link
+                to={user.role === "VOLUNTEER" ? "/volunteer-portal" : "/dashboard"}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#14532d] text-white hover:bg-[#0f4023] font-semibold text-xs shadow-2xs"
+              >
+                <span>Go to Supporter Portal</span>
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+              <button
+                type="button"
+                onClick={async () => {
+                  await logout();
+                }}
+                className="text-xs font-semibold text-rose-700 hover:text-rose-900 underline cursor-pointer"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Error Alert */}
         {errorMessage && (

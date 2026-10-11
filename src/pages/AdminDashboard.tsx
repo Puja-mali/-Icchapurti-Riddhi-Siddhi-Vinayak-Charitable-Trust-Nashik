@@ -78,41 +78,7 @@ interface AuditQueueItem {
   status: "Pending Audit" | "Verified & Stamped";
 }
 
-const INITIAL_QUEUE: AuditQueueItem[] = [
-  {
-    id: "q-1",
-    passportId: "SCT-PASS-2025-1044",
-    causeTitle: "Free Medical, Health & Naturopathy Camps",
-    stageToVerify: "Diagnostic Equipment & Medical Camp Supply Invoice",
-    amount: "₹25,000",
-    vendorDoc: "DISB-MED-2025-119",
-    submittedBy: "Medical Camp Coordinator",
-    date: "Feb 18, 2025",
-    status: "Pending Audit",
-  },
-  {
-    id: "q-2",
-    passportId: "SCT-PASS-2025-1190",
-    causeTitle: "Diwali Faral & Wholesome Food Distribution",
-    stageToVerify: "Food Grain & Grocery Delivery Weighment Slip",
-    amount: "₹5,000",
-    vendorDoc: "PO-GRAIN-2025-081",
-    submittedBy: "Seva Coordinator",
-    date: "Feb 19, 2025",
-    status: "Pending Audit",
-  },
-  {
-    id: "q-3",
-    passportId: "SCT-PASS-2025-0812",
-    causeTitle: "Notebooks & School Stationery Distribution Drive",
-    stageToVerify: "Partner School Student Receipt & Distribution Log",
-    amount: "₹15,000",
-    vendorDoc: "AUDIT-REP-773",
-    submittedBy: "Education Coordinator",
-    date: "Feb 02, 2025",
-    status: "Verified & Stamped",
-  },
-];
+const INITIAL_QUEUE: AuditQueueItem[] = [];
 
 export const AdminDashboard: React.FC = () => {
   const { t } = useLanguage();
@@ -148,6 +114,13 @@ export const AdminDashboard: React.FC = () => {
   useEffect(() => {
     fetchDashboardSummary();
   }, [fetchDashboardSummary]);
+
+  // Enforce STAFF role boundaries: restrict access strictly away from Admin-only tabs
+  useEffect(() => {
+    if (user?.role === "STAFF" && (activeTab === "trust" || activeTab === "users")) {
+      setActiveTab("overview");
+    }
+  }, [user?.role, activeTab]);
 
   // Real MongoDB Help Requests State
   const [helpRequests, setHelpRequests] = useState<HelpRequest[]>([]);
@@ -209,7 +182,7 @@ export const AdminDashboard: React.FC = () => {
     slug: "",
     category: "Field Updates",
     author: "Siddhivinayak Trust",
-    coverImage: "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&q=80&w=1200",
+    coverImage: "",
     excerpt: "",
     content: "",
     tags: "",
@@ -241,7 +214,7 @@ export const AdminDashboard: React.FC = () => {
     registrationRequired: false,
     registrationLimit: "100",
     status: "UPCOMING" as EventStatus,
-    imageUrl: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=1200",
+    imageUrl: "",
     isKumbhRelated: false,
   });
 
@@ -401,7 +374,7 @@ export const AdminDashboard: React.FC = () => {
       shortDescription: "",
       description: "",
       targetAmount: "",
-      imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200",
+      imageUrl: "",
       location: "Nashik, Maharashtra",
       status: "ACTIVE",
       isKumbhRelated: false,
@@ -568,7 +541,7 @@ export const AdminDashboard: React.FC = () => {
       registrationRequired: false,
       registrationLimit: "150",
       status: "UPCOMING",
-      imageUrl: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=1200",
+      imageUrl: "",
       isKumbhRelated: false,
     });
     setIsEventModalOpen(true);
@@ -743,7 +716,7 @@ export const AdminDashboard: React.FC = () => {
       slug: "",
       category: "Field Updates",
       author: "Siddhivinayak Trust",
-      coverImage: "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&q=80&w=1200",
+      coverImage: "",
       excerpt: "",
       content: "",
       tags: "",
@@ -1332,18 +1305,23 @@ export const AdminDashboard: React.FC = () => {
           <Bell className="w-3.5 h-3.5" />
           <span>Live Notifications</span>
         </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("trust")}
-          className={`pb-3 px-4 font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
-            activeTab === "trust"
-              ? "border-emerald-800 text-emerald-900"
-              : "border-transparent text-stone-500 hover:text-stone-800"
-          }`}
-        >
-          <Building className="w-3.5 h-3.5" />
-          <span>Trust Profile & Trustees</span>
-        </button>
+        {user?.role === 'ADMIN' && (
+          <button
+            type="button"
+            onClick={() => setActiveTab("trust")}
+            className={`pb-3 px-4 font-semibold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+              activeTab === "trust"
+                ? "border-emerald-800 text-emerald-900"
+                : "border-transparent text-stone-500 hover:text-stone-800"
+            }`}
+          >
+            <Building className="w-3.5 h-3.5" />
+            <span>Trust Profile & Trustees</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 font-bold border border-amber-300">
+              Admin Only
+            </span>
+          </button>
+        )}
         {user?.role === 'ADMIN' && (
           <button
             type="button"
@@ -1657,7 +1635,7 @@ export const AdminDashboard: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-xs text-stone-500 mt-1">
-                      Published annual audit statements, 80G filings & balance sheets
+                      Published annual audit statements & statutory balance sheets
                     </p>
                   </div>
                   <div className="pt-2 border-t border-stone-100 text-[11px] text-stone-500">
@@ -1832,7 +1810,20 @@ export const AdminDashboard: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100 font-medium text-stone-700">
-                  {queue.map((item) => {
+                  {queue.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-5 py-12 text-center text-stone-500">
+                        <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center mx-auto mb-2 border border-emerald-200">
+                          <FileCheck className="w-5 h-5" />
+                        </div>
+                        <p className="font-serif font-bold text-sm text-stone-800">No Pending Audits in Queue</p>
+                        <p className="text-xs text-stone-500 max-w-sm mx-auto mt-1">
+                          Audit queue items will appear here as donations are disbursed and verification documents are logged by Trust coordinators.
+                        </p>
+                      </td>
+                    </tr>
+                  ) : (
+                    queue.map((item) => {
                     const isPending = item.status === "Pending Audit";
                     return (
                       <tr key={item.id} className="hover:bg-stone-50/50 transition-colors">
@@ -1952,14 +1943,16 @@ export const AdminDashboard: React.FC = () => {
                 >
                   Sync
                 </Button>
-                <Button
-                  size="sm"
-                  onClick={openCreateModal}
-                  leftIcon={<Plus className="w-3.5 h-3.5" />}
-                  className="bg-[#14532d] hover:bg-[#0f4023] text-white text-xs font-semibold"
-                >
-                  Create New Campaign
-                </Button>
+                {user?.role === "ADMIN" && (
+                  <Button
+                    size="sm"
+                    onClick={openCreateModal}
+                    leftIcon={<Plus className="w-3.5 h-3.5" />}
+                    className="bg-[#14532d] hover:bg-[#0f4023] text-white text-xs font-semibold"
+                  >
+                    Create New Campaign
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -2109,32 +2102,36 @@ export const AdminDashboard: React.FC = () => {
                                   <Eye className="w-3.5 h-3.5" />
                                 </Link>
 
-                                <button
-                                  type="button"
-                                  onClick={() => openEditModal(c)}
-                                  className="p-1.5 rounded hover:bg-stone-100 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
-                                  title="Edit Campaign"
-                                >
-                                  <Edit2 className="w-3.5 h-3.5" />
-                                </button>
+                                {user?.role === "ADMIN" && (
+                                  <>
+                                    <button
+                                      type="button"
+                                      onClick={() => openEditModal(c)}
+                                      className="p-1.5 rounded hover:bg-stone-100 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
+                                      title="Edit Campaign"
+                                    >
+                                      <Edit2 className="w-3.5 h-3.5" />
+                                    </button>
 
-                                <button
-                                  type="button"
-                                  onClick={() => handleToggleStatus(c)}
-                                  className="p-1.5 rounded hover:bg-stone-100 text-stone-600 hover:text-amber-800 transition-colors cursor-pointer"
-                                  title={c.status === "ACTIVE" ? "Archive Campaign" : "Publish / Activate Campaign"}
-                                >
-                                  <Archive className="w-3.5 h-3.5" />
-                                </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleToggleStatus(c)}
+                                      className="p-1.5 rounded hover:bg-stone-100 text-stone-600 hover:text-amber-800 transition-colors cursor-pointer"
+                                      title={c.status === "ACTIVE" ? "Archive Campaign" : "Publish / Activate Campaign"}
+                                    >
+                                      <Archive className="w-3.5 h-3.5" />
+                                    </button>
 
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteCause(c)}
-                                  className="p-1.5 rounded hover:bg-rose-50 text-stone-400 hover:text-rose-700 transition-colors cursor-pointer"
-                                  title="Delete Campaign"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteCause(c)}
+                                      className="p-1.5 rounded hover:bg-rose-50 text-stone-400 hover:text-rose-700 transition-colors cursor-pointer"
+                                      title="Delete Campaign"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </>
+                                )}
                               </div>
                             </td>
                           </tr>
@@ -2594,7 +2591,7 @@ export const AdminDashboard: React.FC = () => {
                                   className="w-full h-full object-cover"
                                   onError={(e) => {
                                     (e.target as HTMLImageElement).src =
-                                      "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=400&q=80";
+                                      "/activities/image.png";
                                   }}
                                 />
                               </div>
@@ -2749,7 +2746,7 @@ export const AdminDashboard: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs text-stone-500 mt-0.5">
-                  Publish statutory audited accounts, Form 10B certificates, 80G utilizations, and governance filings.
+                  Publish statutory audited accounts, institutional review statements, and official governance filings.
                 </p>
               </div>
 
@@ -3825,8 +3822,10 @@ export const AdminDashboard: React.FC = () => {
 
               <button
                 type="button"
-                disabled={isUpdatingKumbh}
+                disabled={isUpdatingKumbh || user?.role !== "ADMIN"}
+                title={user?.role === "ADMIN" ? "Toggle Kumbh Mode" : "Administrator privileges required to modify module settings"}
                 onClick={async () => {
+                  if (user?.role !== "ADMIN") return;
                   try {
                     setIsUpdatingKumbh(true);
                     setKumbhSyncMsg(null);
@@ -3976,7 +3975,7 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* ================= TAB 6: TRUST PROFILE & TRUSTEES ================= */}
-      {activeTab === "trust" && (
+      {activeTab === "trust" && user?.role === "ADMIN" && (
         <TrustManagementTab
           onNotify={(msg) => {
             setSuccessToast(msg);
@@ -3986,7 +3985,7 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* ================= TAB 7: USERS & ROLES MANAGEMENT ================= */}
-      {activeTab === "users" && (
+      {activeTab === "users" && user?.role === "ADMIN" && (
         <UsersManagementTab />
       )}
 
@@ -4235,7 +4234,7 @@ export const AdminDashboard: React.FC = () => {
                 required
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                placeholder="https://images.unsplash.com/..."
+                placeholder="https://example.com/activity-photo.jpg"
                 className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
               />
             </div>
@@ -4431,7 +4430,7 @@ export const AdminDashboard: React.FC = () => {
                 required
                 value={eventFormData.imageUrl}
                 onChange={(e) => setEventFormData({ ...eventFormData, imageUrl: e.target.value })}
-                placeholder="https://images.unsplash.com/..."
+                placeholder="https://example.com/event-photo.jpg"
                 className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
               />
             </div>
@@ -4930,7 +4929,7 @@ export const AdminDashboard: React.FC = () => {
               </label>
               <input
                 type="text"
-                placeholder="e.g. Form 10B (Audit Report) or Section 80G"
+                placeholder="e.g. Annual Audit Report or Institutional Review"
                 value={transparencyFormData.statutoryType}
                 onChange={(e) => setTransparencyFormData({ ...transparencyFormData, statutoryType: e.target.value })}
                 className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"

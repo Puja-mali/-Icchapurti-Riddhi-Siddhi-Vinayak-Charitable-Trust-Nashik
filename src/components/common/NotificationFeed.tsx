@@ -30,7 +30,7 @@ interface NotificationFeedProps {
 
 export const NotificationFeed: React.FC<NotificationFeedProps> = ({
   title = 'Notifications & Seva Alerts',
-  description = 'Live updates regarding your donations, tax receipts, volunteer applications, and aid requests.',
+  description = 'Live updates regarding your donations, receipts, volunteer applications, and aid requests.',
   className,
   showActions = true,
 }) => {

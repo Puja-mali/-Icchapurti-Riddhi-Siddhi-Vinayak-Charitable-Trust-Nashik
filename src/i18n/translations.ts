@@ -1206,9 +1206,9 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
 
     auth: {
       loginTitle: "Sign In to Trust Portal",
-      loginSubtitle: "Access your verified Impact Passports, tax receipts, and volunteer records.",
+      loginSubtitle: "Access your verified Impact Passports, donation receipts, and volunteer records.",
       registerTitle: "Create Supporter Account",
-      registerSubtitle: "Join thousands of transparent supporters with persistent Impact Passports.",
+      registerSubtitle: "Register a supporter account for transparent recordkeeping and Impact Passports.",
       fullName: "Full Legal Name",
       fullNamePlaceholder: "e.g. Sanya Kapoor",
       email: "Email Address",
@@ -1847,9 +1847,9 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
 
     auth: {
       loginTitle: "विश्वस्त पोर्टल लॉगिन",
-      loginSubtitle: "आपले पडताळलेले इम्पॅक्ट पासपोर्ट्स, ८०-जी कर पावती आणि स्वयंसेवक नोंदी पहा.",
+      loginSubtitle: "आपले नोंदणीकृत इम्पॅक्ट पासपोर्ट्स, देणगी पावती आणि स्वयंसेवक नोंदी पहा.",
       registerTitle: "नवीन समर्थक खाते तयार करा",
-      registerSubtitle: "पारदर्शक इम्पॅक्ट पासपोर्ट्ससह हजारो समर्थकांमध्ये सामील व्हा.",
+      registerSubtitle: "पारदर्शक नोंदणी आणि इम्पॅक्ट पासपोर्ट्ससाठी समर्थक खाते तयार करा.",
       fullName: "पूर्ण कायदेशीर नाव",
       fullNamePlaceholder: "उदा. सान्या कपूर",
       email: "ईमेल पत्ता",
@@ -2444,9 +2444,9 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
 
     auth: {
       loginTitle: "ट्रस्ट पोर्टल में साइन इन करें",
-      loginSubtitle: "अपने सत्यापित इम्पैक्ट पासपोर्ट, कर रसीदें और स्वयंसेवक रिकॉर्ड देखें।",
+      loginSubtitle: "अपने सत्यापित इम्पैक्ट पासपोर्ट, दान रसीदें और स्वयंसेवक रिकॉर्ड देखें।",
       registerTitle: "समर्थक खाता बनाएं",
-      registerSubtitle: "पारदर्शी इम्पैक्ट पासपोर्ट के साथ समर्थकों से जुड़ें।",
+      registerSubtitle: "पारदर्शी रिकॉर्ड और इम्पैक्ट पासपोर्ट के लिए समर्थक खाता बनाएं।",
       fullName: "पूरा कानूनी नाम",
       fullNamePlaceholder: "उदा. सान्या कपूर",
       email: "ईमेल पता",

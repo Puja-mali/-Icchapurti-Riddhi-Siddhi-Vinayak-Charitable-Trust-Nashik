@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Phone, ArrowRight, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
-import { TRUST_INFO } from "@/src/data/mockData";
 import { Button } from "@/src/components/common/Button";
 import { useAuth } from "@/src/context/AuthContext";
+import { useTrust } from "@/src/context/TrustContext";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { ApiError } from "@/src/services/api";
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { trustProfile } = useTrust();
   const { t } = useLanguage();
+
+  const trustName = trustProfile?.trustName || "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -88,28 +91,28 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md space-y-5">
+    <div className="min-h-[75vh] flex items-center justify-center px-4 py-8 sm:py-12">
+      <div className="w-full max-w-md space-y-4 sm:space-y-5">
         {/* Branding */}
         <div className="text-center space-y-1.5">
           <Link to="/" className="inline-flex items-center gap-2">
             <div className="w-8 h-8 rounded bg-[#14532d] text-white flex items-center justify-center font-serif font-bold text-sm">
-              ST
+              IT
             </div>
-            <span className="text-lg font-serif font-bold text-stone-900 tracking-tight">
-              {TRUST_INFO.name}
+            <span className="text-base sm:text-lg font-serif font-bold text-stone-900 tracking-tight">
+              {trustName}
             </span>
           </Link>
-          <h1 className="text-2xl font-serif font-bold text-stone-900 pt-1">
+          <h1 className="text-xl sm:text-2xl font-serif font-bold text-stone-900 pt-1">
             {t.auth?.registerTitle || "Create Supporter Account"}
           </h1>
           <p className="text-xs text-stone-600 max-w-sm mx-auto">
-            {t.auth?.registerSubtitle || "Join thousands of transparent supporters with persistent Impact Passports."}
+            {t.auth?.registerSubtitle || "Register an official donor or volunteer account for auditable receipts and Impact Passports."}
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-md p-6 sm:p-7 border border-stone-200 shadow-2xs space-y-4">
+        <div className="bg-white rounded-md p-5 sm:p-7 border border-stone-200 shadow-2xs space-y-3.5 sm:space-y-4">
           {/* Public Role selector - Strictly DONOR or VOLUNTEER only */}
           <div className="space-y-1.5">
             <label className="text-[11px] font-semibold text-stone-600 uppercase tracking-wider block">

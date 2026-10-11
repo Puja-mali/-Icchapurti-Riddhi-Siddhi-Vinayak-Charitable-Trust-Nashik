@@ -53,7 +53,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Check Role authorization if specific roles are required
   if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
     const defaultRoute =
-      user.role === 'ADMIN'
+      user.role === 'ADMIN' || user.role === 'STAFF'
         ? '/admin'
         : user.role === 'VOLUNTEER'
         ? '/volunteer-portal'

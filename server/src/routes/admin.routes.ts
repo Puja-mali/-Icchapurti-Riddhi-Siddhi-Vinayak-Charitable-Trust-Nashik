@@ -36,7 +36,7 @@ router.get(
 router.patch(
   '/settings/kumbh-mode',
   authenticate,
-  authorize('ADMIN', 'STAFF'),
+  authorize('ADMIN'),
   AdminController.updateKumbhMode
 );
 

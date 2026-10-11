@@ -58,7 +58,7 @@ async function startServer() {
   });
 
   // Initialize backend database connection in the background without blocking port 3000 readiness
-  connectDatabase()
+  connectDatabase({ allowInMemory: true })
     .then(async (dbConnected) => {
       if (dbConnected) {
         await autoSeedTrustData();

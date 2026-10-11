@@ -480,12 +480,12 @@ export const ImpactPassport: React.FC = () => {
 
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-xs sm:max-w-none mx-auto pt-2">
               <Link to="/login?redirect=/impact-passport" className="w-full sm:w-auto">
                 <Button
                   size="sm"
                   variant="primary"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#28563b] text-white hover:bg-[#1d452e] text-xs font-semibold px-4 py-2 h-9 sm:h-10"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#28563b] text-white hover:bg-[#1d452e] text-xs font-semibold px-3.5 py-1.5 h-9"
                 >
                   <LogIn className="h-3.5 w-3.5" />
                   <span>Sign In to Donor Portal</span>
@@ -496,7 +496,7 @@ export const ImpactPassport: React.FC = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full sm:w-auto text-xs px-4 py-2 h-9 sm:h-10 justify-center border-stone-300 text-stone-700 hover:bg-stone-50 font-medium"
+                  className="w-full sm:w-auto text-xs px-3 sm:px-3.5 py-1.5 h-8 sm:h-9 justify-center border-stone-300 text-stone-700 hover:bg-stone-50 font-medium"
                 >
                   Explore Trust Causes
                 </Button>
@@ -774,9 +774,9 @@ export const ImpactPassport: React.FC = () => {
                       <Button
                         size="sm"
                         variant="primary"
-                        className="inline-flex items-center gap-1.5 bg-[#28563b] text-white hover:bg-[#1d452e] text-xs font-semibold px-3.5 py-2 h-9 sm:h-10"
+                        className="inline-flex items-center gap-1.5 bg-[#28563b] text-white hover:bg-[#1d452e] text-xs font-semibold px-3 sm:px-3.5 py-1.5 h-8 sm:h-9"
                       >
-                        <span>Explore Verified Causes to Support</span>
+                        <span>Explore Trust Causes</span>
                         <ArrowRight className="h-3.5 w-3.5" />
                       </Button>
                     </Link>

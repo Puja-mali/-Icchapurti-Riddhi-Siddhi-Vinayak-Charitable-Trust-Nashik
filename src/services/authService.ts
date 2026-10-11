@@ -41,12 +41,15 @@ export const isValidAuthUser = (candidate: unknown): candidate is AuthUser => {
 };
 
 export const normalizeAuthUser = (candidate: any): AuthUser => {
+  if (!candidate || !isValidUserRole(candidate.role)) {
+    throw new Error(`Authentication identity error: Unresolved or invalid role '${candidate?.role}'.`);
+  }
   return {
     id: String(candidate.id || candidate._id || ''),
     name: typeof candidate.name === 'string' && candidate.name.trim() ? candidate.name.trim() : 'Trust Member',
     email: String(candidate.email || '').toLowerCase().trim(),
     phone: typeof candidate.phone === 'string' ? candidate.phone : undefined,
-    role: isValidUserRole(candidate.role) ? candidate.role : 'DONOR',
+    role: candidate.role,
     isActive: candidate.isActive !== false,
     isEmailVerified: Boolean(candidate.isEmailVerified),
     createdAt: candidate.createdAt ? String(candidate.createdAt) : undefined,

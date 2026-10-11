@@ -278,7 +278,7 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
                   ? 'Admin & Governance Portal'
                   : user.role === 'VOLUNTEER'
                   ? 'Volunteer Seva Portal'
-                  : 'My Donations & Tax Receipts'}
+                  : 'My Donations & Receipts'}
               </span>
             </Link>
 
