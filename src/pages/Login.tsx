@@ -167,13 +167,34 @@ export const Login: React.FC = () => {
                 size="md"
                 variant="primary"
                 disabled={isLoading}
-                className="w-full font-semibold"
+                className="w-full font-semibold cursor-pointer"
                 rightIcon={isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
               >
                 {isLoading ? "Verifying Credentials..." : "Sign In"}
               </Button>
             </div>
           </form>
+
+          {/* Quick Demo Donor Account Helper */}
+          <div className="mt-4 p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl text-left text-xs">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-amber-950">Demo Donor Account</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail("donor@example.com");
+                  setPassword("Donor@123456");
+                }}
+                className="text-[11px] font-semibold text-amber-800 hover:text-amber-950 underline cursor-pointer"
+              >
+                Auto-fill
+              </button>
+            </div>
+            <div className="text-[11px] text-stone-600 mt-1 space-y-0.5 font-mono">
+              <div>Email: donor@example.com</div>
+              <div>Password: Donor@123456</div>
+            </div>
+          </div>
 
           <div className="mt-5 pt-4 border-t border-stone-100 text-center text-xs text-stone-600">
             Don't have a donor or volunteer account yet?{" "}

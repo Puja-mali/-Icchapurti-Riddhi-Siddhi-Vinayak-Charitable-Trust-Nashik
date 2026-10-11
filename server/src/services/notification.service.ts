@@ -254,7 +254,7 @@ export class NotificationService {
     if (!this.isConnected()) return;
 
     try {
-      const targetRoles = input.roles || ['ADMIN'];
+      const targetRoles = input.roles || ['ADMIN', 'STAFF'];
       const adminUsers = await User.find({
         role: { $in: targetRoles },
         isActive: true,

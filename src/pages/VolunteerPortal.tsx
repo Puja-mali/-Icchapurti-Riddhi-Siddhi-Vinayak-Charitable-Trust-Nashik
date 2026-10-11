@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
+import { PushNotificationToggle } from "@/src/components/common/PushNotificationToggle";
 import { VolunteerCertificate, VolunteerShift } from "@/src/types";
 import { volunteerService, VolunteerProfileData } from "@/src/services/volunteerService";
 import { useAuth } from "@/src/context/AuthContext";
@@ -248,6 +249,9 @@ export const VolunteerPortal: React.FC = () => {
           </Button>
         </div>
       )}
+
+      {/* Volunteer Device Push Notifications */}
+      <PushNotificationToggle />
 
       {/* Main Grid: Shifts History & Digital Certificates */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

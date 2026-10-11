@@ -19,6 +19,7 @@ import {
 import { notificationService, AppNotification } from '@/src/services/notificationService';
 import { cn } from '@/src/lib/utils';
 import { Button } from './Button';
+import { PushNotificationToggle } from './PushNotificationToggle';
 
 interface NotificationFeedProps {
   title?: string;
@@ -188,6 +189,11 @@ export const NotificationFeed: React.FC<NotificationFeedProps> = ({
             )}
           </div>
         )}
+      </div>
+
+      {/* Device Web Push Notification Quick Toggle */}
+      <div className="px-5 py-3 bg-stone-50/80 border-b border-stone-200">
+        <PushNotificationToggle compact />
       </div>
 
       {/* Filter Toolbar */}

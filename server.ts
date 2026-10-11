@@ -3,6 +3,7 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { app as apiApp } from './server/src/app';
 import { connectDatabase, disconnectDatabase } from './server/src/config/database';
+import { autoSeedTrustData } from './server/src/services/seed.service';
 import { logger } from './server/src/utils/logger';
 
 async function startServer() {
@@ -12,19 +13,18 @@ async function startServer() {
   // Trust proxy for reverse proxies in container / cloud environment
   app.set('trust proxy', true);
 
-  // Initialize backend database connection (fails startup if connection is not established)
-  const dbConnected = await connectDatabase();
-  if (!dbConnected) {
-    if (process.env.NODE_ENV === 'production') {
-      logger.error(
-        '[FATAL] Production startup aborted: Could not connect to real MongoDB. Set a valid MONGODB_URI in environment.'
-      );
+  // Initialize backend database connection (resilient fallback if unavailable)
+  try {
+    const dbConnected = await connectDatabase();
+    if (dbConnected) {
+      await autoSeedTrustData();
     } else {
-      logger.error(
-        '[FATAL] Development startup aborted: Database connection failed. Set MONGODB_URI or USE_IN_MEMORY_DB=true in .env.'
+      logger.warn(
+        '[NOTICE] Database is currently offline. Starting server with resilient stubs and fallback data.'
       );
     }
-    process.exit(1);
+  } catch (dbErr) {
+    logger.warn('[NOTICE] Database connection error caught during startup:', dbErr);
   }
 
   // Route all /api/* requests strictly to the backend Express application

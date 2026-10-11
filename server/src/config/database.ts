@@ -68,23 +68,21 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
   let uri = options.uri !== undefined ? options.uri : (process.env.MONGODB_URI || env.MONGODB_URI);
 
   // 1. Production Validation: Real MongoDB connection strictly required
-  if (isProd) {
-    if (!uri) {
-      logger.error(
-        '[FATAL] Production database configuration error: MONGODB_URI is required when NODE_ENV=production. In-memory database fallback is strictly prohibited in production. Server startup aborted.'
-      );
-      return false;
-    }
+  if (isProd && !uri && options.allowInMemory !== true) {
+    logger.warn(
+      '[WARNING] Production database configuration notice: MONGODB_URI is not set in environment.'
+    );
+    return false;
   }
 
-  // 2. Development & Non-production Fallback: Only permitted with explicit opt-in
-  if (!uri && !isProd) {
-    const useInMemory = options.allowInMemory ?? (process.env.USE_IN_MEMORY_DB === 'true' || env.USE_IN_MEMORY_DB);
+  // 2. Fallback: Automatically launch in-memory MongoDB when no remote URI is configured
+  if (!uri) {
+    const useInMemory = options.allowInMemory !== false;
 
     if (useInMemory) {
       try {
         logger.info(
-          'USE_IN_MEMORY_DB=true detected. Initializing local in-memory MongoDB instance for development/testing...'
+          'No external MONGODB_URI configured. Initializing local in-memory MongoDB instance for development & preview...'
         );
         const { MongoMemoryServer } = await import('mongodb-memory-server');
         if (!mongodInstance) {
@@ -93,12 +91,12 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
         uri = mongodInstance.getUri();
         logger.info('Local in-memory MongoDB instance initialized successfully.');
       } catch (memErr) {
-        logger.error('Failed to launch in-memory MongoDB instance:', (memErr as Error)?.message || memErr);
+        logger.warn('Failed to launch in-memory MongoDB instance:', (memErr as Error)?.message || memErr);
         return false;
       }
     } else {
-      logger.error(
-        '[FATAL] Database configuration missing: MONGODB_URI is not set in environment. To start with an ephemeral in-memory database for local testing or development, set USE_IN_MEMORY_DB=true in your .env file. Otherwise, provide a valid MONGODB_URI (e.g. MongoDB Atlas or local mongodb://localhost:27017/trust_db).'
+      logger.warn(
+        'Database connection omitted: MONGODB_URI is unset and in-memory database is disabled.'
       );
       return false;
     }

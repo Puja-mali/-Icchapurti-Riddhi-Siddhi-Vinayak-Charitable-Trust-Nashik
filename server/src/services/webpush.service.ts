@@ -129,7 +129,7 @@ export class WebPushService {
           failedAttempts: 0,
         },
       },
-      { upsert: true, new: true, runValidators: true }
+      { upsert: true, returnDocument: 'after', runValidators: true }
     );
 
     logger.info(`[WEB PUSH] Registered push subscription for user ${userId}. Endpoint: ${subscription.endpoint.substring(0, 30)}...`);
@@ -212,8 +212,8 @@ export class WebPushService {
     const sanitizedPayload: PushPayload = {
       title: payload.title.trim(),
       body: payload.body.trim(),
-      icon: payload.icon || '/favicon.ico',
-      badge: payload.badge || '/favicon.ico',
+      icon: payload.icon || '/trust-emblem.jpg',
+      badge: payload.badge || '/trust-emblem.jpg',
       tag: payload.tag || 'sct-trust-update',
       data: {
         url: payload.data?.url || '/dashboard',
@@ -289,7 +289,7 @@ export class WebPushService {
       return { sent: 0, failed: 0 };
     }
 
-    const targetRoles = options.roles || ['ADMIN'];
+    const targetRoles = options.roles || ['ADMIN', 'STAFF'];
     const adminUsers = await User.find({
       role: { $in: targetRoles },
       isActive: true,

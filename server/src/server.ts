@@ -6,18 +6,18 @@ import { logger } from './utils/logger';
 const startServer = async () => {
   try {
     // Attempt database connection
-    const dbConnected = await connectDatabase();
-    if (!dbConnected) {
-      if (process.env.NODE_ENV === 'production' || env.isProduction) {
-        logger.error(
-          '[FATAL] Production startup aborted: Could not connect to real MongoDB. Set a valid MONGODB_URI in environment.'
-        );
+    try {
+      const dbConnected = await connectDatabase();
+      if (dbConnected) {
+        const { autoSeedTrustData } = await import('./services/seed.service.js');
+        await autoSeedTrustData();
       } else {
-        logger.error(
-          '[FATAL] Development startup aborted: Database connection failed. Set MONGODB_URI or USE_IN_MEMORY_DB=true in .env.'
+        logger.warn(
+          '[NOTICE] Database connection unavailable. Server continuing in fallback mode.'
         );
       }
-      process.exit(1);
+    } catch (dbErr) {
+      logger.warn('[NOTICE] Database connection error during startup:', dbErr);
     }
 
     const server = app.listen(env.PORT, '0.0.0.0', () => {

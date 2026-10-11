@@ -19,6 +19,7 @@ import {
 import { notificationService, AppNotification } from '@/src/services/notificationService';
 import { useAuth } from '@/src/context/AuthContext';
 import { cn } from '@/src/lib/utils';
+import { PushNotificationToggle } from './PushNotificationToggle';
 
 export const NotificationBell: React.FC = () => {
   const { user } = useAuth();
@@ -244,6 +245,11 @@ export const NotificationBell: React.FC = () => {
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
+            </div>
+
+            {/* Device Web Push Notification Quick Toggle */}
+            <div className="px-4 py-2 bg-stone-50/80 border-b border-stone-200">
+              <PushNotificationToggle compact />
             </div>
 
             {/* Filter Tabs */}

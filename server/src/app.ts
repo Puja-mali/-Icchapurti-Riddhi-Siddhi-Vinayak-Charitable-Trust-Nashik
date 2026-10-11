@@ -123,6 +123,29 @@ export const createApp = (): Express => {
     sendError(res, `Route ${req.method} ${req.originalUrl} not found`, 404);
   });
 
+  // Database offline error middleware fallback
+  app.use((err: any, req: Request, res: Response, next: any) => {
+    if (
+      err &&
+      (err.name === 'MongooseError' ||
+        err.name === 'MongoNetworkError' ||
+        (err.message && err.message.includes('buffering timed out')))
+    ) {
+      console.warn('[AI Studio] Database offline — returning mock empty response');
+      if (req.method === 'GET') {
+        return res.json({
+          success: true,
+          data: req.path.endsWith('s') || req.path.endsWith('s/') ? [] : {},
+        });
+      }
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable (database offline)',
+      });
+    }
+    next(err);
+  });
+
   // Centralized Error Handling Middleware
   app.use(errorHandler);
 

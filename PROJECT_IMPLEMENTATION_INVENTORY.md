@@ -19,7 +19,7 @@
 | **Backend Runtime** | Node.js (v22 runtime), Express 4.21.2, `tsx` 4.21.0, `esbuild` 0.25.0 | TypeScript REST API server running on port 3000. |
 | **Database & ODM** | MongoDB, Mongoose 9.9.5, `mongodb-memory-server` 11.2.0 | Schema-backed document persistence with automatic dev fallback to embedded in-memory MongoDB. |
 | **Security & Utilities** | `bcryptjs` 3.0.3, `jsonwebtoken` 9.0.3, `helmet` 8.3.0, `cors` 2.8.6, `express-rate-limit` 8.7.0, `zod` 4.6.1, `cookie-parser` 1.4.7 | Cryptographic hashing (12 salt rounds), JWT signing, security headers, rate limiting, and schema validation. |
-| **Integrations** | `razorpay` 2.9.8, `@google/genai` 2.4.0, `cloudinary` 2.11.0, `nodemailer` 10.0.10, `multer` 2.4.0 | Payment SDK, AI SDK, cloud asset storage, transactional email. *Note: Live external round-trips depend on external service credentials (see Section 6 & 7).* |
+| **Integrations** | `razorpay` 2.9.8, `@google/genai` 2.4.0, `web-push` 3.6.7, `cloudinary` 2.11.0, `nodemailer` 10.0.10, `multer` 2.4.0 | Payment SDK, AI SDK, Web Push notifications, cloud asset storage, transactional email. *Note: Live external round-trips depend on external service credentials (see Section 6 & 7).* |
 
 ### 1.2 Entry Points & Client-Server Communication Flow
 * **Unified Server Entry Point (`server.ts`)**:
@@ -59,6 +59,7 @@
 * `npm run lint`: Runs strict TypeScript compiler check (`tsc --noEmit`).
 * `npm run create-admin`: Runs CLI administrator provisioning script (`tsx server/src/scripts/createAdmin.ts`).
 * `npm run seed-trust-data`: Seeds authentic Trust profile, 13 trustees, 9 causes, and 6 volunteer roles into MongoDB (`tsx server/src/scripts/seedRealTrustData.ts`).
+* `npm run test:push`: Runs Web Push notification automated test suite against an isolated in-memory MongoDB instance (`tsx server/src/scripts/testWebPush.ts`).
 * `npm run test:admin`: Runs admin summary metrics test suite against an isolated in-memory MongoDB instance.
 * `npm run test:e2e`: Runs 15-domain end-to-end readiness and security test suite against an isolated in-memory MongoDB instance.
 
@@ -334,6 +335,10 @@ To maintain audit integrity, every major public and authenticated page is classi
 | 104 | **GET** | `/api/volunteers` | ADMIN | `VolunteerController.listAllVolunteers` | `volunteer.routes.ts` |
 | 105 | **PATCH** | `/api/volunteers/:id/hours` | ADMIN | `VolunteerController.updateVolunteerHours` | `volunteer.routes.ts` |
 | 106 | **GET** | `/api/volunteers/:id` | VOLUNTEER, ADMIN, STAFF | `VolunteerController.getVolunteerById` | `volunteer.routes.ts` |
+| 107 | **GET** | `/api/push/public-key` | Public | `PushController.getPublicKey` | `push.routes.ts` |
+| 108 | **POST** | `/api/push/subscribe` | Authenticated | `PushController.subscribe` | `push.routes.ts` |
+| 109 | **POST** | `/api/push/unsubscribe` | Authenticated | `PushController.unsubscribe` | `push.routes.ts` |
+| 110 | **GET** | `/api/push/status` | Authenticated | `PushController.getStatus` | `push.routes.ts` |
 
 ---
 
@@ -402,6 +407,14 @@ To prevent conflating software data structures with verified legal records, the 
 * **Nodemailer SMTP Email Service:**
   - Code integration implemented in `server/src/services/email.service.ts`.
   - **Live SMTP Delivery: NOT VERIFIED.** In the test environment, emails are skipped with log notice: `Skipped delivery (SMTP credentials not configured)`.
+* **Web Push Notifications & Service Worker Integration:**
+  - Full-stack VAPID Web Push protocol implemented via `web-push` SDK and HTTPS-compatible browser Service Worker (`public/sw.js`).
+  - Supported endpoints: `GET /api/push/public-key`, `POST /api/push/subscribe`, `POST /api/push/unsubscribe`, `GET /api/push/status`.
+  - Permission model: Push permissions are requested solely upon explicit user engagement via `PushNotificationToggle` (never on unsolicited page load). Integrated across authenticated views: `UserProfileMenu` (Profile modal), `NotificationBell` (Navbar dropdown), `NotificationFeed` (Dashboard center), `AdminDashboard` (Operational settings tab), and `VolunteerPortal`.
+  - Multi-tenant IDOR protection: Subscriptions are strictly bound to authenticated user ObjectIDs; deletion queries enforce ownership (`{ endpoint, user: req.user._id }`).
+  - Deduplication & privacy: 10-minute sliding window suppresses duplicate notifications; payloads are strictly sanitized against beneficiary or financial PII.
+  - Automatic stale-subscription cleanup: HTTP 410 Gone and 404 Not Found delivery errors automatically purge dead subscriptions from MongoDB.
+  - **Live Mobile OS Push: NOT VERIFIED on physical external device.** While local VAPID encryption, in-memory subscriptions, and event dispatches are 100% verified by automated tests, actual push delivery to real phone notification trays depends on user-granted browser permission, HTTPS origin deployment, and external browser push services (FCM / Mozilla Push / Apple APNs).
 
 ---
 
@@ -411,15 +424,28 @@ All automated test suites in the repository were executed directly. Results are 
 
 1. **TypeScript Type-Checking (`npm run lint` / `tsc --noEmit`):**
    - **Result:** PASSED with 0 errors.
-2. **Production Build (`npm run build` / Vite + esbuild):**
+2. **Server TypeScript Compilation (`npx tsc --noEmit -p server/tsconfig.json`):**
+   - **Result:** PASSED with 0 errors.
+3. **Production Build (`npm run build` / Vite + esbuild):**
    - **Result:** PASSED with clean client bundle and `dist/server.cjs`.
-3. **Database Startup & Configuration Tests (`npm run test:db`):**
+4. **Database Startup & Configuration Tests (`npm run test:db`):**
    - **Result:** 17 / 17 Verification Checks PASSED.
    - Tests production missing MONGODB_URI abort, unreachable URI failure, development fallback opt-in checks, /api/health real status reporting, and unbuffered traffic degradation.
-4. **Users & Roles Management Tests (`npm run test:users`):**
+5. **Users & Roles Management Tests (`npm run test:users`):**
    - **Result:** 24 / 24 Verification Checks PASSED.
    - Tests User Directory search, admin lockout prevention, strict four-role enforcement, RBAC guards on user-management routes, cryptographic invitation hashing, token expiry, single-use token consumption, and password assignment.
-5. **Admin Dashboard Summary Tests (`npm run test:admin`):**
+6. **Web Push Notification Verification Tests (`npm run test:push`):**
+   - **Result:** 17 / 17 Verification Checks PASSED.
+   - Test Group 1: VAPID public key availability and format validation.
+   - Test Group 2: HTTPS requirement and missing cryptographic keys rejection.
+   - Test Group 3: Valid subscription registration and endpoint idempotency.
+   - Test Group 4: Subscription status queries.
+   - Test Group 5: Strict IDOR ownership enforcement on unsubscribe.
+   - Test Group 6: Deduplication suppressing repeated alerts within 10-minute window.
+   - Test Group 7: Data privacy and PII sanitization (exclusion of PAN, Aadhaar, payment card data).
+   - Test Group 8: Role-based broadcast targeting (ADMIN & STAFF inclusion, DONOR exclusion).
+   - Test Group 9: Automatic expired-subscription cleanup upon HTTP 410 Gone response.
+7. **Admin Dashboard Summary Tests (`npm run test:admin`):**
    - **Result:** 6 / 6 Test Cases PASSED.
    - Test 1: Unauthenticated request blocked with HTTP 401.
    - Test 2: Invalid Bearer token blocked with HTTP 401.
@@ -427,7 +453,7 @@ All automated test suites in the repository were executed directly. Results are 
    - Test 4: Authenticated VOLUNTEER blocked with HTTP 403.
    - Test 5: Authenticated ADMIN on empty database returns zeroed counts without mock numbers.
    - Test 6: Authenticated ADMIN with real database records computes accurate mathematical aggregations and strips beneficiary PII.
-6. **End-to-End Readiness Suite (`npm run test:e2e`):**
+8. **End-to-End Readiness Suite (`npm run test:e2e`):**
    - **Result:** 15 / 15 Domain Suites PASSED.
    - Domain 1: Public Website & Information Architecture — PASS
    - Domain 2: Authentication & Authorization Flow — PASS
@@ -438,7 +464,7 @@ All automated test suites in the repository were executed directly. Results are 
    - Domain 7: Help Request & Beneficiary Assistance — PASS
    - Domain 8: Impact Passport & Radical Transparency — PASS
    - Domain 9: AI Assistant & Grounded Allocation — PASS
-   - Domain 10: In-App Notifications — PASS
+   - Domain 10: In-App Notifications & Web Push hooks — PASS
    - Domain 11: File & Media Upload Security (Magic bytes & SSRF) — PASS
    - Domain 12: Admin Daily Operations & Management — PASS
    - Domain 13: Data Integrity & Validation (Zod schemas) — PASS
@@ -451,6 +477,7 @@ All automated test suites in the repository were executed directly. Results are 
 
 Based on direct source code inspection, Express AST route analysis, and execution of automated verification suites:
 
-1. **Architecture & Integrity:** The codebase implements a complete, structured TypeScript full-stack architecture with 106 defined API endpoints across 18 route modules, schema validation, and secure authentication flows.
-2. **Security & RBAC:** Role boundaries between `ADMIN`, `STAFF`, `DONOR`, and `VOLUNTEER` are verified by backend middleware. Administrative accounts cannot be created via public registration and must be provisioned via server-side CLI (`npm run create-admin`).
-3. **Production Readiness:** While local software components, database models, and build pipelines are verified and passing all automated test suites, **production deployment requires external operational setup**: provisioning live MongoDB Atlas credentials, live Razorpay gateway keys, SMTP email credentials, and valid Cloudinary API keys. Statutory documents and vendor records currently serve as software demonstration assets rather than externally audited filings.
+1. **Architecture & Integrity:** The codebase implements a complete, structured TypeScript full-stack architecture with 110 defined API endpoints across 19 route modules, schema validation, and secure authentication flows.
+2. **Security & RBAC:** Role boundaries between `ADMIN`, `STAFF`, `DONOR`, and `VOLUNTEER` are verified by backend middleware. Administrative accounts cannot be created via public registration and must be provisioned via server-side CLI (`npm run create-admin`) or initial seed.
+3. **Web Push Readiness:** Real Web Push notification infrastructure is fully implemented, guarded by VAPID protocol, opt-in permission requirements, role-based recipient routing, deduplication, and automatic stale-subscription cleanup.
+4. **Production Readiness:** While local software components, database models, and build pipelines are verified and passing all automated test suites, **production deployment requires external operational setup**: provisioning live MongoDB Atlas credentials, live Razorpay gateway keys, SMTP email credentials, valid Cloudinary API keys, and production VAPID key pairs. Statutory documents and vendor records currently serve as software demonstration assets rather than externally audited filings.

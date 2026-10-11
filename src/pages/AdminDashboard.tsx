@@ -58,6 +58,7 @@ import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
 import { TrustManagementTab } from "@/src/components/admin/TrustManagementTab";
 import { UsersManagementTab } from "@/src/components/admin/UsersManagementTab";
+import { PushNotificationToggle } from "@/src/components/common/PushNotificationToggle";
 import { FileUploadField } from "@/src/components/common/FileUploadField";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
@@ -3942,7 +3943,20 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* 3. Role Switcher for Testing */}
+          {/* 3. Operational Push Notifications */}
+          <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
+            <h3 className="font-serif font-bold text-lg text-stone-900">
+              Admin & Staff Device Notifications
+            </h3>
+            <p className="text-xs text-stone-600">
+              Enable real-time push alerts on your workstation or mobile device for incoming contributions, verified payments, volunteer applications, and emergency aid tickets.
+            </p>
+            <div className="pt-1">
+              <PushNotificationToggle />
+            </div>
+          </div>
+
+          {/* 4. Role Switcher for Testing */}
           <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
             <h3 className="font-serif font-bold text-lg text-stone-900">
               Role-Based UI Perspective Simulation

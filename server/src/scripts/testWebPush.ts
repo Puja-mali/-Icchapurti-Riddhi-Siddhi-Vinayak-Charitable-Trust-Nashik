@@ -204,19 +204,56 @@ async function runWebPushSuite() {
       },
     });
 
-    // Query active recipients for ADMIN broadcast
-    const adminRecipients = await User.find({ role: { $in: ['ADMIN'] }, isActive: true }).select('_id');
+    // Query active recipients for ADMIN/STAFF broadcast
+    const adminRecipients = await User.find({ role: { $in: ['ADMIN', 'STAFF'] }, isActive: true }).select('_id');
     const donorInAdminList = adminRecipients.some((r) => r._id.toString() === testDonor._id.toString());
     assert(!donorInAdminList, 'DONOR is strictly excluded from administrative push alerts');
 
     const adminInAdminList = adminRecipients.some((r) => r._id.toString() === testAdmin._id.toString());
     assert(adminInAdminList, 'ADMIN is included in administrative push broadcast targets');
 
+    const staffInAdminList = adminRecipients.some((r) => r._id.toString() === testStaff._id.toString());
+    assert(staffInAdminList, 'STAFF is included in administrative push broadcast targets');
+
+    // --- TEST GROUP 9: Expired/Dead Subscription Automatic Cleanup (HTTP 410) ---
+    console.log('\n--- TEST GROUP 9: Automatic Expired-Subscription Cleanup ---');
+    const expiredEndpoint = `https://fcm.googleapis.com/fcm/send/expired-${Date.now()}`;
+    await WebPushService.registerSubscription(testDonor._id.toString(), {
+      endpoint: expiredEndpoint,
+      keys: {
+        p256dh: 'BNcRdreALRFXTkOOUHK1EtK2wtaz5Ry4YfYCA_0QT9AcUbVYOSTxGen0KURo6-CG9K2wtaz5Ry4YfYCA',
+        auth: 'tBHItJI5svbpez7KI4CCXg',
+      },
+    });
+
+    const webpushModule = await import('web-push');
+    const originalSendNotification = webpushModule.default.sendNotification;
+
+    try {
+      // Mock webpush.sendNotification to simulate an HTTP 410 Gone response
+      (webpushModule.default as any).sendNotification = async () => {
+        const error: any = new Error('Subscription expired');
+        error.statusCode = 410;
+        throw error;
+      };
+
+      await WebPushService.sendToUser(testDonor._id.toString(), {
+        title: 'Test Expired Cleanup',
+        body: 'This delivery should trigger cleanup.',
+      }, { dedupKey: `cleanup-test-${Date.now()}` });
+
+      const deadSubInDb = await PushSubscription.findOne({ endpoint: expiredEndpoint });
+      assert(deadSubInDb === null, 'Expired subscription (HTTP 410 Gone) is automatically purged from database');
+    } finally {
+      // Restore original sendNotification
+      webpushModule.default.sendNotification = originalSendNotification;
+    }
+
     // -------------------------------------------------------------
     // Cleanup
     // -------------------------------------------------------------
     await User.deleteMany({ _id: { $in: [testAdmin._id, testStaff._id, testDonor._id] } });
-    await PushSubscription.deleteMany({ endpoint: { $in: [donorEndpoint, adminEndpoint] } });
+    await PushSubscription.deleteMany({ endpoint: { $in: [donorEndpoint, adminEndpoint, expiredEndpoint] } });
 
     console.log('\n===============================================================');
     console.log(` Web Push Test Summary: ${passed} Passed, ${failed} Failed`);
