@@ -1880,7 +1880,7 @@ export const AdminDashboard: React.FC = () => {
                         </td>
                       </tr>
                     );
-                  })}
+                 }))}
                 </tbody>
               </table>
             </div>
