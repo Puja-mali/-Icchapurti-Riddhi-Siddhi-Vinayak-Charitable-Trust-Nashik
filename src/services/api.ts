@@ -38,7 +38,8 @@ export class ApiError extends Error {
 // In-memory access token storage (never written to localStorage)
 let inMemoryAccessToken: string | null = null;
 let isRefreshing = false;
-let refreshSubscribers: Array<(token: string) => void> = [];
+type RefreshCallback = (err: Error | null, token: string | null) => void;
+let refreshSubscribers: RefreshCallback[] = [];
 
 export const setAccessToken = (token: string | null) => {
   inMemoryAccessToken = token;
@@ -49,14 +50,15 @@ export const getAccessToken = (): string | null => {
 };
 
 const onRefreshed = (newToken: string) => {
-  refreshSubscribers.forEach((cb) => cb(newToken));
+  refreshSubscribers.forEach((cb) => cb(null, newToken));
   refreshSubscribers = [];
 };
 
-const onRefreshFailed = () => {
+const onRefreshFailed = (err?: Error) => {
+  const failureError = err || new ApiError('Session expired. Please sign in again.', 401);
   refreshSubscribers.forEach((cb) => {
     try {
-      cb('');
+      cb(failureError, null);
     } catch {
       // Ignore
     }
@@ -150,7 +152,15 @@ export async function apiClient<T = any>(
       } else {
         // Queue parallel requests until refresh completes
         const retryToken = await new Promise<string>((resolve, reject) => {
-          refreshSubscribers.push(resolve);
+          refreshSubscribers.push((err, token) => {
+            if (err) {
+              reject(err);
+            } else if (token) {
+              resolve(token);
+            } else {
+              reject(new ApiError('Session expired. Please sign in again.', 401));
+            }
+          });
           setTimeout(() => reject(new ApiError('Refresh timeout', 408)), 10000);
         });
         headers.set('Authorization', `Bearer ${retryToken}`);

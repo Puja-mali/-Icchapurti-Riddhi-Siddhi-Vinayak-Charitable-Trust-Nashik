@@ -98,14 +98,22 @@ export const createApp = (): Express => {
   // Apply general rate limiting to API routes
   app.use('/api', apiLimiter);
 
-  // Protect normal API traffic when database connection is not active
-  app.use('/api', (req: Request, res: Response, next) => {
+  // Handle requests during database initialization or fallback
+  app.use('/api', async (req: Request, res: Response, next) => {
     // Health check endpoint is always permitted to report real system status
     if (req.path === '/health' || req.path === '/health/') {
       return next();
     }
     const db = getDbStatus();
-    if (db.status !== 'connected') {
+    if (db.status === 'connecting') {
+      // Brief wait up to 3 seconds for initial connection during server boot
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+        if (getDbStatus().status === 'connected') break;
+      }
+    }
+
+    if (getDbStatus().status !== 'connected') {
       return res.status(503).json({
         success: false,
         message: 'Database service is unavailable. Please try again later.',

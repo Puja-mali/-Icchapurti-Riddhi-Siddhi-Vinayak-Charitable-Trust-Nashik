@@ -953,6 +953,7 @@ recordCheck('11', 'Security: HTML/SVG script polyglots strictly rejected', !poly
     server.close();
     await mongoose.disconnect();
     await mongoServer.stop();
+    process.exit(0);
   }
 }
 

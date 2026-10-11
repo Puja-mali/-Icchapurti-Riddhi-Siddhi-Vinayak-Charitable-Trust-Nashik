@@ -481,3 +481,24 @@ Based on direct source code inspection, Express AST route analysis, and executio
 2. **Security & RBAC:** Role boundaries between `ADMIN`, `STAFF`, `DONOR`, and `VOLUNTEER` are verified by backend middleware. Administrative accounts cannot be created via public registration and must be provisioned via server-side CLI (`npm run create-admin`) or initial seed.
 3. **Web Push Readiness:** Real Web Push notification infrastructure is fully implemented, guarded by VAPID protocol, opt-in permission requirements, role-based recipient routing, deduplication, and automatic stale-subscription cleanup.
 4. **Production Readiness:** While local software components, database models, and build pipelines are verified and passing all automated test suites, **production deployment requires external operational setup**: provisioning live MongoDB Atlas credentials, live Razorpay gateway keys, SMTP email credentials, valid Cloudinary API keys, and production VAPID key pairs. Statutory documents and vendor records currently serve as software demonstration assets rather than externally audited filings.
+
+---
+
+## 10. Final Verification Checkpoint & Operational Status
+
+**Audit & Fix Session Summary:**
+1. **Server Startup & Port 3000 Pre-warming:** Resolved dev server pre-warming process termination by immediately binding `httpServer` to port 3000 (`0.0.0.0`) in `server.ts` before background DB connection initialization, and multiplexed Vite HMR directly through `httpServer` to eliminate WebSocket port 24678 collisions.
+2. **Database Status & Safe Degradation:** Verified that production strictly refuses in-memory DB fallback and requires genuine `MONGODB_URI`. All 17 checks in `npm run test:db` pass cleanly.
+3. **Rate Limiting & Token Refresh Loop:** Resolved the root cause of the "Too many requests from this IP" error in `src/services/api.ts` by ensuring failed silent token refresh cycles reject parallel subscribers with 401 instead of re-dispatching empty-token retry requests to the backend.
+4. **Authentication & Session Hygiene:** Added `sessionStorage.clear()` to `AuthContext.logout()` alongside `localStorage` token cleanup. Verified role-based navigation guards for `/login` and `/admin/login`. Verified "Forgot password?" link visibility and reset flow.
+5. **Data Integrity & Honest Content:** Confirmed `mockData.ts` and `seed.service.ts` contain zero synthetic campaigns, events, locations, or fake donation totals. Honest empty states display whenever no administrator-published records exist.
+6. **All Test Suites Passing:**
+   - `npm run lint` — 0 errors
+   - `npx tsc --noEmit -p server/tsconfig.json` — 0 errors
+   - `npm run build` — Clean Vite client bundle & esbuild `dist/server.cjs`
+   - `npm run test:db` — 17 / 17 checks passed
+   - `npm run test:users` — 24 / 24 checks passed
+   - `npm run test:push` — 17 / 17 checks passed
+   - `npm run test:admin` — 6 / 6 test cases passed
+   - `npm run test:e2e` — 15 / 15 domain suites passed
+

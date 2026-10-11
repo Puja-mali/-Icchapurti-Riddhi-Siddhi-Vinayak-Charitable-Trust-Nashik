@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import http from 'http';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { app as apiApp } from './server/src/app';
@@ -8,24 +9,10 @@ import { logger } from './server/src/utils/logger';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   // Trust proxy for reverse proxies in container / cloud environment
   app.set('trust proxy', true);
-
-  // Initialize backend database connection (resilient fallback if unavailable)
-  try {
-    const dbConnected = await connectDatabase();
-    if (dbConnected) {
-      await autoSeedTrustData();
-    } else {
-      logger.warn(
-        '[NOTICE] Database is currently offline. Starting server with resilient stubs and fallback data.'
-      );
-    }
-  } catch (dbErr) {
-    logger.warn('[NOTICE] Database connection error caught during startup:', dbErr);
-  }
 
   // Route all /api/* requests strictly to the backend Express application
   app.use((req: Request, res: Response, next) => {
@@ -35,10 +22,15 @@ async function startServer() {
     next();
   });
 
+  const httpServer = http.createServer(app);
+
   // Vite middleware for frontend development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: process.env.DISABLE_HMR === 'true' ? false : { server: httpServer },
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -50,7 +42,13 @@ async function startServer() {
     });
   }
 
-  const server = app.listen(PORT, '0.0.0.0', () => {
+  // Handle server errors (e.g. EADDRINUSE) gracefully
+  httpServer.on('error', (err: any) => {
+    logger.error('HTTP server encountered an error:', err);
+  });
+
+  // Start HTTP server immediately so port 3000 responds right away for health & pre-warming checks
+  httpServer.listen(PORT, '0.0.0.0', () => {
     logger.info(`=======================================================`);
     logger.info(` Siddhivinayak Charitable Trust Unified Platform Ready `);
     logger.info(` Port:        ${PORT}                                  `);
@@ -59,10 +57,25 @@ async function startServer() {
     logger.info(`=======================================================`);
   });
 
+  // Initialize backend database connection in the background without blocking port 3000 readiness
+  connectDatabase()
+    .then(async (dbConnected) => {
+      if (dbConnected) {
+        await autoSeedTrustData();
+      } else {
+        logger.warn(
+          '[NOTICE] Database is currently offline. Starting server with resilient stubs and fallback data.'
+        );
+      }
+    })
+    .catch((dbErr) => {
+      logger.warn('[NOTICE] Database connection error caught during startup:', dbErr);
+    });
+
   // Graceful Shutdown
   const shutdown = async (signal: string) => {
     logger.info(`Received ${signal}. Shutting down cleanly...`);
-    server.close(async () => {
+    httpServer.close(async () => {
       await disconnectDatabase();
       logger.info('Server closed cleanly. Process exiting.');
       process.exit(0);
@@ -78,4 +91,6 @@ async function startServer() {
   process.on('SIGTERM', () => shutdown('SIGTERM'));
 }
 
-startServer();
+startServer().catch((err) => {
+  logger.error('Fatal unhandled error during server startup:', err);
+});

@@ -113,8 +113,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await authService.logout();
     } finally {
-      localStorage.removeItem('sct_auth_active');
-      localStorage.removeItem('sct_user_role');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('sct_auth_active');
+        localStorage.removeItem('sct_user_role');
+        sessionStorage.clear();
+      }
       setUser(null);
       setAccessToken(null);
       setIsLoading(false);
