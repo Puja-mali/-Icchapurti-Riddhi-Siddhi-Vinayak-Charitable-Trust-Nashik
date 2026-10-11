@@ -317,5 +317,121 @@ export class AuthService {
     await user.save();
     logger.info(`[SECURITY] Password changed successfully for user ${user.email} (${user._id})`);
   }
+
+  /**
+   * Generates single-use password reset token and sends email
+   * Prevents user enumeration by returning a generic response regardless of whether email exists
+   */
+  public static async forgotPassword(email: string): Promise<{ success: boolean; message: string; debugResetUrl?: string }> {
+    const cleanEmail = (email || '').toLowerCase().trim();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      throw new AppError('A valid email address is required.', 400);
+    }
+
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user || user.isActive === false) {
+      // Return identical generic response to prevent user enumeration attacks
+      return {
+        success: true,
+        message: 'If an account exists with this email address, password reset instructions have been sent to your inbox.',
+      };
+    }
+
+    // Generate cryptographic 32-byte hex token
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expiresInMinutes = 60;
+    const expiresAt = new Date(Date.now() + expiresInMinutes * 60 * 1000);
+
+    // Save hashed token and expiry on user document
+    await User.findByIdAndUpdate(user._id, {
+      $set: {
+        resetPasswordToken: tokenHash,
+        resetPasswordExpires: expiresAt,
+      },
+    });
+
+    const resetUrl = `${env.CLIENT_URL}/reset-password?token=${rawToken}`;
+
+    // Send transactional email (fail-safe; never throws)
+    await EmailService.sendPasswordResetEmail({
+      email: user.email,
+      name: user.name,
+      resetUrl,
+      expiresInMinutes,
+    });
+
+    logger.info(`[SECURITY] Password reset token generated for user ${user.email}. Expires in ${expiresInMinutes}m.`);
+
+    return {
+      success: true,
+      message: 'If an account exists with this email address, password reset instructions have been sent to your inbox.',
+      // Only include debug URL in non-production when useful for testing
+      ...(!env.isProduction ? { debugResetUrl: resetUrl } : {}),
+    };
+  }
+
+  /**
+   * Validates unexpired single-use password reset token
+   */
+  public static async validateResetToken(rawToken: string): Promise<{ valid: boolean; email: string }> {
+    if (!rawToken || typeof rawToken !== 'string') {
+      throw new AppError('Password reset token is required.', 400);
+    }
+
+    const tokenHash = crypto.createHash('sha256').update(rawToken.trim()).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken: tokenHash,
+      resetPasswordExpires: { $gt: new Date() },
+      isActive: true,
+    }).select('+resetPasswordToken +resetPasswordExpires');
+
+    if (!user) {
+      throw new AppError('This password reset link is invalid, expired, or has already been used. Please request a new one.', 400);
+    }
+
+    // Return masked email for confirmation display
+    const parts = user.email.split('@');
+    const masked = parts[0].length > 2 ? `${parts[0].slice(0, 2)}***@${parts[1]}` : user.email;
+
+    return { valid: true, email: masked };
+  }
+
+  /**
+   * Consumes password reset token and sets new password
+   */
+  public static async resetPassword(rawToken: string, newPassword: string): Promise<void> {
+    if (!rawToken || typeof rawToken !== 'string') {
+      throw new AppError('Password reset token is required.', 400);
+    }
+
+    if (!newPassword || newPassword.length < 8) {
+      throw new AppError('New password must be at least 8 characters long.', 400);
+    }
+
+    const tokenHash = crypto.createHash('sha256').update(rawToken.trim()).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken: tokenHash,
+      resetPasswordExpires: { $gt: new Date() },
+      isActive: true,
+    }).select('+passwordHash +resetPasswordToken +resetPasswordExpires');
+
+    if (!user) {
+      throw new AppError('This password reset link is invalid, expired, or has already been used. Please request a new one.', 400);
+    }
+
+    // Set new password
+    user.passwordHash = await hashPassword(newPassword);
+    // Invalidate reset token (single-use enforcement)
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    // Invalidate existing sessions/refresh tokens across all devices
+    user.refreshTokens = [];
+    await user.save();
+
+    logger.info(`[SECURITY] Password reset successfully completed for user ${user.email} (${user._id})`);
+  }
 }
 

@@ -36,6 +36,8 @@ import { Gallery } from "@/src/pages/Gallery";
 import { Blog } from "@/src/pages/Blog";
 import { BlogPost } from "@/src/pages/BlogPost";
 import { AcceptInvitation } from "@/src/pages/AcceptInvitation";
+import { ForgotPassword } from "@/src/pages/ForgotPassword";
+import { ResetPassword } from "@/src/pages/ResetPassword";
 
 const AnimatedRoutes: React.FC = () => {
   const location = useLocation();
@@ -70,6 +72,8 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/events/:id" element={<EventDetails />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/accept-invitation" element={<AcceptInvitation />} />

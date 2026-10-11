@@ -16,6 +16,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 
 dotenv.config();
 dotenv.config({ path: path.resolve(process.cwd(), 'server/.env') });
@@ -403,8 +404,9 @@ async function runTests() {
     // -------------------------------------------------------------
     // Cleanup test artifacts
     // -------------------------------------------------------------
+    const userIdsToClean = [testAdmin._id, testStaff._id, testDonor._id, activatedUser?._id].filter(Boolean);
     await User.deleteMany({
-      _id: { $in: [testAdmin._id, testStaff._id, testDonor._id, activatedUser?._id] },
+      _id: { $in: userIdsToClean as mongoose.Types.ObjectId[] },
     });
     await Invitation.deleteMany({
       _id: { $in: [issuedInvitationData.invitation._id, revokedInv._id, expiredInv._id] },

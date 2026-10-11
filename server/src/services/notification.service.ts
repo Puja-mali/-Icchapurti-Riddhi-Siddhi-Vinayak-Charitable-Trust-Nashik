@@ -1,6 +1,7 @@
 import mongoose, { Types } from 'mongoose';
 import { Notification, INotification, NotificationType } from '../models/Notification';
 import { User } from '../models/User';
+import { WebPushService } from './webpush.service';
 import { AppError } from '../utils/apiResponse';
 import { logger } from '../utils/logger';
 
@@ -57,6 +58,25 @@ export class NotificationService {
         relatedEntity: input.relatedEntity,
         metadata: input.metadata || {},
         isRead: false,
+      });
+
+      // Non-blocking Web Push dispatch to the recipient's devices
+      WebPushService.sendToUser(
+        recipientObjectId,
+        {
+          title: input.title.trim(),
+          body: input.message.trim(),
+          data: {
+            url: input.link || '/dashboard',
+            entityType: input.relatedEntity?.entityType,
+            entityId: input.relatedEntity?.entityId ? input.relatedEntity.entityId.toString() : undefined,
+          },
+        },
+        {
+          dedupKey: `${recipientObjectId.toString()}:${input.type}:${input.relatedEntity?.entityId || ''}`,
+        }
+      ).catch((pushErr) => {
+        logger.debug?.(`[WEB PUSH] Background dispatch skipped or failed: ${pushErr.message}`);
       });
 
       return notification;
@@ -255,6 +275,24 @@ export class NotificationService {
       }));
 
       await Notification.insertMany(docs, { ordered: false });
+
+      // Non-blocking Web Push dispatch to Admin & Staff devices
+      WebPushService.sendToAdmins(
+        {
+          title: input.title.trim(),
+          body: input.message.trim(),
+          data: {
+            url: input.link || '/admin',
+            ...input.metadata,
+          },
+        },
+        {
+          roles: targetRoles,
+          dedupKey: `admin:${input.type}:${input.metadata?.donationId || input.metadata?.requestId || input.title}`,
+        }
+      ).catch((pushErr) => {
+        logger.debug?.(`[WEB PUSH] Background admin push dispatch skipped or failed: ${pushErr.message}`);
+      });
     } catch (err: any) {
       logger.error(`[NOTIFICATION SERVICE] Failed to notify admins: ${err.message}`);
     }

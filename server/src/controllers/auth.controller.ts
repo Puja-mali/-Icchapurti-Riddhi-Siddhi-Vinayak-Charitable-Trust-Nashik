@@ -147,5 +147,52 @@ export class AuthController {
       next(error);
     }
   }
+
+  public static async forgotPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { email } = req.body;
+      const result = await AuthService.forgotPassword(email);
+      sendSuccess(res, result, result.message, 200);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async validateResetToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const token = req.params.token || (req.query.token as string);
+      const result = await AuthService.validateResetToken(token);
+      sendSuccess(res, result, 'Reset token is valid.', 200);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async resetPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { token, password } = req.body;
+      await AuthService.resetPassword(token, password);
+      sendSuccess(
+        res,
+        null,
+        'Password has been reset successfully. Please sign in with your new credentials.',
+        200
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 

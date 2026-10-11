@@ -1,0 +1,167 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
+import { Button } from "@/src/components/common/Button";
+import { useTrust } from "@/src/context/TrustContext";
+import { authService } from "@/src/services/authService";
+import { ApiError } from "@/src/services/api";
+
+export const ForgotPassword: React.FC = () => {
+  const { trustProfile } = useTrust();
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [debugUrl, setDebugUrl] = useState<string | null>(null);
+
+  const trustName = trustProfile?.trustName || "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !cleanEmail.includes("@")) {
+      setErrorMessage("Please enter a valid registered email address.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await authService.forgotPassword(cleanEmail);
+      setIsSubmitted(true);
+      if (response?.debugResetUrl) {
+        setDebugUrl(response.debugResetUrl);
+      }
+    } catch (err: any) {
+      if (err instanceof ApiError) {
+        setErrorMessage(err.message);
+      } else {
+        setErrorMessage(err?.message || "Unable to send password reset request. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md space-y-5">
+        {/* Branding Header */}
+        <div className="text-center space-y-1.5">
+          <Link to="/" className="inline-flex items-center gap-2">
+            <div className="w-8 h-8 rounded bg-[#14532d] text-white flex items-center justify-center font-serif font-bold text-sm">
+              IT
+            </div>
+            <span className="text-lg font-serif font-bold text-stone-900 tracking-tight">
+              {trustName}
+            </span>
+          </Link>
+          <h1 className="text-2xl font-serif font-bold text-stone-900 pt-1">
+            Account Recovery
+          </h1>
+          <p className="text-xs text-stone-600">
+            Reset your access password to the Siddhivinayak Trust donor or volunteer portal.
+          </p>
+        </div>
+
+        {/* Card */}
+        <div className="bg-white rounded-md p-6 sm:p-7 border border-stone-200 shadow-2xs">
+          {isSubmitted ? (
+            <div className="space-y-4">
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-950 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-sm text-emerald-900">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <span>Password Reset Request Received</span>
+                </div>
+                <p className="text-xs text-emerald-800 leading-relaxed">
+                  If an active account is registered with <strong className="font-mono text-emerald-950">{email}</strong>, a secure single-use password reset link has been dispatched to your inbox.
+                </p>
+                <p className="text-[11px] text-emerald-700">
+                  The link is valid for <strong>60 minutes</strong>. Please check your inbox and spam folder.
+                </p>
+              </div>
+
+              {debugUrl && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-900 space-y-1">
+                  <div className="font-semibold text-amber-950 flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
+                    <span>Local Development Test Link:</span>
+                  </div>
+                  <p className="text-[11px] text-amber-800">
+                    SMTP credentials are not configured in local environment. Use this link directly:
+                  </p>
+                  <a
+                    href={debugUrl}
+                    className="block text-[11px] text-[#14532d] font-mono break-all hover:underline font-bold"
+                  >
+                    {debugUrl}
+                  </a>
+                </div>
+              )}
+
+              <div className="pt-2">
+                <Link to="/login" className="block">
+                  <Button variant="outline" size="md" className="w-full text-xs font-semibold" leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}>
+                    Return to Sign In
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+              {errorMessage && (
+                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-md text-xs text-rose-800 flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                  <div className="leading-relaxed">{errorMessage}</div>
+                </div>
+              )}
+
+              <div>
+                <label className="font-semibold text-stone-700 block mb-1">
+                  Registered Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    disabled={isLoading}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    autoComplete="email"
+                    className="w-full pl-8 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] disabled:opacity-60"
+                  />
+                </div>
+                <p className="text-[11px] text-stone-500 mt-1">
+                  Enter the email address you registered with to receive a secure reset link.
+                </p>
+              </div>
+
+              <div className="pt-2 space-y-2">
+                <Button
+                  type="submit"
+                  size="md"
+                  variant="primary"
+                  disabled={isLoading}
+                  className="w-full font-semibold"
+                  rightIcon={isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
+                >
+                  {isLoading ? "Sending Reset Link..." : "Send Reset Link"}
+                </Button>
+
+                <Link to="/login" className="block text-center pt-2">
+                  <span className="text-xs text-stone-600 hover:text-[#14532d] hover:underline font-medium inline-flex items-center gap-1">
+                    <ArrowLeft className="w-3 h-3" /> Back to Sign In
+                  </span>
+                </Link>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

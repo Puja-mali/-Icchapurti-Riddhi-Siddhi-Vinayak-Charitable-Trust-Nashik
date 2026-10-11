@@ -26,6 +26,7 @@ import { authService, UserRole } from '@/src/services/authService';
 import { api, ApiError } from '@/src/services/api';
 import { Modal } from '@/src/components/common/Modal';
 import { Button } from '@/src/components/common/Button';
+import { PushNotificationToggle } from '@/src/components/common/PushNotificationToggle';
 import { formatDate } from '@/src/lib/utils';
 
 interface UserProfileMenuProps {
@@ -289,7 +290,7 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
               className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-stone-700 hover:bg-stone-50 hover:text-stone-950 transition-colors cursor-pointer"
             >
               <UserIcon className="w-4 h-4 text-stone-500" />
-              <span>My Profile</span>
+              <span>My Profile & Edit Details</span>
             </button>
 
             <button
@@ -337,9 +338,12 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
       <Modal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        title="My Account Profile"
+        title="Account Profile & Edit Details"
       >
         <form onSubmit={handleSaveProfile} className="space-y-4">
+          <p className="text-xs text-stone-600">
+            View your verified account standing and update your legal contact name and phone number.
+          </p>
           {profileFeedback && (
             <div
               className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
@@ -404,6 +408,10 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
               onChange={(e) => setEditPhone(e.target.value)}
               className="w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]"
             />
+          </div>
+
+          <div className="pt-2">
+            <PushNotificationToggle />
           </div>
 
           <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-3">

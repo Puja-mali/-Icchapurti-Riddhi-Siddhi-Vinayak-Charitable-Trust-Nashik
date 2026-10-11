@@ -63,6 +63,27 @@ router.post(
 );
 
 /**
+ * @route   POST /api/auth/forgot-password
+ * @desc    Request a single-use password reset link via email
+ * @access  Public (Rate limited)
+ */
+router.post('/forgot-password', authLimiter, AuthController.forgotPassword);
+
+/**
+ * @route   GET /api/auth/reset-password/validate/:token
+ * @desc    Validate password reset token validity before showing reset form
+ * @access  Public
+ */
+router.get('/reset-password/validate/:token', AuthController.validateResetToken);
+
+/**
+ * @route   POST /api/auth/reset-password
+ * @desc    Reset password using valid single-use token
+ * @access  Public (Rate limited)
+ */
+router.post('/reset-password', authLimiter, AuthController.resetPassword);
+
+/**
  * @route   GET /api/auth/me
  * @desc    Retrieve profile of the currently authenticated user
  * @access  Private

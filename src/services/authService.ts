@@ -180,6 +180,32 @@ export const authService = {
   },
 
   /**
+   * Request password reset email for forgotten credentials
+   */
+  async forgotPassword(email: string): Promise<{ success: boolean; message: string; debugResetUrl?: string }> {
+    return api.post<{ success: boolean; message: string; debugResetUrl?: string }>('/auth/forgot-password', {
+      email: email.trim().toLowerCase(),
+    });
+  },
+
+  /**
+   * Validate password reset token
+   */
+  async validateResetToken(token: string): Promise<{ valid: boolean; email: string }> {
+    return api.get<{ valid: boolean; email: string }>(`/auth/reset-password/validate/${encodeURIComponent(token)}`);
+  },
+
+  /**
+   * Reset password using single-use token
+   */
+  async resetPassword(token: string, password: string): Promise<{ success: boolean; message: string }> {
+    return api.post<{ success: boolean; message: string }>('/auth/reset-password', {
+      token: token.trim(),
+      password,
+    });
+  },
+
+  /**
    * Inspect current in-memory access token state
    */
   hasToken(): boolean {

@@ -9,6 +9,8 @@ export interface IUser extends Document {
   role: UserRole;
   isActive: boolean;
   isEmailVerified: boolean;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   refreshTokens?: Array<{
     tokenHash: string;
     createdAt: Date;
@@ -57,6 +59,14 @@ const userSchema = new Schema<IUser>(
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
     },
     refreshTokens: {
       type: [

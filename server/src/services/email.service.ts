@@ -612,5 +612,55 @@ export class EmailService {
     const html = this.wrapTemplate(subject, body);
     return this.sendMail({ to: data.email, subject, html });
   }
+
+  /**
+   * 10. Password Reset Email
+   */
+  public static async sendPasswordResetEmail(data: {
+    email: string;
+    name?: string;
+    resetUrl: string;
+    expiresInMinutes?: number;
+  }): Promise<EmailSendResult> {
+    const minutes = data.expiresInMinutes || 60;
+    const subject = `Password Reset Request - Shree Siddhivinayak Charitable Trust`;
+
+    const body = `
+      <div style="margin-bottom: 16px;">
+        <span class="badge" style="background-color: #fef2f2; color: #991b1b; border: 1px solid #fecaca;">Security Authorization</span>
+      </div>
+      <h2 style="margin: 0 0 16px 0; color: #0f172a; font-size: 18px;">Namaste${
+        data.name ? ` ${escapeHtml(data.name)}` : ''
+      },</h2>
+      <p>We received a request to reset the password for your account associated with <strong>${escapeHtml(
+        data.email
+      )}</strong> at Shree Siddhivinayak Charitable Trust.</p>
+
+      <div class="card" style="border-left: 4px solid #b91c1c;">
+        <p style="margin: 0; font-size: 13px;"><strong>Security Notice:</strong> Single-use password reset link</p>
+        <p style="margin: 6px 0 0 0; font-size: 12px; color: #b45309;"><strong>Validity:</strong> This link expires in <strong>${minutes} minutes</strong>.</p>
+      </div>
+
+      <p style="font-size: 13px; color: #334155;">To set a new password, click the secure button below:</p>
+
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${escapeHtml(
+          data.resetUrl
+        )}" class="btn" style="color: #ffffff !important; background-color: #14532d; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Reset My Password</a>
+      </div>
+
+      <p style="font-size: 12px; color: #64748b; margin-top: 20px;">If the button does not work, copy and paste this link into your browser:</p>
+      <p style="font-size: 11px; word-break: break-all; color: #1e40af; background: #f1f5f9; padding: 10px; border-radius: 4px; font-family: monospace;">
+        ${escapeHtml(data.resetUrl)}
+      </p>
+
+      <p style="font-size: 11px; color: #94a3b8; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+        If you did not make this request, you can safely ignore this email. Your current password remains unchanged and your account is secure.
+      </p>
+    `;
+
+    const html = this.wrapTemplate(subject, body);
+    return this.sendMail({ to: data.email, subject, html });
+  }
 }
 

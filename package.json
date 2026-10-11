@@ -15,6 +15,7 @@
     "test:admin": "tsx server/src/scripts/testAdminSummary.ts",
     "test:db": "tsx server/src/scripts/testDatabaseStartup.ts",
     "test:users": "tsx server/src/scripts/testUserManagement.ts",
+    "test:push": "tsx server/src/scripts/testWebPush.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
@@ -42,6 +43,7 @@
     "react-router-dom": "^7.18.3",
     "tailwind-merge": "^3.6.0",
     "vite": "^6.2.3",
+    "web-push": "^3.6.7",
     "zod": "^4.6.1"
   },
   "devDependencies": {
@@ -55,6 +57,7 @@
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/web-push": "^3.6.4",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
     "mongodb-memory-server": "^11.2.0",

@@ -18,10 +18,12 @@ import aiRoutes from './ai.routes';
 import notificationRoutes from './notification.routes';
 import uploadRoutes from './upload.routes';
 import invitationRoutes from './invitation.routes';
+import pushRoutes from './push.routes';
 
 const router = Router();
 
 // Mount modules
+router.use('/push', pushRoutes);
 router.use('/uploads', uploadRoutes);
 router.use('/public', publicRoutes);
 router.use('/admin', adminRoutes);

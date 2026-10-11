@@ -20,19 +20,34 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // If already authenticated, redirect to destination
+  /**
+   * Computes authoritative and safe redirect destination based on verified role
+   * Strictly prevents non-administrative roles (DONOR, VOLUNTEER) from entering /admin or /admin/login
+   */
+  const getSafeDestination = (role: string, targetPath?: string): string => {
+    const isAdminOrStaff = role === "ADMIN" || role === "STAFF";
+
+    if (targetPath && typeof targetPath === "string" && targetPath !== "/login" && targetPath !== "/admin/login") {
+      // If candidate path is administrative, verify caller has elevated role
+      if (targetPath.startsWith("/admin")) {
+        return isAdminOrStaff ? targetPath : (role === "VOLUNTEER" ? "/volunteer-portal" : "/dashboard");
+      }
+      // For ordinary user-facing paths (e.g. /donate, /causes/123, /request-help, /impact-passport), allow return
+      return targetPath;
+    }
+
+    // Role-authoritative defaults
+    if (isAdminOrStaff) return "/admin";
+    if (role === "VOLUNTEER") return "/volunteer-portal";
+    return "/dashboard";
+  };
+
+  // If already authenticated, redirect to role-safe destination
   useEffect(() => {
     if (user) {
       const fromPath = (location.state as any)?.from?.pathname;
-      if (fromPath && fromPath !== "/login") {
-        navigate(fromPath, { replace: true });
-      } else if (user.role === "ADMIN" || user.role === "STAFF") {
-        navigate("/admin", { replace: true });
-      } else if (user.role === "VOLUNTEER") {
-        navigate("/volunteer-portal", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
+      const destination = getSafeDestination(user.role, fromPath);
+      navigate(destination, { replace: true });
     }
   }, [user, navigate, location.state]);
 
@@ -51,19 +66,10 @@ export const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const user = await login({ email: cleanEmail, password });
-
-      // Determine appropriate redirect destination
+      const authenticatedUser = await login({ email: cleanEmail, password });
       const fromPath = (location.state as any)?.from?.pathname;
-      if (fromPath && fromPath !== "/login") {
-        navigate(fromPath, { replace: true });
-      } else if (user.role === "ADMIN" || user.role === "STAFF") {
-        navigate("/admin", { replace: true });
-      } else if (user.role === "VOLUNTEER") {
-        navigate("/volunteer-portal", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
+      const destination = getSafeDestination(authenticatedUser.role, fromPath);
+      navigate(destination, { replace: true });
     } catch (err: any) {
       if (err instanceof ApiError) {
         setErrorMessage(err.message);
@@ -116,6 +122,7 @@ export const Login: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
+                  autoComplete="username"
                   className="w-full pl-8 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] disabled:opacity-60"
                 />
               </div>
@@ -124,9 +131,12 @@ export const Login: React.FC = () => {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label className="font-semibold text-stone-700">Password</label>
-                <span className="text-[11px] text-[#14532d] hover:underline cursor-pointer">
-                  Forgot?
-                </span>
+                <Link
+                  to="/forgot-password"
+                  className="text-[11px] text-[#14532d] hover:underline font-semibold cursor-pointer"
+                >
+                  Forgot password?
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -137,29 +147,17 @@ export const Login: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete="current-password"
                   className="w-full pl-8 pr-9 py-2 bg-stone-50 border border-stone-200 rounded-md text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#14532d] disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 cursor-pointer"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-0.5">
-              <div className="flex items-center gap-1.5">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  defaultChecked
-                  className="w-3.5 h-3.5 rounded text-[#14532d] focus:ring-[#14532d] border-stone-300"
-                />
-                <label htmlFor="remember" className="text-xs text-stone-600 cursor-pointer">
-                  Keep signed in
-                </label>
               </div>
             </div>
 

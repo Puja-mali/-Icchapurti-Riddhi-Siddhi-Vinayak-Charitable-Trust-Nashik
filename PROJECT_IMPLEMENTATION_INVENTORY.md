@@ -98,6 +98,8 @@ To maintain audit integrity, every major public and authenticated page is classi
 | `/login` | `Login.tsx` | Implemented in code; authenticates via `POST /api/auth/login`. Restores intended redirect path. | Covered in E2E Domain 2 | Verified against local DB |
 | `/register` | `Register.tsx` | Implemented in code; registers via `POST /api/auth/register`. Enforces public role limitation. | Covered in E2E Domain 2 & 13 | Verified against local DB |
 | `/dashboard` | `UserDashboard.tsx` | Implemented in code; queries `GET /api/donations/my`. Modal triggers `POST /api/ai/donation-allocation`. | Covered in E2E Domain 4 & 9 | Algorithmic model verified; Live Gemini cloud API: NOT VERIFIED |
+| `/forgot-password` | `ForgotPassword.tsx` | Implemented in code; calls `POST /api/auth/forgot-password` with anti-enumeration response and single-use token dispatch. | Verified in build and unit flows | Verified against local DB |
+| `/reset-password` | `ResetPassword.tsx` | Implemented in code; validates token via `GET /api/auth/reset-password/validate/:token`, updates password via `POST /api/auth/reset-password`. | Verified in build and unit flows | Verified against local DB |
 | `/accept-invitation` | `AcceptInvitation.tsx` | Implemented in code; validates single-use token via `GET /api/invitations/validate/:token`, sets password via `POST /api/invitations/accept`. | Covered in `test:users` (24 checks) | Verified against local DB |
 | `/admin/login` | `AdminLogin.tsx` | Implemented in code; authenticates via `POST /api/auth/login`. Dedicated route, not in public nav. | Covered in E2E Domain 2 & 3 | Verified against local DB |
 | `/admin` | `AdminDashboard.tsx` | Implemented in code; queries `GET /api/admin/dashboard/summary` and module APIs. RBAC protected. | Covered in `test:admin` & E2E Domain 12 | Verified against local DB |
@@ -120,6 +122,15 @@ To maintain audit integrity, every major public and authenticated page is classi
   - Validates `sct_refresh_token` cookie against `JWT_REFRESH_SECRET`, rotates cookie, and returns fresh Access Token.
 * **Logout (`POST /api/auth/logout`)**:
   - Clears `sct_refresh_token` cookie and invalidates database token record.
+  - Cleans client storage markers (`sct_auth_active`, `sct_user_role`) and resets in-memory access token.
+* **Password Reset Workflow (`POST /api/auth/forgot-password`, `GET /api/auth/reset-password/validate/:token`, `POST /api/auth/reset-password`)**:
+  - `forgot-password`: Generates 32-byte cryptographic random hex token, stores only SHA-256 hash on user record (`resetPasswordToken`), sets 60-minute expiry (`resetPasswordExpires`). Returns uniform anti-enumeration message to protect user privacy.
+  - `validate/:token`: Verifies unexpired single-use token before displaying form.
+  - `reset-password`: Consumes token, validates minimum 8-character complexity, hashes new password with bcrypt (12 rounds), clears reset token fields (single-use enforcement), and invalidates all active sessions (`refreshTokens = []`).
+* **Role-Safe Login & Navigation Guards (`src/pages/Login.tsx`)**:
+  - Resolves destination strictly based on verified database role: `ADMIN` / `STAFF` → `/admin`; `DONOR` → `/dashboard`; `VOLUNTEER` → `/volunteer-portal`.
+  - Strictly prevents non-administrative roles (`DONOR`, `VOLUNTEER`) from being redirected into `/admin` or `/admin/login`, even if `location.state.from` was set to an administrative route.
+  - Inputs configured with `autoComplete="username"` and `autoComplete="current-password"` to avoid lingering credentials after sign out.
 
 ### 3.2 Audit of `Cannot read properties of null (reading 'user')`
 * **Evidence Analysis:**

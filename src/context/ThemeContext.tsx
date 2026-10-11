@@ -18,17 +18,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   });
 
-  const [userRole, setUserRoleState] = useState<"admin" | "donor" | "volunteer" | "guest">(() => {
-    try {
-      const saved = localStorage.getItem("sct_user_role");
-      if (saved === "admin" || saved === "donor" || saved === "volunteer") {
-        return saved;
-      }
-    } catch {
-      // Fallback
-    }
-    return "admin";
-  });
+  const [userRole, setUserRoleState] = useState<"admin" | "donor" | "volunteer" | "guest">("admin");
 
   useEffect(() => {
     try {
@@ -47,11 +37,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const setUserRole = (role: "admin" | "donor" | "volunteer" | "guest") => {
     setUserRoleState(role);
-    try {
-      localStorage.setItem("sct_user_role", role);
-    } catch {
-      // Ignore
-    }
   };
 
   return (
