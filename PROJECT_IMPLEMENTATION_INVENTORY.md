@@ -98,6 +98,7 @@ To maintain audit integrity, every major public and authenticated page is classi
 | `/login` | `Login.tsx` | Implemented in code; authenticates via `POST /api/auth/login`. Restores intended redirect path. | Covered in E2E Domain 2 | Verified against local DB |
 | `/register` | `Register.tsx` | Implemented in code; registers via `POST /api/auth/register`. Enforces public role limitation. | Covered in E2E Domain 2 & 13 | Verified against local DB |
 | `/dashboard` | `UserDashboard.tsx` | Implemented in code; queries `GET /api/donations/my`. Modal triggers `POST /api/ai/donation-allocation`. | Covered in E2E Domain 4 & 9 | Algorithmic model verified; Live Gemini cloud API: NOT VERIFIED |
+| `/accept-invitation` | `AcceptInvitation.tsx` | Implemented in code; validates single-use token via `GET /api/invitations/validate/:token`, sets password via `POST /api/invitations/accept`. | Covered in `test:users` (24 checks) | Verified against local DB |
 | `/admin/login` | `AdminLogin.tsx` | Implemented in code; authenticates via `POST /api/auth/login`. Dedicated route, not in public nav. | Covered in E2E Domain 2 & 3 | Verified against local DB |
 | `/admin` | `AdminDashboard.tsx` | Implemented in code; queries `GET /api/admin/dashboard/summary` and module APIs. RBAC protected. | Covered in `test:admin` & E2E Domain 12 | Verified against local DB |
 
@@ -154,6 +155,19 @@ To maintain audit integrity, every major public and authenticated page is classi
   - `authorize(...roles)`: Checks `req.user.role`. Rejects unauthorized roles with HTTP 403 Forbidden.
   - **Tested Boundaries:** Automated tests (`npm run test:admin`) confirm that requests to `/api/admin/dashboard/summary` without a token return 401, while tokens with `DONOR` or `VOLUNTEER` roles return 403 with `Required role(s): [ADMIN, STAFF]`.
 
+### 3.5 Admin Users & Roles Management & Cryptographic Invitation Workflow
+* **Dedicated Module (`src/components/admin/UsersManagementTab.tsx`):**
+  - Exclusively visible and accessible to authenticated `ADMIN` users (STAFF, DONOR, and VOLUNTEER users are blocked at both UI and API levels).
+  - **User Directory:** Real-time search by name, email, and phone; role filtering (`ALL`, `ADMIN`, `STAFF`, `VOLUNTEER`, `DONOR`); pagination; user details with status badges; role update modal; account activation/deactivation toggles with strict lockout prevention (an admin cannot deactivate or demote their own account).
+  - **Strict Four-Role Limit:** Only the four canonical Trust roles (`ADMIN`, `STAFF`, `DONOR`, `VOLUNTEER`) are supported; arbitrary roles like `SUPER_ADMIN` are rejected at both frontend validation and backend schema layers.
+* **Cryptographic Single-Use Invitation Workflow:**
+  - **Generation:** Generates 32-byte cryptographic random hex token (`crypto.randomBytes(32).toString('hex')`).
+  - **Storage:** Only the SHA-256 hash (`crypto.createHash('sha256').update(token).digest('hex')`) is stored in MongoDB (`Invitation` model). The raw plaintext token is never persisted.
+  - **Expiration & Single-Use:** Default 48-hour expiration (`expiresAt`); state transitions (`PENDING` → `ACCEPTED` / `REVOKED` / `EXPIRED`). Consumed tokens are strictly rejected on reuse.
+  - **Role Limitation:** Invitations can only be issued for `ADMIN` or `STAFF` roles, and only by authenticated `ADMIN` users.
+  - **Transactional Email Integration (`EmailService.sendAdminInvitationEmail`):** Formats official trust onboarding email. When SMTP credentials are unconfigured, logs a clear non-breaking warning and returns an actionable invitation link directly in the admin UI.
+  - **Acceptance Flow (`/accept-invitation` & `AcceptInvitation.tsx`):** Invitee validates token, verifies their assigned role badge, inputs their legal name, and securely sets their own password (hashed with bcrypt, 12 rounds). Administrator passwords are never emailed or displayed.
+
 ---
 
 ## 4. Admin Dashboard Module & Metrics Inventory
@@ -170,7 +184,8 @@ To maintain audit integrity, every major public and authenticated page is classi
 9. **Donations Ledger Tab:** Transaction ledger of all contributions, filtering by status (`SUCCESS`, `PENDING`, `FAILED`), receipt generation, and manual receipt download.
 10. **In-App Notifications Tab:** Broadcast announcements to donors or volunteers; inspect system alerts.
 11. **Trust Governance Tab (`TrustManagementTab.tsx`):** Manage official Trust profile, edit trustee listings, office hours, and registration numbers.
-12. **Settings Tab:** Global configuration, high-contrast accessibility switch, and backend Kumbh Mode toggle.
+12. **Users & Roles Tab (`UsersManagementTab.tsx`):** Full administrator and staff onboarding suite with directory search, pagination, role modification, account deactivation/reactivation safeguards, and cryptographic single-use invitation management.
+13. **Settings Tab:** Global configuration, high-contrast accessibility switch, and backend Kumbh Mode toggle.
 
 ### 4.2 Metrics Calculation: Real Database Aggregations
 * **Endpoint:** `GET /api/admin/dashboard/summary` (Handled by `AdminService.getDashboardSummary` in `server/src/services/admin.service.ts`).
@@ -387,7 +402,13 @@ All automated test suites in the repository were executed directly. Results are 
    - **Result:** PASSED with 0 errors.
 2. **Production Build (`npm run build` / Vite + esbuild):**
    - **Result:** PASSED with clean client bundle and `dist/server.cjs`.
-3. **Admin Dashboard Summary Tests (`npm run test:admin`):**
+3. **Database Startup & Configuration Tests (`npm run test:db`):**
+   - **Result:** 17 / 17 Verification Checks PASSED.
+   - Tests production missing MONGODB_URI abort, unreachable URI failure, development fallback opt-in checks, /api/health real status reporting, and unbuffered traffic degradation.
+4. **Users & Roles Management Tests (`npm run test:users`):**
+   - **Result:** 24 / 24 Verification Checks PASSED.
+   - Tests User Directory search, admin lockout prevention, strict four-role enforcement, RBAC guards on user-management routes, cryptographic invitation hashing, token expiry, single-use token consumption, and password assignment.
+5. **Admin Dashboard Summary Tests (`npm run test:admin`):**
    - **Result:** 6 / 6 Test Cases PASSED.
    - Test 1: Unauthenticated request blocked with HTTP 401.
    - Test 2: Invalid Bearer token blocked with HTTP 401.
@@ -395,7 +416,7 @@ All automated test suites in the repository were executed directly. Results are 
    - Test 4: Authenticated VOLUNTEER blocked with HTTP 403.
    - Test 5: Authenticated ADMIN on empty database returns zeroed counts without mock numbers.
    - Test 6: Authenticated ADMIN with real database records computes accurate mathematical aggregations and strips beneficiary PII.
-4. **End-to-End Readiness Suite (`npm run test:e2e`):**
+6. **End-to-End Readiness Suite (`npm run test:e2e`):**
    - **Result:** 15 / 15 Domain Suites PASSED.
    - Domain 1: Public Website & Information Architecture — PASS
    - Domain 2: Authentication & Authorization Flow — PASS

@@ -110,6 +110,11 @@ export const Footer: React.FC = () => {
                   {t.navEvents}
                 </Link>
               </li>
+              <li>
+                <Link to="/gallery" className="text-stone-400 hover:text-white transition-colors">
+                  {language === "mr" ? "छायाचित्र दालन" : language === "hi" ? "चित्र दीर्घा" : "Visual Field Gallery"}
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -6,7 +6,6 @@ import { PageHeader } from "@/src/components/common/PageHeader";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
 import { publicService } from "@/src/services/publicService";
 import { GalleryItem } from "@/src/types";
-import { MOCK_GALLERY_ITEMS } from "@/src/data/mockData";
 
 export const Gallery: React.FC = () => {
   const { isKumbhMode } = useKumbhMode();
@@ -23,14 +22,25 @@ export const Gallery: React.FC = () => {
         const homeData = await publicService.getHomeData();
         if (isMounted) {
           if (homeData?.galleryPreview && homeData.galleryPreview.length > 0) {
-            setItems(homeData.galleryPreview as unknown as GalleryItem[]);
+            const mapped: GalleryItem[] = homeData.galleryPreview.map((item: any, idx: number) => ({
+              id: item.eventSlug ? `event-gal-${item.eventSlug}-${idx}` : `gal-${idx}`,
+              title: item.title || "Documented Seva Initiative",
+              category: (item.category as any) || "Events",
+              imageUrl: item.url,
+              location: item.location || "Nashik, Maharashtra",
+              date: "Verified Record",
+              caption: item.title || "Verified field activity documented by trust coordinators.",
+              isKumbhRelated: Boolean(item.isKumbhRelated),
+            }));
+            setItems(mapped);
           } else {
-            setItems(MOCK_GALLERY_ITEMS);
+            // Honest empty state when no visual assets are stored in MongoDB
+            setItems([]);
           }
         }
       } catch (err) {
-        console.warn("Could not load gallery items, using verified mock items:", err);
-        if (isMounted) setItems(MOCK_GALLERY_ITEMS);
+        console.warn("Could not load gallery items from database:", err);
+        if (isMounted) setItems([]);
       } finally {
         if (isMounted) setIsLoading(false);
       }

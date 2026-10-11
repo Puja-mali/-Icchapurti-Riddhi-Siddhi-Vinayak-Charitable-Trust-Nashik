@@ -1187,7 +1187,9 @@ export const AdminDashboard: React.FC = () => {
             <span className="text-xs font-semibold uppercase tracking-wider text-amber-300 bg-black/40 px-2.5 py-0.5 rounded border border-amber-300/30">
               Admin & Governance Console
             </span>
-            <span className="text-xs text-emerald-200">Role: {userRole}</span>
+            <span className="text-xs text-emerald-200">
+              Role: <strong className="font-semibold text-white uppercase">{user?.role || "ADMIN"}</strong>
+            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
             Trust Operations & Verification Desk
@@ -3943,10 +3945,10 @@ export const AdminDashboard: React.FC = () => {
           {/* 3. Role Switcher for Testing */}
           <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
             <h3 className="font-serif font-bold text-lg text-stone-900">
-              Role-Based Access Simulation (RBAC)
+              Role-Based UI Perspective Simulation
             </h3>
             <p className="text-xs text-stone-600">
-              Switch current view identity to test user journeys across different stakeholder perspectives.
+              Preview how theme perspectives appear across roles. Note: This is an aesthetic preview toggle only; your verified active server session remains authentic as <span className="font-mono font-bold text-[#14532d]">{user?.role || "ADMIN"}</span>.
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               {(["admin", "donor", "volunteer", "guest"] as const).map((r) => (

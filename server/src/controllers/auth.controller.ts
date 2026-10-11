@@ -128,4 +128,24 @@ export class AuthController {
       next(error);
     }
   }
+
+  public static async changePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      await AuthService.changePassword(req.user!._id, currentPassword, newPassword);
+      sendSuccess(
+        res,
+        null,
+        'Password changed successfully. Please store your new credentials securely.',
+        200
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }
+

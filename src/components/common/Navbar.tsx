@@ -12,6 +12,7 @@ import {
 import { Button } from "./Button";
 import { NotificationBell } from "./NotificationBell";
 import { TrustEmblem } from "./TrustEmblem";
+import { UserProfileMenu } from "./UserProfileMenu";
 import { cn } from "@/src/lib/utils";
 import { useLanguage, Language } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
@@ -84,6 +85,15 @@ export const Navbar: React.FC = () => {
   const secondaryLinks: NavItem[] = [
     { label: t.navVolunteer, path: "/volunteer" },
     { label: t.navEvents, path: "/events" },
+    {
+      label:
+        language === "mr"
+          ? "छायाचित्र दालन"
+          : language === "hi"
+          ? "चित्र दीर्घा"
+          : "Field Gallery",
+      path: "/gallery",
+    },
     {
       label:
         language === "mr"
@@ -423,8 +433,27 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Desktop Right Actions */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2.5">
             {user && <NotificationBell />}
+
+            {user ? (
+              <UserProfileMenu isTransparent={isTransparent} />
+            ) : (
+              <Link to="/login">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={cn(
+                    "text-xs font-semibold px-3 py-1.5 transition-all",
+                    isTransparent
+                      ? "border-white/30 text-white hover:bg-white/15 bg-black/20"
+                      : "border-stone-300 text-stone-700 hover:bg-stone-100"
+                  )}
+                >
+                  {t.navLogin}
+                </Button>
+              </Link>
+            )}
 
             <Link to="/donate">
               <Button
@@ -453,6 +482,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile Right Bar */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 lg:hidden">
             {user && <NotificationBell />}
+            {user && <UserProfileMenu isTransparent={isTransparent} />}
 
             <Link to="/donate" className="shrink-0">
               <Button
@@ -605,31 +635,62 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Auth / Dashboard Action links */}
-            <div className={cn("pt-3 border-t grid grid-cols-2 gap-2", isTransparent ? "border-white/10" : "border-stone-100")}>
-              <Link to="/login" onClick={closeMobileMenu}>
-                <Button
-                  variant="outline"
-                  size="sm"
+            <div className={cn("pt-3 border-t space-y-2", isTransparent ? "border-white/10" : "border-stone-100")}>
+              {user ? (
+                <div
                   className={cn(
-                    "w-full text-xs",
-                    isTransparent ? "border-white/30 text-white hover:bg-white/10 bg-transparent" : ""
+                    "p-3 rounded-lg border space-y-2.5",
+                    isTransparent ? "bg-white/5 border-white/15" : "bg-stone-50 border-stone-200"
                   )}
                 >
-                  {t.navLogin}
-                </Button>
-              </Link>
-              <Link to="/dashboard" onClick={closeMobileMenu}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    "w-full text-xs",
-                    isTransparent ? "border-white/30 text-white hover:bg-white/10 bg-transparent" : ""
-                  )}
-                >
-                  {t.navDashboard}
-                </Button>
-              </Link>
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold truncate">{user.name || "Trust Member"}</p>
+                      <p className="text-[10px] text-stone-400 font-mono truncate">{user.email}</p>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
+                      {user.role}
+                    </span>
+                  </div>
+
+                  <Link
+                    to={
+                      user.role === "ADMIN" || user.role === "STAFF"
+                        ? "/admin"
+                        : user.role === "VOLUNTEER"
+                        ? "/volunteer-portal"
+                        : "/dashboard"
+                    }
+                    onClick={closeMobileMenu}
+                    className="block"
+                  >
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="w-full text-xs bg-[#14532d] hover:bg-[#166534] text-white py-1.5"
+                    >
+                      {user.role === "ADMIN" || user.role === "STAFF"
+                        ? "Admin Portal"
+                        : user.role === "VOLUNTEER"
+                        ? "Volunteer Portal"
+                        : "Donor Dashboard"}
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <Link to="/login" onClick={closeMobileMenu} className="block">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      "w-full text-xs py-2",
+                      isTransparent ? "border-white/30 text-white hover:bg-white/10 bg-transparent" : ""
+                    )}
+                  >
+                    {t.navLogin}
+                  </Button>
+                </Link>
+              )}
             </div>
           </motion.div>
         )}

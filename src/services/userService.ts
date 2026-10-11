@@ -71,7 +71,7 @@ export const userService = {
     const res = await api.get<{ users: UserSummary[]; pagination: UserPagination }>(
       `/users?${query.toString()}`
     );
-    return res.data || { users: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } };
+    return res || { users: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } };
   },
 
   /**
@@ -79,7 +79,7 @@ export const userService = {
    */
   async updateUserStatus(id: string, isActive: boolean): Promise<UserSummary> {
     const res = await api.patch<{ user: UserSummary }>(`/users/${id}/status`, { isActive });
-    return res.data!.user;
+    return res.user;
   },
 
   /**
@@ -87,7 +87,7 @@ export const userService = {
    */
   async updateUserRole(id: string, role: UserRole): Promise<UserSummary> {
     const res = await api.patch<{ user: UserSummary }>(`/users/${id}/role`, { role });
-    return res.data!.user;
+    return res.user;
   },
 
   /**
@@ -104,7 +104,7 @@ export const userService = {
     const res = await api.get<{ invitations: InvitationItem[]; pagination: UserPagination }>(
       `/invitations?${query.toString()}`
     );
-    return res.data || { invitations: [], pagination: { page: 1, limit: 30, total: 0, totalPages: 0 } };
+    return res || { invitations: [], pagination: { page: 1, limit: 30, total: 0, totalPages: 0 } };
   },
 
   /**
@@ -116,7 +116,7 @@ export const userService = {
     role: 'ADMIN' | 'STAFF';
   }): Promise<CreateInvitationResponse> {
     const res = await api.post<CreateInvitationResponse>('/invitations', payload);
-    return res.data!;
+    return res;
   },
 
   /**
@@ -124,7 +124,7 @@ export const userService = {
    */
   async resendInvitation(id: string): Promise<CreateInvitationResponse> {
     const res = await api.post<CreateInvitationResponse>(`/invitations/${id}/resend`);
-    return res.data!;
+    return res;
   },
 
   /**
@@ -139,7 +139,7 @@ export const userService = {
    */
   async validateInvitation(token: string): Promise<ValidateInvitationResponse> {
     const res = await api.get<ValidateInvitationResponse>(`/invitations/validate/${encodeURIComponent(token)}`);
-    return res.data!;
+    return res;
   },
 
   /**
@@ -154,6 +154,6 @@ export const userService = {
       '/invitations/accept',
       payload
     );
-    return res.data!;
+    return res;
   },
 };

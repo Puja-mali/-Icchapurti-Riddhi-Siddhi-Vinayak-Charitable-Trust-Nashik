@@ -170,6 +170,16 @@ export const authService = {
   },
 
   /**
+   * Safely update password for current authenticated user
+   */
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await api.post('/auth/change-password', {
+      currentPassword,
+      newPassword,
+    });
+  },
+
+  /**
    * Inspect current in-memory access token state
    */
   hasToken(): boolean {

@@ -27,7 +27,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch {
       // Fallback
     }
-    return "donor";
+    return "admin";
   });
 
   useEffect(() => {

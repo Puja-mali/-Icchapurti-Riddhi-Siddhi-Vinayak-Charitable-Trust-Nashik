@@ -288,4 +288,34 @@ export class AuthService {
     }
     return user;
   }
+
+  /**
+   * Safely updates an authenticated user's password after verifying existing credentials.
+   */
+  public static async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string
+  ): Promise<void> {
+    const user = await User.findById(userId).select('+passwordHash');
+    if (!user) {
+      throw new AppError('User account not found.', 404);
+    }
+
+    const isMatch = await comparePassword(currentPassword, user.passwordHash);
+    if (!isMatch) {
+      throw new AppError('Current password entered is incorrect.', 400);
+    }
+
+    if (currentPassword === newPassword) {
+      throw new AppError('New password cannot be identical to your current password.', 400);
+    }
+
+    user.passwordHash = await hashPassword(newPassword);
+    // Invalidate active refresh tokens for account security after password change
+    user.refreshTokens = [];
+    await user.save();
+    logger.info(`[SECURITY] Password changed successfully for user ${user.email} (${user._id})`);
+  }
 }
+

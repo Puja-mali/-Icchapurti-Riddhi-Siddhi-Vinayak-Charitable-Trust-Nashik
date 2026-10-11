@@ -5,6 +5,7 @@ import {
   registerSchema,
   loginSchema,
   refreshTokenSchema,
+  changePasswordSchema,
 } from '../validators/auth.validator';
 import { authLimiter } from '../middleware/rateLimiter';
 import { authenticate, optionalAuthenticate } from '../middleware/auth';
@@ -48,6 +49,18 @@ router.post('/refresh', AuthController.refresh);
  * @access  Public / Authenticated
  */
 router.post('/logout', optionalAuthenticate, AuthController.logout);
+
+/**
+ * @route   POST /api/auth/change-password
+ * @desc    Safely change password for the authenticated user
+ * @access  Private
+ */
+router.post(
+  '/change-password',
+  authenticate,
+  validateBody(changePasswordSchema),
+  AuthController.changePassword
+);
 
 /**
  * @route   GET /api/auth/me
