@@ -513,8 +513,8 @@ export const Donate: React.FC = () => {
           <div className="p-4 rounded-xl bg-stone-50/80 border border-stone-200 text-[11px] text-stone-600 space-y-1">
             <p className="font-semibold text-stone-800">Donation Transparency & Receipt Policy:</p>
             <p className="leading-relaxed">
-              Official receipts are generated only after cryptographic verification of payment capture from the banking network.
-              Tax deductibility under section 80G is subject to trust registration status and annual regulatory filings.
+              Official Trust donation receipts are generated only after cryptographic verification of payment capture from the banking network.
+              Tax deduction eligibility is subject to verification of the Trust's statutory documentation and annual regulatory filings.
             </p>
           </div>
 

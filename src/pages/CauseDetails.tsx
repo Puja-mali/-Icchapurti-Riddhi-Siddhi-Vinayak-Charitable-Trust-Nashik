@@ -15,7 +15,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Cause } from "@/src/types";
-import { MOCK_CAUSES } from "@/src/data/mockData";
 import { causeService } from "@/src/services/causeService";
 import { Button } from "@/src/components/common/Button";
 import { EmptyState } from "@/src/components/common/EmptyState";
@@ -45,14 +44,9 @@ export const CauseDetails: React.FC = () => {
         }
       } catch (err: any) {
         if (isMounted) {
-          const fallback = MOCK_CAUSES.find((c) => c.id === id || (c as any).slug === id);
-          if (fallback) {
-            setCause(fallback);
-          } else {
-            console.error("Failed to load campaign details:", err);
-            setError(err?.message || "Campaign could not be found.");
-            setCause(null);
-          }
+          console.error("Failed to load campaign details:", err);
+          setError(err?.message || "Campaign could not be found.");
+          setCause(null);
         }
       } finally {
         if (isMounted) {

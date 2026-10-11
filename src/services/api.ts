@@ -54,6 +54,13 @@ const onRefreshed = (newToken: string) => {
 };
 
 const onRefreshFailed = () => {
+  refreshSubscribers.forEach((cb) => {
+    try {
+      cb('');
+    } catch {
+      // Ignore
+    }
+  });
   refreshSubscribers = [];
   inMemoryAccessToken = null;
 };

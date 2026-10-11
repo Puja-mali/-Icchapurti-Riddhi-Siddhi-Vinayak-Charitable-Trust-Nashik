@@ -26,8 +26,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
 import { CauseCard } from "@/src/components/causes/CauseCard";
-import { ImpactTimeline } from "@/src/components/impact/ImpactTimeline";
-import { ImpactJourneyInteractive } from "@/src/components/impact/ImpactJourneyInteractive";
 import { HumanImpactStory } from "@/src/components/impact/HumanImpactStory";
 import { AnimatedCounter } from "@/src/components/common/AnimatedCounter";
 import { KumbhHomeBanner } from "@/src/components/kumbh/KumbhHomeBanner";
@@ -36,7 +34,6 @@ import { publicService, PublicHomeData } from "@/src/services/publicService";
 import { formatEventDate } from "@/src/services/eventService";
 import { useTrust } from "@/src/context/TrustContext";
 import { useLanguage } from "@/src/context/LanguageContext";
-import { MOCK_CAUSES } from "@/src/data/mockData";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -84,7 +81,7 @@ export const Home: React.FC = () => {
   const stats = homeData?.stats;
   const featuredCauses = (homeData?.featuredCauses && homeData.featuredCauses.length > 0)
     ? homeData.featuredCauses
-    : MOCK_CAUSES.slice(0, 3);
+    : [];
   const upcomingEvents = homeData?.upcomingEvents || [];
   const latestNews = homeData?.latestNews || [];
   const recentAudits = homeData?.recentAudits || [];
@@ -98,7 +95,7 @@ export const Home: React.FC = () => {
       category: tr("शिक्षण", "शिक्षा", "Education"),
       desc: t.educationDesc,
       icon: GraduationCap,
-      image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80",
+      image: "/activities/Charity Camp Book Distribution.png",
       location: tr("नाशिक शाळा व ग्रामीण परिसर", "नासिक विद्यालय एवं ग्रामीण क्षेत्र", "Nashik Schools & Communities"),
       link: "/causes?category=Education",
     },
@@ -108,7 +105,7 @@ export const Home: React.FC = () => {
       category: tr("आरोग्य", "स्वास्थ्य", "Medical Support"),
       desc: t.medicalDesc,
       icon: Stethoscope,
-      image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80",
+      image: "/activities/Community Aid Distribution Under the Trees.png",
       location: tr("नाशिक आरोग्य सेवा केंद्र", "नासिक स्वास्थ्य सेवा केंद्र", "Nashik Community Seva Centers"),
       link: "/causes?category=Medical Support",
     },
@@ -118,7 +115,7 @@ export const Home: React.FC = () => {
       category: tr("अन्नदान", "पोषण", "Food & Nutrition"),
       desc: t.foodDesc,
       icon: Utensils,
-      image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80",
+      image: "/activities/image.png",
       location: tr("नाशिक अन्नछत्र केंद्र", "नासिक अन्नक्षेत्र केंद्र", "Nashik Community Centers"),
       link: "/causes?category=Food & Nutrition",
     },
@@ -128,7 +125,7 @@ export const Home: React.FC = () => {
       category: tr("पर्यावरण", "पर्यावरण", "Environment"),
       desc: t.environmentDesc,
       icon: TreePine,
-      image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80",
+      image: "/trust-emblem.jpg",
       location: tr("नाशिक सार्वजनिक उद्याने व परिसर", "नासिक सार्वजनिक उद्यान एवं परिसर", "Nashik Public Grounds & Schools"),
       link: "/causes?category=Environment",
     },
@@ -566,54 +563,42 @@ export const Home: React.FC = () => {
           )}
         </section>
 
-        {/* 5. IMPACT PASSPORT: ANIMATED JOURNEY */}
+        {/* 5. IMPACT PASSPORT SPOTLIGHT */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ImpactJourneyInteractive />
-
-          {/* Live Timeline Sample */}
-          <div className="mt-8 max-w-4xl mx-auto">
-            <div className="text-xs font-semibold text-stone-600 mb-2 uppercase tracking-wide flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span>{t.samplePassportLabel}</span>
-                <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-mono font-medium">
-                  {samplePassport ? "Live Verified Entry" : "Verification Framework"}
+          <div className="bg-gradient-to-br from-[#112a1d] to-[#0a1e14] text-white rounded-2xl p-6 sm:p-10 border border-emerald-900 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-3 max-w-2xl">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-300 bg-amber-950/80 px-2.5 py-0.5 rounded border border-amber-800">
+                  {tr("पारदर्शक व्यवस्था", "पारदर्शी व्यवस्था", "Transparent Accountability")}
+                </span>
+                <span className="inline-flex items-center gap-1 text-[11px] text-emerald-300 font-medium bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  {tr("४-टप्प्यांची नोंदवही", "४-चरणीय लेजर", "4-Stage Ledger Pipeline")}
                 </span>
               </div>
-              <Link
-                to="/impact-passport"
-                className="text-[#14532d] text-xs hover:underline flex items-center gap-1 font-medium"
-              >
-                <span>{tr("संपूर्ण पासपोर्ट नोंदवही पहा", "संपूर्ण पासपोर्ट लेजर देखें", "View Full Passport Ledger")}</span>
-                <ArrowRight className="w-3 h-3" />
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+                {tr("डिजिटल इम्पॅक्ट पासपोर्ट", "डिजिटल इम्पैक्ट पासपोर्ट", "Digital Impact Passport")}
+              </h2>
+              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+                {tr(
+                  "प्रत्येक अधिकृत देणगी थेट मंजूर सेवा उपक्रमाशी जोडली जाते: १. देणगी पावती २. मोहीम वाटप ३. कागदपत्रे व तपासणी ४. प्रत्यक्ष समाजोपयोगी काम.",
+                  "प्रत्येक सत्यापित दान सीधे स्वीकृत सेवा अभियान से जुड़ता है: १. दान रसीद २. अभियान आवंटन ३. दस्तावेज व सत्यापन ४. प्रत्यक्ष प्रभाव।",
+                  "Every contribution receives an official Trust receipt and auditable lifecycle tracking across four verified stages: 1. Donation received, 2. Campaign allocation, 3. Verification and supporting evidence, 4. Field impact and completed milestones."
+                )}
+              </p>
+            </div>
+            <div className="shrink-0">
+              <Link to="/impact-passport">
+                <Button
+                  size="md"
+                  variant="primary"
+                  className="bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs sm:text-sm shadow-md"
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                >
+                  {tr("पासपोर्ट नोंदवही पहा", "पासपोर्ट लेजर देखें", "View Impact Passport Ledger")}
+                </Button>
               </Link>
             </div>
-
-            {samplePassport ? (
-              <ImpactTimeline passport={samplePassport} />
-            ) : (
-              <div className="bg-white rounded-md border border-stone-200 p-8 text-center space-y-3 shadow-2xs">
-                <div className="w-12 h-12 rounded-full bg-emerald-50 text-[#14532d] flex items-center justify-center mx-auto border border-emerald-100">
-                  <Receipt className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-serif font-bold text-stone-900">
-                  {tr("डिजिटल इम्पॅक्ट पासपोर्ट नोंदवही", "डिजिटल इम्पैक्ट पासपोर्ट लेजर", "Digital Impact Passport Ledger")}
-                </h3>
-                <p className="text-xs sm:text-sm text-stone-600 max-w-lg mx-auto leading-relaxed">
-                  {tr(
-                    "प्रत्येक पडताळणी केलेल्या देणगीसाठी ४-टप्प्यांची पारदर्शक नोंद तयार केली जाते (पावती -> निधी वाटप -> क्षेत्रीय अंमलबजावणी -> सीए ऑडिट). आपली पहिली देणगी नोंदवून पासपोर्ट प्राप्त करा.",
-                    "प्रत्येक सत्यापित दान के लिए ४-चरणीय पारदर्शी रिकॉर्ड तैयार किया जाता है (रसीद -> फंड आवंटन -> जमीनी सत्यापन -> ऑडिट)। अपना पहला दान दर्ज करके पासपोर्ट प्राप्त करें।",
-                    "Every contribution receipted by the trust receives an immutable 4-stage tracking docket (Donation -> Allocation -> Verification -> Impact). Make a verified contribution to generate your personal passport."
-                  )}
-                </p>
-                <div className="pt-2">
-                  <Link to="/causes">
-                    <Button size="sm" variant="primary" className="text-xs" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                      {tr("उपक्रमाला हातभार लावा", "सक्रिय अभियान में सहयोग करें", "Support an Active Cause")}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
           </div>
         </section>
 
@@ -768,7 +753,7 @@ export const Home: React.FC = () => {
                         className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src =
-                            "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80";
+                            "/activities/image.png";
                         }}
                       />
                       <span className="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-0.5 rounded">
@@ -1000,7 +985,7 @@ export const Home: React.FC = () => {
                         className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src =
-                            "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=800&q=80";
+                            "/activities/image.png";
                         }}
                       />
                       <span className="absolute top-2.5 left-2.5 bg-black/70 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-0.5 rounded">

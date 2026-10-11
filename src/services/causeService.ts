@@ -43,7 +43,7 @@ export const normalizeCause = (item: any): Cause => {
     targetAmount: Number(item.targetAmount) || 0,
     raisedAmount: Number(item.raisedAmount) || 0,
     donorCount: Number(item.donorCount) || 0,
-    imageUrl: item.imageUrl || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: item.imageUrl || '/activities/image.png',
     location: item.location || 'Maharashtra, India',
     urgent: !!item.urgent,
     featured: !!item.featured,

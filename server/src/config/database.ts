@@ -107,40 +107,57 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
     return false;
   }
 
-  try {
-    setupConnectionListeners();
+  setupConnectionListeners();
 
-    // Determine appropriate timeout: if uri already specifies serverSelectionTimeoutMS, let it take precedence
-    const isRemote = uri.startsWith('mongodb+srv://') || (!uri.includes('127.0.0.1') && !uri.includes('localhost'));
-    const defaultSelectionTimeout = isRemote ? 10000 : 5000;
+  // Determine appropriate timeout: if uri already specifies serverSelectionTimeoutMS, let it take precedence
+  const isRemote = uri.startsWith('mongodb+srv://') || (!uri.includes('127.0.0.1') && !uri.includes('localhost'));
+  const defaultSelectionTimeout = isRemote ? 10000 : 5000;
+  const maxAttempts = isRemote ? 3 : 1;
 
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: defaultSelectionTimeout,
-      connectTimeoutMS: 10000,
-      socketTimeoutMS: 45000,
-    });
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      if (attempt > 1) {
+        logger.info(`[MONGODB] Retrying connection attempt ${attempt}/${maxAttempts}...`);
+      }
 
-    return true;
-  } catch (error: any) {
-    const errorMsg = error?.message || String(error);
-    logger.error('Failed to establish MongoDB connection:', errorMsg);
+      await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: defaultSelectionTimeout,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 45000,
+      });
 
-    // Provide actionable diagnostic advice without revealing secrets or URI strings
-    if (error?.name === 'MongooseServerSelectionError' || errorMsg.includes('ECONNREFUSED') || errorMsg.includes('ETIMEDOUT')) {
-      logger.warn(
-        '[MONGODB ATLAS DIAGNOSTIC] Cluster unreachable or server selection timed out. Typical root causes: ' +
-        '1) Client IP is not permitted in MongoDB Atlas Network Access (whitelist your hosting IP or 0.0.0.0/0 for Cloud Run/Container hosting). ' +
-        '2) MongoDB Atlas shared M0 cluster is in pause/resume transition. ' +
-        '3) Network restricts direct outbound TCP on port 27017.'
-      );
-    } else if (errorMsg.includes('Authentication failed') || errorMsg.includes('auth error')) {
-      logger.warn(
-        '[MONGODB ATLAS DIAGNOSTIC] Authentication failed. Ensure MongoDB Atlas username and password in MONGODB_URI are URL-encoded and match a user in Atlas Database Access.'
-      );
+      return true;
+    } catch (error: any) {
+      const errorMsg = error?.message || String(error);
+
+      if (attempt < maxAttempts) {
+        const delayMs = Math.min(1000 * Math.pow(2, attempt - 1), 4000);
+        logger.warn(`[MONGODB] Connection attempt ${attempt} failed (${errorMsg}). Backing off for ${delayMs}ms...`);
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+        continue;
+      }
+
+      logger.error('Failed to establish MongoDB connection after maximum attempts:', errorMsg);
+
+      // Provide actionable diagnostic advice without revealing secrets or URI strings
+      if (error?.name === 'MongooseServerSelectionError' || errorMsg.includes('ECONNREFUSED') || errorMsg.includes('ETIMEDOUT')) {
+        logger.warn(
+          '[MONGODB ATLAS DIAGNOSTIC] Cluster unreachable or server selection timed out. Typical root causes: ' +
+          '1) Client IP is not permitted in MongoDB Atlas Network Access (whitelist your hosting IP or 0.0.0.0/0 for Cloud Run/Container hosting). ' +
+          '2) MongoDB Atlas shared M0 cluster is in pause/resume transition. ' +
+          '3) Network restricts direct outbound TCP on port 27017.'
+        );
+      } else if (errorMsg.includes('Authentication failed') || errorMsg.includes('auth error')) {
+        logger.warn(
+          '[MONGODB ATLAS DIAGNOSTIC] Authentication failed. Ensure MongoDB Atlas username and password in MONGODB_URI are URL-encoded and match a user in Atlas Database Access.'
+        );
+      }
+
+      return false;
     }
-
-    return false;
   }
+
+  return false;
 };
 
 export const disconnectDatabase = async (): Promise<void> => {

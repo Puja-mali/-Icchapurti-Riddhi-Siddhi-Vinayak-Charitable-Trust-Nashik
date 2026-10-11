@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 
 import { Cause, CauseCategory } from "@/src/types";
-import { MOCK_CAUSES } from "@/src/data/mockData";
 import { causeService } from "@/src/services/causeService";
 
 import { CauseCard } from "@/src/components/causes/CauseCard";
@@ -53,15 +52,11 @@ export const Causes: React.FC = () => {
       if (response?.causes && response.causes.length > 0) {
         setCauses(response.causes);
       } else {
-        setCauses(MOCK_CAUSES);
+        setCauses([]);
       }
     } catch (err: any) {
-      console.warn(
-        "Notice fetching registered causes, utilizing local verified causes:",
-        err
-      );
-
-      setCauses(MOCK_CAUSES);
+      console.warn("Notice fetching registered causes:", err);
+      setCauses([]);
     } finally {
       setIsLoading(false);
     }

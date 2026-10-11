@@ -393,10 +393,10 @@ export const ImpactPassport: React.FC = () => {
                   Stage 01
                 </p>
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  Donation Received
+                  1. Donation Received
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
-                  Payment confirmed. Official 80G tax receipt and private tracking record created.
+                  Payment confirmed. Official Trust donation receipt and private tracking record created.
                 </p>
               </div>
 
@@ -409,7 +409,7 @@ export const ImpactPassport: React.FC = () => {
                   Stage 02
                 </p>
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  Fund Allocation
+                  2. Campaign Allocation
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
                   Pooled donor contributions allocated to approved community cause budget lines.
@@ -425,7 +425,7 @@ export const ImpactPassport: React.FC = () => {
                   Stage 03
                 </p>
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  Evidence & Verification
+                  3. Verification and Supporting Evidence
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
                   Trust officers inspect vendor receipts, weighment slips, and execution records.
@@ -441,7 +441,7 @@ export const ImpactPassport: React.FC = () => {
                   Stage 04
                 </p>
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#24412f]">
-                  Community Impact
+                  4. Field Impact and Completed Milestones
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#61705f]">
                   Completed program milestones, beneficiary support delivered, and verified metrics published.

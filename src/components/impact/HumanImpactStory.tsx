@@ -20,7 +20,7 @@ export const HumanImpactStory: React.FC = () => {
             transition={{ duration: 0.65, ease: [0.25, 0.1, 0.25, 1.0] }}
           >
             <img
-              src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80"
+              src="/activities/Charity Camp Book Distribution.png"
               alt="School notebook and stationery distribution for students in Nashik"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-103"
               loading="lazy"

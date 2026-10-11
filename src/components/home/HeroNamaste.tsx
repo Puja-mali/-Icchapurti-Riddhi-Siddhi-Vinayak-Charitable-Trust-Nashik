@@ -421,14 +421,7 @@ export const HeroNamaste: React.FC = () => {
 
         <div className="flex items-center justify-between flex-wrap gap-1 text-[10px] sm:text-[11px] text-stone-500 mt-1.5 px-0.5">
           <span>
-            Sample:{" "}
-            <button
-              type="button"
-              onClick={() => setSearchPassportId("SCT-PASS-2025-0812")}
-              className="text-[#14532d] font-mono font-semibold underline hover:text-emerald-950 cursor-pointer"
-            >
-              SCT-PASS-2025-0812
-            </button>
+            {language === "mr" ? "अधिकृत देणगी पावतीवरील क्रमांक टाका" : "Enter docket number from official receipt"}
           </span>
           <Link
             to="/impact-passport"

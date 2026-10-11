@@ -12,15 +12,22 @@ export const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: false,
-  skip: (req) => req.path === '/health' || req.path === '/health/',
+  skip: (req) =>
+    process.env.NODE_ENV === 'test' ||
+    req.path === '/health' ||
+    req.path === '/health/' ||
+    req.originalUrl === '/api/health' ||
+    req.originalUrl === '/api/health/',
   handler: (req, res) => {
-    const retryAfterSeconds = Math.ceil(
-      ((req as any).rateLimit?.resetTime?.getTime() - Date.now()) / 1000
-    ) || Math.ceil(env.RATE_LIMIT_WINDOW_MS / 1000);
-    res.setHeader('Retry-After', retryAfterSeconds);
+    const retryAfterSeconds =
+      Math.ceil(
+        (((req as any).rateLimit?.resetTime?.getTime() || 0) - Date.now()) / 1000
+      ) || Math.ceil(env.RATE_LIMIT_WINDOW_MS / 1000);
+    const safeSeconds = Math.max(1, retryAfterSeconds);
+    res.setHeader('Retry-After', safeSeconds);
     sendError(
       res,
-      `Too many requests from this IP. Please wait ${retryAfterSeconds} seconds before trying again.`,
+      `Too many requests from this IP. Please wait ${safeSeconds} seconds before trying again.`,
       429
     );
   },
@@ -29,7 +36,6 @@ export const apiLimiter = rateLimit({
 /**
  * Strict Rate Limiter for Authentication Endpoints
  * Mitigates brute-force credential stuffing and password guessing attacks.
- * TODO: For production hardening, add Redis-backed store for multi-instance clusters.
  */
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -37,10 +43,11 @@ export const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: false,
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (_req, res) => {
     sendError(
       res,
-      'Too many authentication attempts. Please try again after 15 minutes.',
+      'Too many authentication attempts from this network. Please wait a few minutes before trying again.',
       429
     );
   },
@@ -52,10 +59,11 @@ export const authLimiter = rateLimit({
  */
 export const paymentLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 30, // Max 30 orders/verifications per IP window
+  max: 60, // Max 60 orders/verifications per IP window
   standardHeaders: true,
   legacyHeaders: false,
   validate: false,
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (_req, res) => {
     sendError(
       res,

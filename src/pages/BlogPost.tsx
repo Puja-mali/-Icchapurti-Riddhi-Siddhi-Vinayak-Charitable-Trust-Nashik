@@ -193,7 +193,7 @@ export const BlogPost: React.FC = () => {
           className="w-full h-full object-cover"
           onError={(e) => {
             (e.target as HTMLImageElement).src =
-              "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=1200&q=80";
+              "/activities/image.png";
           }}
         />
       </div>

@@ -96,9 +96,7 @@ export const normalizeEvent = (item: any): EventItem => {
     registrationCount,
     registrationRequired: !!item.registrationRequired,
     status: item.status || 'UPCOMING',
-    imageUrl:
-      item.imageUrl ||
-      'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: item.imageUrl || '/activities/image.png',
     galleryUrls: Array.isArray(item.galleryUrls) ? item.galleryUrls : [],
     isKumbhRelated: !!item.isKumbhRelated,
     createdAt: item.createdAt ? new Date(item.createdAt).toISOString() : undefined,

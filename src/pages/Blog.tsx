@@ -217,7 +217,7 @@ export const Blog: React.FC = () => {
                     onError={(e) => {
                       // Fallback placeholder if broken URL
                       (e.target as HTMLImageElement).src =
-                        "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=800&q=80";
+                        "/activities/image.png";
                     }}
                   />
                   <div className="absolute top-2.5 left-2.5 flex gap-1 flex-wrap">
