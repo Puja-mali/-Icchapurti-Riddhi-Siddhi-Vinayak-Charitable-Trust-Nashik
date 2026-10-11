@@ -144,12 +144,13 @@ export class AiService {
     const ai = getGeminiClient();
     if (ai) {
       try {
-        const aiResult = await this.callGeminiAllocation(
-          ai,
-          input,
-          activeCauses,
-          donorHistoryContext
+        const timeoutPromise = new Promise<null>((_, reject) =>
+          setTimeout(() => reject(new Error('Gemini API call timed out after 10000ms')), 10000)
         );
+        const aiResult = await Promise.race([
+          this.callGeminiAllocation(ai, input, activeCauses, donorHistoryContext),
+          timeoutPromise,
+        ]);
         if (aiResult) {
           return aiResult;
         }

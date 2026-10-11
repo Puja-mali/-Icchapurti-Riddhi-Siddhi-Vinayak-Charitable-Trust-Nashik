@@ -12,10 +12,15 @@ export const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: false,
-  handler: (_req, res) => {
+  skip: (req) => req.path === '/health' || req.path === '/health/',
+  handler: (req, res) => {
+    const retryAfterSeconds = Math.ceil(
+      ((req as any).rateLimit?.resetTime?.getTime() - Date.now()) / 1000
+    ) || Math.ceil(env.RATE_LIMIT_WINDOW_MS / 1000);
+    res.setHeader('Retry-After', retryAfterSeconds);
     sendError(
       res,
-      'Too many requests from this IP. Please try again after 15 minutes.',
+      `Too many requests from this IP. Please wait ${retryAfterSeconds} seconds before trying again.`,
       429
     );
   },

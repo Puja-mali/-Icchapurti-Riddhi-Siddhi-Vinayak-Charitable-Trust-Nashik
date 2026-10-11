@@ -156,10 +156,13 @@ export async function apiClient<T = any>(
     const data = isJson ? await response.json() : null;
 
     if (!response.ok) {
+      const retryAfter = response.headers.get('retry-after');
       const errorMessage =
         data?.message ||
         (data?.errors && data.errors.length > 0 ? data.errors[0].message : null) ||
-        `Request failed with status ${response.status}`;
+        (response.status === 429
+          ? `Too many requests. Please wait ${retryAfter ? retryAfter + ' seconds' : 'a moment'} before trying again.`
+          : `Request failed with status ${response.status}`);
       throw new ApiError(errorMessage, response.status, data?.errors);
     }
 

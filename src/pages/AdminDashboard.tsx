@@ -117,7 +117,7 @@ const INITIAL_QUEUE: AuditQueueItem[] = [
 export const AdminDashboard: React.FC = () => {
   const { t } = useLanguage();
   const { isKumbhMode, toggleKumbhMode, kumbhConfig } = useKumbhMode();
-  const { highContrast, toggleHighContrast, userRole, setUserRole } = useTheme();
+  const { highContrast, toggleHighContrast } = useTheme();
   const { user } = useAuth();
 
   const [activeTab, setActiveTab] = useState<"overview" | "audits" | "causes" | "events" | "blog" | "transparency" | "help" | "volunteers" | "donations" | "notifications" | "trust" | "users" | "settings">("overview");
@@ -3959,30 +3959,17 @@ export const AdminDashboard: React.FC = () => {
           {/* 4. Role Switcher for Testing */}
           <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-3">
             <h3 className="font-serif font-bold text-lg text-stone-900">
-              Role-Based UI Perspective Simulation
+              Active Session & Access Level
             </h3>
             <p className="text-xs text-stone-600">
-              Preview how theme perspectives appear across roles. Note: This is an aesthetic preview toggle only; your verified active server session remains authentic as <span className="font-mono font-bold text-[#14532d]">{user?.role || "ADMIN"}</span>.
+              Your session is authenticated with the verified database role of <span className="font-mono font-bold text-[#14532d]">{user?.role || "ADMIN"}</span>. Administrative privileges and access boundaries are strictly enforced server-side.
             </p>
-            <div className="flex flex-wrap gap-2 pt-1">
-              {(["admin", "donor", "volunteer", "guest"] as const).map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => {
-                    setUserRole(r);
-                    setSuccessToast(`Active role switched to: ${r.toUpperCase()}`);
-                    setTimeout(() => setSuccessToast(null), 2500);
-                  }}
-                  className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-all capitalize cursor-pointer ${
-                    userRole === r
-                      ? "bg-[#14532d] text-white border-emerald-800 shadow-2xs"
-                      : "bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-300"
-                  }`}
-                >
-                  Role: {r}
-                </button>
-              ))}
+            <div className="flex items-center gap-2 pt-1 text-xs text-stone-700">
+              <span className="font-medium">Authenticated Account:</span>
+              <span className="font-mono bg-stone-100 px-2 py-0.5 rounded border border-stone-200">{user?.email}</span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                Verified {user?.role || 'ADMIN'}
+              </span>
             </div>
           </div>
         </div>

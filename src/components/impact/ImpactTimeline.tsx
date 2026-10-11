@@ -295,9 +295,8 @@ export const ImpactTimeline: React.FC<ImpactTimelineProps> = ({
           size="md"
         >
           <div className="space-y-4 text-xs font-mono">
-            <div className="p-3 bg-emerald-50 rounded border border-emerald-200 text-emerald-950">
-              <strong>Verified Audit Inspection Record:</strong> Stored under certified trust ledger records,
-              cross-referenced with statutory vendor invoices, field verification dockets, and bank settlement hashes.
+            <div className="p-3 bg-stone-100 rounded border border-stone-200 text-stone-700 text-xs font-sans">
+              <strong>Sample Verification Artifact:</strong> Illustrates the record format used by Trust officers to attach supplier receipts, weighment slips, and completion certificates to campaign milestones.
             </div>
 
             <div className="bg-stone-50 rounded border border-stone-300 p-4 space-y-2 text-stone-800">

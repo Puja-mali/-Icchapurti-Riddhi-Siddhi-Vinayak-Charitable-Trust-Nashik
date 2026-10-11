@@ -29,7 +29,6 @@ import { PassportService } from "@/src/services/passportService";
 
 import { useAuth } from "@/src/context/AuthContext";
 import { ImpactTimeline } from "@/src/components/impact/ImpactTimeline";
-import { ImpactJourneyInteractive } from "@/src/components/impact/ImpactJourneyInteractive";
 import { Button } from "@/src/components/common/Button";
 import { useLanguage } from "@/src/context/LanguageContext";
 
@@ -299,14 +298,13 @@ export const ImpactPassport: React.FC = () => {
           className="mx-auto max-w-3xl space-y-3 text-center"
         >
           <div className="inline-flex flex-wrap items-center justify-center gap-2">
-
-            <span className="rounded-full border border-[#d8c89f] bg-[#fffaf0] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#28563b] shadow-sm">
-              Cryptographic Transparency Ledger
+            <span className="rounded-full border border-[#d8c89f] bg-[#fffaf0] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#28563b] shadow-xs">
+              Impact Tracking Ledger
             </span>
 
-            <span className="inline-flex items-center gap-1 rounded-full border border-[#b9cdb6] bg-[#edf4eb] px-2.5 py-1 text-xs font-semibold text-[#28563b] shadow-sm">
+            <span className="inline-flex items-center gap-1 rounded-full border border-[#b9cdb6] bg-[#edf4eb] px-2.5 py-1 text-xs font-semibold text-[#28563b] shadow-xs">
               <ShieldCheck className="h-3.5 w-3.5 text-[#356846]" />
-              MongoDB Audited
+              Accountable Giving
             </span>
           </div>
 
@@ -317,11 +315,7 @@ export const ImpactPassport: React.FC = () => {
           {/* Traditional divider */}
           <div className="flex items-center justify-center gap-2 py-1">
             <span className="h-px w-12 bg-[#c6a75d]/60" />
-
-            <span className="text-sm text-[#b28d43]">
-              ✦
-            </span>
-
+            <span className="text-sm text-[#b28d43]">✦</span>
             <span className="h-px w-12 bg-[#c6a75d]/60" />
           </div>
 
@@ -334,26 +328,21 @@ export const ImpactPassport: React.FC = () => {
             TRANSPARENCY STATEMENT
             ============================================================ */}
 
-        <div className="mt-8 flex items-start gap-3 rounded-2xl border border-[#ddd5c5] bg-[#fffdf8]/90 p-4 text-xs text-[#5f625b] shadow-[0_8px_30px_rgba(60,70,55,0.05)] backdrop-blur-sm sm:p-5">
-
+        <div className="mt-8 flex items-start gap-3 rounded-2xl border border-[#ddd5c5] bg-[#fffdf8]/90 p-4 text-xs text-[#5f625b] shadow-xs backdrop-blur-sm sm:p-5">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#356846]" />
 
           <div className="space-y-1 leading-relaxed">
             <p>
               <strong className="text-[#293c30]">
-                Live Statutory Audit Ledger:
+                Pooled Contribution Model & Accountability:
               </strong>{" "}
-              Each record below represents an immutable,
-              verified financial contribution recorded in
-              the Siddhivinayak Charitable Trust database.
-              Fund allocations, auditor certifications, and
-              milestone tracking reflect real data records.
+              Multiple donors contribute collectively to fund larger welfare initiatives. Every successful donation receives an official receipt and private Impact Passport. Campaign-level milestones, expenses, and verification dockets reflect verified records maintained by Trust officers.
             </p>
           </div>
         </div>
 
         {/* ============================================================
-            ⭐ IMPORTANT TRANSFORMATION FLOW
+            FOUR-STAGE ACCOUNTABILITY LIFECYCLE
             ============================================================ */}
 
         <motion.div
@@ -373,20 +362,14 @@ export const ImpactPassport: React.FC = () => {
           transition={{
             duration: 0.55,
           }}
-          className="relative mt-8 overflow-hidden rounded-[2rem] border border-[#d9d0bd] bg-gradient-to-br from-[#fffdf8] via-[#faf7ee] to-[#edf3e9] p-5 shadow-[0_15px_45px_rgba(55,70,54,0.07)] sm:p-7"
+          className="relative mt-8 overflow-hidden rounded-2xl border border-[#d9d0bd] bg-gradient-to-br from-[#fffdf8] via-[#faf7ee] to-[#edf3e9] p-5 shadow-xs sm:p-7"
         >
-
-          {/* Decorative corner */}
-          <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full border border-[#c5a45b]/10" />
-
           <div className="relative z-10">
-
             {/* Heading */}
             <div className="mb-6 text-center">
-
               <div className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7c6840]">
                 <span className="h-px w-6 bg-[#c5a45b]/60" />
-                Your Contribution Journey
+                Donation Lifecycle
                 <span className="h-px w-6 bg-[#c5a45b]/60" />
               </div>
 
@@ -395,154 +378,78 @@ export const ImpactPassport: React.FC = () => {
               </h2>
 
               <p className="mx-auto mt-1.5 max-w-2xl text-xs leading-relaxed text-[#73766e] sm:text-sm">
-                Follow how your contribution moves through
-                the Trust and becomes a verified social impact.
+                Each donor's contribution is pooled with others into an approved Trust cause, progressing through four verified stages.
               </p>
             </div>
 
-            {/* Journey */}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-center">
-
-              {/* STEP 1 */}
-              <div className="group rounded-2xl border border-[#ded7c8] bg-white/80 p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-
-                <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
+            {/* 4 Stages Responsive Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* STAGE 1 */}
+              <div className="rounded-xl border border-[#ded7c8] bg-white/90 p-4 text-center shadow-2xs">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
                   <HeartHandshake className="h-5 w-5" />
                 </div>
-
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8b856f]">
-                  Step 01
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
+                  Stage 01
                 </p>
-
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  Your Donation
+                  Donation Received
                 </h3>
-
-                <p className="mt-1 text-[11px] leading-relaxed text-[#777a72]">
-                  You support a verified Trust cause.
+                <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
+                  Payment confirmed. Official 80G tax receipt and private tracking record created.
                 </p>
               </div>
 
-              {/* ARROW */}
-              <div className="hidden md:flex items-center justify-center">
-                <ArrowRight className="h-5 w-5 text-[#b4944e]" />
-              </div>
-
-              {/* STEP 2 */}
-              <div className="group rounded-2xl border border-[#d7e1d4] bg-white/80 p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-
-                <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#c6d8c1] bg-[#edf4eb] text-[#356846]">
+              {/* STAGE 2 */}
+              <div className="rounded-xl border border-[#d7e1d4] bg-white/90 p-4 text-center shadow-2xs">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#c6d8c1] bg-[#edf4eb] text-[#356846]">
                   <Layers className="h-5 w-5" />
                 </div>
-
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8b856f]">
-                  Step 02
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
+                  Stage 02
                 </p>
-
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  Allocation
+                  Fund Allocation
                 </h3>
-
-                <p className="mt-1 text-[11px] leading-relaxed text-[#777a72]">
-                  Funds are allocated to the selected initiative.
+                <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
+                  Pooled donor contributions allocated to approved community cause budget lines.
                 </p>
               </div>
 
-              {/* ARROW */}
-              <div className="hidden md:flex items-center justify-center">
-                <ArrowRight className="h-5 w-5 text-[#b4944e]" />
-              </div>
-
-              {/* STEP 3 */}
-              <div className="group rounded-2xl border border-[#ded7c8] bg-white/80 p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-
-                <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
+              {/* STAGE 3 */}
+              <div className="rounded-xl border border-[#ded7c8] bg-white/90 p-4 text-center shadow-2xs">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#d7c38f] bg-[#faf3dd] text-[#8c6e2f]">
                   <FileCheck className="h-5 w-5" />
                 </div>
-
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8b856f]">
-                  Step 03
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b856f]">
+                  Stage 03
                 </p>
-
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#29392e]">
-                  Verification
+                  Evidence & Verification
                 </h3>
-
-                <p className="mt-1 text-[11px] leading-relaxed text-[#777a72]">
-                  Records and milestones are verified.
+                <p className="mt-1 text-xs leading-relaxed text-[#777a72]">
+                  Trust officers inspect vendor receipts, weighment slips, and execution records.
                 </p>
               </div>
 
-              {/* ARROW */}
-              <div className="hidden md:flex items-center justify-center">
-                <ArrowRight className="h-5 w-5 text-[#b4944e]" />
-              </div>
-
-              {/* STEP 4 */}
-              <div className="relative rounded-2xl border border-[#9fbd9d] bg-[#eaf3e7] p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-
-                {/* Small badge */}
-                <div className="absolute right-2 top-2 rounded-full bg-[#28563b] px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white">
-                  Verified
-                </div>
-
-                <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#a9c4a5] bg-white text-[#28563b]">
+              {/* STAGE 4 */}
+              <div className="rounded-xl border border-[#9fbd9d] bg-[#eaf3e7]/80 p-4 text-center shadow-2xs">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-[#a9c4a5] bg-white text-[#28563b]">
                   <CheckCircle2 className="h-5 w-5" />
                 </div>
-
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#668064]">
-                  Step 04
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#668064]">
+                  Stage 04
                 </p>
-
                 <h3 className="mt-1 font-serif text-sm font-bold text-[#24412f]">
-                  Real Impact
+                  Community Impact
                 </h3>
-
-                <p className="mt-1 text-[11px] leading-relaxed text-[#61705f]">
-                  Your support becomes measurable impact.
+                <p className="mt-1 text-xs leading-relaxed text-[#61705f]">
+                  Completed program milestones, beneficiary support delivered, and verified metrics published.
                 </p>
               </div>
-            </div>
-
-            {/* Mobile arrows */}
-            <div className="flex flex-col items-center gap-1 py-1 md:hidden">
-
-              <ArrowRight className="h-4 w-4 rotate-90 text-[#b4944e]" />
-
-              <ArrowRight className="h-4 w-4 rotate-90 text-[#b4944e]" />
-
-              <ArrowRight className="h-4 w-4 rotate-90 text-[#b4944e]" />
-            </div>
-
-            {/* Final Passport indicator */}
-            <div className="mt-6 flex flex-col items-center justify-center gap-2 sm:flex-row">
-
-              <div className="h-px w-10 bg-[#c5a45b]/40" />
-
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#cdbb91] bg-[#fffaf0] px-4 py-2 text-xs font-semibold text-[#6e592e] shadow-sm">
-
-                <ShieldCheck className="h-4 w-4 text-[#8d7037]" />
-
-                This verified journey becomes your
-                <span className="font-bold text-[#28563b]">
-                  Impact Passport
-                </span>
-
-              </div>
-
-              <div className="h-px w-10 bg-[#c5a45b]/40" />
-
             </div>
           </div>
         </motion.div>
-
-        {/* ============================================================
-            EXISTING INTERACTIVE JOURNEY
-            ============================================================ */}
-
-        <div className="mt-8">
-          <ImpactJourneyInteractive />
-        </div>
 
         {/* ============================================================
             GUEST NOTIFICATION
@@ -821,12 +728,11 @@ export const ImpactPassport: React.FC = () => {
                 <div className="mx-auto h-10 w-10 animate-spin rounded-full border-[3px] border-[#ddd7ca] border-t-[#28563b]" />
 
                 <div className="font-serif text-sm font-bold text-[#29372d]">
-                  Retrieving Verified Impact Records from MongoDB...
+                  Loading Verified Impact Passport Records...
                 </div>
 
                 <p className="mx-auto max-w-sm text-xs text-[#777a72]">
-                  Validating cryptographic receipt numbers
-                  and statutory audit clearance.
+                  Retrieving donation history, allocated initiatives, and verified project milestones.
                 </p>
 
               </div>

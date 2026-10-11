@@ -3,8 +3,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 interface ThemeContextType {
   highContrast: boolean;
   toggleHighContrast: () => void;
-  userRole: "admin" | "donor" | "volunteer" | "guest";
-  setUserRole: (role: "admin" | "donor" | "volunteer" | "guest") => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -17,8 +15,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return false;
     }
   });
-
-  const [userRole, setUserRoleState] = useState<"admin" | "donor" | "volunteer" | "guest">("admin");
 
   useEffect(() => {
     try {
@@ -35,17 +31,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const toggleHighContrast = () => setHighContrast((prev) => !prev);
 
-  const setUserRole = (role: "admin" | "donor" | "volunteer" | "guest") => {
-    setUserRoleState(role);
-  };
-
   return (
     <ThemeContext.Provider
       value={{
         highContrast,
         toggleHighContrast,
-        userRole,
-        setUserRole,
       }}
     >
       {children}
@@ -59,8 +49,6 @@ export const useTheme = (): ThemeContextType => {
     return {
       highContrast: false,
       toggleHighContrast: () => {},
-      userRole: "donor",
-      setUserRole: () => {},
     };
   }
   return context;

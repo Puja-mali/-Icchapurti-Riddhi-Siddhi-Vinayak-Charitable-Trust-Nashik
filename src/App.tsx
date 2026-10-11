@@ -13,31 +13,40 @@ import { TrustProvider } from "@/src/context/TrustContext";
 
 // Pages
 import { Home } from "@/src/pages/Home";
-import { About } from "@/src/pages/About";
-import { Causes } from "@/src/pages/Causes";
-import { CauseDetails } from "@/src/pages/CauseDetails";
-import { Donate } from "@/src/pages/Donate";
-import { ImpactPassport } from "@/src/pages/ImpactPassport";
-import { Volunteer } from "@/src/pages/Volunteer";
-import { Events } from "@/src/pages/Events";
-import { EventDetails } from "@/src/pages/EventDetails";
-import { Contact } from "@/src/pages/Contact";
-import { Login } from "@/src/pages/Login";
-import { Register } from "@/src/pages/Register";
-import { UserDashboard } from "@/src/pages/UserDashboard";
-import { AdminDashboard } from "@/src/pages/AdminDashboard";
-import { AdminLogin } from "@/src/pages/AdminLogin";
 import { ProtectedRoute } from "@/src/components/common/ProtectedRoute";
-import { KumbhSeva } from "@/src/pages/KumbhSeva";
-import { RequestHelp } from "@/src/pages/RequestHelp";
-import { Transparency } from "@/src/pages/Transparency";
-import { VolunteerPortal } from "@/src/pages/VolunteerPortal";
-import { Gallery } from "@/src/pages/Gallery";
-import { Blog } from "@/src/pages/Blog";
-import { BlogPost } from "@/src/pages/BlogPost";
-import { AcceptInvitation } from "@/src/pages/AcceptInvitation";
-import { ForgotPassword } from "@/src/pages/ForgotPassword";
-import { ResetPassword } from "@/src/pages/ResetPassword";
+
+// Lazy-loaded routes for optimal initial bundle size and rapid time-to-interactive
+const About = React.lazy(() => import("@/src/pages/About").then((m) => ({ default: m.About })));
+const Causes = React.lazy(() => import("@/src/pages/Causes").then((m) => ({ default: m.Causes })));
+const CauseDetails = React.lazy(() => import("@/src/pages/CauseDetails").then((m) => ({ default: m.CauseDetails })));
+const Donate = React.lazy(() => import("@/src/pages/Donate").then((m) => ({ default: m.Donate })));
+const ImpactPassport = React.lazy(() => import("@/src/pages/ImpactPassport").then((m) => ({ default: m.ImpactPassport })));
+const Volunteer = React.lazy(() => import("@/src/pages/Volunteer").then((m) => ({ default: m.Volunteer })));
+const VolunteerPortal = React.lazy(() => import("@/src/pages/VolunteerPortal").then((m) => ({ default: m.VolunteerPortal })));
+const Events = React.lazy(() => import("@/src/pages/Events").then((m) => ({ default: m.Events })));
+const EventDetails = React.lazy(() => import("@/src/pages/EventDetails").then((m) => ({ default: m.EventDetails })));
+const Contact = React.lazy(() => import("@/src/pages/Contact").then((m) => ({ default: m.Contact })));
+const Login = React.lazy(() => import("@/src/pages/Login").then((m) => ({ default: m.Login })));
+const Register = React.lazy(() => import("@/src/pages/Register").then((m) => ({ default: m.Register })));
+const UserDashboard = React.lazy(() => import("@/src/pages/UserDashboard").then((m) => ({ default: m.UserDashboard })));
+const AdminDashboard = React.lazy(() => import("@/src/pages/AdminDashboard").then((m) => ({ default: m.AdminDashboard })));
+const AdminLogin = React.lazy(() => import("@/src/pages/AdminLogin").then((m) => ({ default: m.AdminLogin })));
+const KumbhSeva = React.lazy(() => import("@/src/pages/KumbhSeva").then((m) => ({ default: m.KumbhSeva })));
+const RequestHelp = React.lazy(() => import("@/src/pages/RequestHelp").then((m) => ({ default: m.RequestHelp })));
+const Transparency = React.lazy(() => import("@/src/pages/Transparency").then((m) => ({ default: m.Transparency })));
+const Gallery = React.lazy(() => import("@/src/pages/Gallery").then((m) => ({ default: m.Gallery })));
+const Blog = React.lazy(() => import("@/src/pages/Blog").then((m) => ({ default: m.Blog })));
+const BlogPost = React.lazy(() => import("@/src/pages/BlogPost").then((m) => ({ default: m.BlogPost })));
+const AcceptInvitation = React.lazy(() => import("@/src/pages/AcceptInvitation").then((m) => ({ default: m.AcceptInvitation })));
+const ForgotPassword = React.lazy(() => import("@/src/pages/ForgotPassword").then((m) => ({ default: m.ForgotPassword })));
+const ResetPassword = React.lazy(() => import("@/src/pages/ResetPassword").then((m) => ({ default: m.ResetPassword })));
+
+const RouteLoadingFallback: React.FC = () => (
+  <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center">
+    <div className="w-8 h-8 rounded-full border-2 border-emerald-200 border-t-[#14532d] animate-spin mb-3" />
+    <span className="text-xs font-semibold text-stone-600">Loading trust portal...</span>
+  </div>
+);
 
 const AnimatedRoutes: React.FC = () => {
   const location = useLocation();
@@ -53,42 +62,58 @@ const AnimatedRoutes: React.FC = () => {
         transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1.0] }}
         className="flex-1"
       >
-        <Routes location={location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/causes" element={<Causes />} />
-          <Route path="/causes/:id" element={<CauseDetails />} />
-          <Route path="/donate" element={<Donate />} />
-          <Route path="/impact-passport" element={<ImpactPassport />} />
-          <Route path="/volunteer" element={<Volunteer />} />
-          <Route path="/volunteer-portal" element={<VolunteerPortal />} />
-          <Route path="/kumbh-seva" element={<KumbhSeva />} />
-          <Route path="/request-help" element={<RequestHelp />} />
-          <Route path="/transparency" element={<Transparency />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:id" element={<EventDetails />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/accept-invitation" element={<AcceptInvitation />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          {/* Catch-all fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <React.Suspense fallback={<RouteLoadingFallback />}>
+          <Routes location={location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/causes" element={<Causes />} />
+            <Route path="/causes/:id" element={<CauseDetails />} />
+            <Route path="/donate" element={<Donate />} />
+            <Route path="/impact-passport" element={<ImpactPassport />} />
+            <Route path="/volunteer" element={<Volunteer />} />
+            <Route
+              path="/volunteer-portal"
+              element={
+                <ProtectedRoute allowedRoles={['VOLUNTEER', 'ADMIN', 'STAFF']}>
+                  <VolunteerPortal />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/kumbh-seva" element={<KumbhSeva />} />
+            <Route path="/request-help" element={<RequestHelp />} />
+            <Route path="/transparency" element={<Transparency />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/events/:id" element={<EventDetails />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['DONOR', 'ADMIN', 'STAFF', 'VOLUNTEER']}>
+                  <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/accept-invitation" element={<AcceptInvitation />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            {/* Catch-all fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </React.Suspense>
       </motion.div>
     </AnimatePresence>
   );

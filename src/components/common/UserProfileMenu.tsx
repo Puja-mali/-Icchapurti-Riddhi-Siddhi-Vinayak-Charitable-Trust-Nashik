@@ -47,6 +47,7 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
 
   // Modals
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileModalTab, setProfileModalTab] = useState<'view' | 'edit'>('view');
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   // Edit Profile Form State
@@ -277,7 +278,18 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
                   ? 'Admin & Governance Portal'
                   : user.role === 'VOLUNTEER'
                   ? 'Volunteer Seva Portal'
-                  : 'Donor Dashboard & Receipts'}
+                  : 'My Donations & Tax Receipts'}
+              </span>
+            </Link>
+
+            <Link
+              to="/impact-passport"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-stone-700 hover:bg-emerald-50 hover:text-[#14532d] transition-colors"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
+              <span>
+                {user.role === 'DONOR' ? 'Track My Impact Passport' : 'Impact Passport Ledger'}
               </span>
             </Link>
 
@@ -285,12 +297,26 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
               type="button"
               onClick={() => {
                 setIsOpen(false);
+                setProfileModalTab('view');
                 setIsProfileModalOpen(true);
               }}
               className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-stone-700 hover:bg-stone-50 hover:text-stone-950 transition-colors cursor-pointer"
             >
               <UserIcon className="w-4 h-4 text-stone-500" />
-              <span>My Profile & Edit Details</span>
+              <span>My Profile</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false);
+                setProfileModalTab('edit');
+                setIsProfileModalOpen(true);
+              }}
+              className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-stone-700 hover:bg-stone-50 hover:text-stone-950 transition-colors cursor-pointer"
+            >
+              <UserCheck className="w-4 h-4 text-emerald-600" />
+              <span>Edit Profile Details</span>
             </button>
 
             <button
@@ -338,12 +364,41 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
       <Modal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        title="Account Profile & Edit Details"
+        title={profileModalTab === 'view' ? "My Account Profile" : "Edit Profile Details"}
       >
-        <form onSubmit={handleSaveProfile} className="space-y-4">
-          <p className="text-xs text-stone-600">
-            View your verified account standing and update your legal contact name and phone number.
-          </p>
+        <div className="space-y-4">
+          {/* Tab Navigation */}
+          <div className="flex border-b border-stone-200">
+            <button
+              type="button"
+              onClick={() => {
+                setProfileModalTab('view');
+                setProfileFeedback(null);
+              }}
+              className={`pb-2 px-3 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
+                profileModalTab === 'view'
+                  ? 'border-[#14532d] text-[#14532d]'
+                  : 'border-transparent text-stone-500 hover:text-stone-800'
+              }`}
+            >
+              Overview & Verification
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setProfileModalTab('edit');
+                setProfileFeedback(null);
+              }}
+              className={`pb-2 px-3 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
+                profileModalTab === 'edit'
+                  ? 'border-[#14532d] text-[#14532d]'
+                  : 'border-transparent text-stone-500 hover:text-stone-800'
+              }`}
+            >
+              Edit Details
+            </button>
+          </div>
+
           {profileFeedback && (
             <div
               className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
@@ -361,86 +416,140 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
             </div>
           )}
 
-          {/* Account Overview Card */}
-          <div className="p-3.5 bg-stone-50 rounded-xl border border-stone-200 space-y-2 text-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-stone-500">Registered Email:</span>
-              <span className="font-mono font-semibold text-stone-800">{user.email}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-stone-500">Database Role:</span>
-              <span>{getRoleBadge(user.role)}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-stone-500">Account Status:</span>
-              <span className="font-semibold text-emerald-700 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                Active
-              </span>
-            </div>
-            {user.createdAt && (
-              <div className="flex items-center justify-between">
-                <span className="text-stone-500">Member Since:</span>
-                <span className="text-stone-700">{formatDate(user.createdAt)}</span>
+          {profileModalTab === 'view' ? (
+            /* VIEW TAB: Verified Details */
+            <div className="space-y-4">
+              <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 space-y-3 text-xs">
+                <div className="flex items-center justify-between py-1 border-b border-stone-200/60">
+                  <span className="text-stone-500 font-medium">Full Name:</span>
+                  <span className="font-semibold text-stone-900">{user.name || 'Not provided'}</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-stone-200/60">
+                  <span className="text-stone-500 font-medium">Registered Email:</span>
+                  <span className="font-mono font-semibold text-stone-800 break-all">{user.email}</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-stone-200/60">
+                  <span className="text-stone-500 font-medium">Phone Number:</span>
+                  <span className="text-stone-800">{user.phone || 'Not provided'}</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-stone-200/60">
+                  <span className="text-stone-500 font-medium">Database Role:</span>
+                  <span>{getRoleBadge(user.role)}</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-stone-200/60">
+                  <span className="text-stone-500 font-medium">Account Standing:</span>
+                  <span className="font-semibold text-emerald-700 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                    Verified & Active
+                  </span>
+                </div>
+                {user.createdAt && (
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-stone-500 font-medium">Member Since:</span>
+                    <span className="text-stone-700">{formatDate(user.createdAt)}</span>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div>
-            <label className="block text-xs font-bold text-stone-700 mb-1">Full Name</label>
-            <input
-              type="text"
-              required
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              className="w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]"
-            />
-          </div>
+              <div className="p-3 bg-emerald-50/50 rounded-lg border border-emerald-100">
+                <p className="text-[11px] text-emerald-900 leading-relaxed">
+                  <strong>Security Note:</strong> Account roles and verification statuses are strictly managed by Trust administrators and database validation rules to prevent unauthorized privilege escalation.
+                </p>
+              </div>
 
-          <div>
-            <label className="block text-xs font-bold text-stone-700 mb-1">
-              Phone Number (Optional)
-            </label>
-            <input
-              type="text"
-              placeholder="+91 9876543210"
-              value={editPhone}
-              onChange={(e) => setEditPhone(e.target.value)}
-              className="w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]"
-            />
-          </div>
+              <div className="pt-2">
+                <PushNotificationToggle />
+              </div>
 
-          <div className="pt-2">
-            <PushNotificationToggle />
-          </div>
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setProfileModalTab('edit')}
+                  className="text-xs"
+                >
+                  Edit Name / Phone
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setIsProfileModalOpen(false)}
+                  className="bg-[#14532d] hover:bg-[#166534] text-white text-xs"
+                >
+                  Done
+                </Button>
+              </div>
+            </div>
+          ) : (
+            /* EDIT TAB: Update Name & Phone */
+            <form onSubmit={handleSaveProfile} className="space-y-4">
+              <p className="text-xs text-stone-600">
+                Update your legal contact details. Security credentials and role assignments remain protected.
+              </p>
 
-          <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsProfileModalOpen(false)}
-            >
-              Close
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              disabled={isSavingProfile}
-              className="bg-[#14532d] hover:bg-[#166534] text-white"
-            >
-              {isSavingProfile ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />
-                  Saving...
-                </>
-              ) : (
-                'Save Changes'
-              )}
-            </Button>
-          </div>
-        </form>
+              <div>
+                <label className="block text-xs font-bold text-stone-700 mb-1">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="Enter full legal name"
+                  className="w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-700 mb-1">
+                  Phone Number (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="+91 9876543210"
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  className="w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]"
+                />
+              </div>
+
+              <div className="pt-2">
+                <PushNotificationToggle />
+              </div>
+
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setProfileModalTab('view');
+                    setProfileFeedback(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="sm"
+                  disabled={isSavingProfile}
+                  className="bg-[#14532d] hover:bg-[#166534] text-white"
+                >
+                  {isSavingProfile ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
+                </Button>
+              </div>
+            </form>
+          )}
+        </div>
       </Modal>
 
       {/* MODAL 2: CHANGE PASSWORD */}
