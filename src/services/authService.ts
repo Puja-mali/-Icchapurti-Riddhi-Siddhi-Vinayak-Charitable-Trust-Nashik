@@ -68,6 +68,7 @@ export interface RegisterPayload {
 export interface LoginPayload {
   email: string;
   password: string;
+  portal?: 'public' | 'admin';
 }
 
 export interface AuthResponseData {
@@ -111,10 +112,15 @@ export const authService = {
    * Authenticate an existing user
    */
   async login(credentials: LoginPayload): Promise<AuthResponseData> {
-    const response = await api.post<any>('/auth/login', {
+    const payload: Record<string, any> = {
       email: credentials.email.toLowerCase().trim(),
       password: credentials.password,
-    });
+    };
+    if (credentials.portal) {
+      payload.portal = credentials.portal;
+    }
+
+    const response = await api.post<any>('/auth/login', payload);
 
     const rawUser = response?.user || response?.data?.user;
     if (!rawUser || !isValidAuthUser(rawUser)) {

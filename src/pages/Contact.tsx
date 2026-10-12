@@ -19,8 +19,8 @@ const FAQS = [
     a: "The Impact Passport is our structured tracking mechanism. Rather than blending donations into an opaque general pool, each pledge is tagged with an indexed audit ID. Donors follow their funds through four stages: Donation receipt, vendor allocation, independent field audit, and monitored beneficiary outcome.",
   },
   {
-    q: "Are donations eligible for statutory deduction?",
-    a: "Tax exemption under Section 80G is subject to verification of the Trust's current official documentation (Form 10AC reference E-9389 / Nashik). Donors receive numbered donation receipts for their contributions with clear audit references.",
+    q: "Do donors receive an official donation receipt?",
+    a: "Yes. Every verified contribution receives an official numbered Trust donation receipt referencing our registration number (E-9389 / Nashik). Note: The Trust does not claim Section 80G tax deductions; receipts confirm your voluntary contribution for personal and Trust accounting records.",
   },
   {
     q: "Can college students volunteer for NSS / academic credits?",

@@ -98,54 +98,54 @@ export const Transparency: React.FC = () => {
           description={t.transparency.subtitle}
         />
 
-        {/* Allocation Ratio Card — Modern Nashik Editorial Statutory Docket */}
+        {/* Authentic Statutory Governance Card */}
         <div className="bg-[#fffdf9] text-stone-900 p-6 sm:p-9 rounded-3xl border border-[#ded5c5] shadow-sm relative overflow-hidden">
-          <div className="pointer-events-none absolute -right-20 -top-20 w-80 h-80 rounded-full bg-amber-200/20 blur-3xl" />
+          <div className="pointer-events-none absolute -right-20 -top-20 w-80 h-80 rounded-full bg-emerald-100/30 blur-3xl" />
           
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-3.5">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-800">
-                <span className="w-2 h-2 rounded-full bg-amber-600" />
-                <span>Statutory Disbursal Integrity</span>
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-900">
+                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                <span>Statutory Governance & Open Ledgers</span>
               </div>
               
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-stone-900 leading-tight">
-                {t.transparency.directUtilization}
+                Public Accountability & Trust Stewardship
               </h2>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-xl">
-                The Trust maintains institutional stewardship under the Maharashtra Public Trusts Act (Reg. No. E-9389 / Nashik).
-                All program expenditures, vendor vouchers, and relief distributions are maintained by the Treasurer and reviewed by the Board of Trustees.
+                Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik operates in strict compliance with the Maharashtra Public Trusts Act (Reg. No. E-9389 / Nashik).
+                All program disbursements, purchase invoices, and relief materials are recorded in official ledgers and reviewed by the Board of Trustees.
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2 text-xs">
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
-                  <div className="font-serif font-bold text-base text-stone-900">Direct Aid</div>
-                  <div className="text-[11px] text-stone-600 font-medium">Education, healthcare, and family relief drives</div>
+                  <div className="font-serif font-bold text-base text-stone-900">Direct Action</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Grassroots welfare in education, healthcare, and nutrition</div>
                 </div>
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
-                  <div className="font-serif font-bold text-base text-amber-900">Governance</div>
-                  <div className="text-[11px] text-stone-600 font-medium">Secretariat oversight & verified bookkeeping</div>
+                  <div className="font-serif font-bold text-base text-stone-900">Governance</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Board of 13 Trustees & monthly secretarial reviews</div>
                 </div>
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
-                  <div className="font-serif font-bold text-base text-stone-800">Public Record</div>
-                  <div className="text-[11px] text-stone-600 font-medium">Compliance filings accessible to stakeholders</div>
+                  <div className="font-serif font-bold text-base text-stone-900">Public Record</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Approved annual reports published transparently</div>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-4 bg-[#f9f5ee] p-5 sm:p-6 rounded-2xl border border-[#e0d5c3] space-y-2.5 text-xs">
+            <div className="lg:col-span-4 bg-[#f9f5ee] p-5 sm:p-6 rounded-2xl border border-[#e0d5c3] space-y-3 text-xs">
               <div className="font-semibold text-stone-900 flex items-center gap-1.5 font-serif text-sm">
-                <Scale className="w-4 h-4 text-amber-700" />
-                <span>Statutory Compliance Registry</span>
+                <Scale className="w-4 h-4 text-emerald-800" />
+                <span>Legal & Registration Standing</span>
               </div>
-              <div className="space-y-1.5 text-stone-600 text-[11px]">
-                <div><strong className="text-stone-800">80G Registration:</strong> Subject to verification of statutory documentation</div>
-                <div><strong className="text-stone-800">12A Registration:</strong> Subject to verification of statutory documentation</div>
-                <div><strong className="text-stone-800">CSR-1 Reg Number:</strong> Subject to verification of MCA filing</div>
-                <div><strong className="text-stone-800">FCRA Status:</strong> Non-commercial Indian Charity (Domestic Contributions Only)</div>
+              <div className="space-y-1.5 text-stone-700 text-[11px]">
+                <div><strong className="text-stone-900">Trust Reg. No:</strong> E-9389 / Nashik</div>
+                <div><strong className="text-stone-900">Governing Act:</strong> Maharashtra Public Trusts Act</div>
+                <div><strong className="text-stone-900">PAN Number:</strong> AAATI2734K</div>
+                <div><strong className="text-stone-900">Registered Office:</strong> 7, Pokar Avenue, Nandanvan Garden Apt, Nashik 422004</div>
               </div>
-              <div className="pt-1.5 text-[10px] text-stone-500 border-t border-[#e2d8c7]">
-                *Official statutory registration certificates are verified upon administrative onboarding.
+              <div className="pt-2 text-[10px] text-stone-500 border-t border-[#e2d8c7] leading-relaxed">
+                *The Trust does not claim Section 80G tax deductions. Official numbered donation receipts are issued for personal records and Trust accounting.
               </div>
             </div>
           </div>
@@ -230,31 +230,33 @@ export const Transparency: React.FC = () => {
 
         {/* Empty State (When DB has no reports) */}
         {!isLoading && !error && reports.length === 0 && (
-          <div className="p-12 text-center bg-stone-50 rounded-2xl border border-dashed border-stone-200 space-y-3">
+          <div className="p-12 text-center bg-stone-50 rounded-2xl border border-dashed border-stone-300 space-y-3">
             <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto text-emerald-800">
               <FileText className="w-6 h-6" />
             </div>
-            <h3 className="font-serif font-bold text-base text-stone-800">
-              {t.transparency.noReports}
+            <h3 className="font-serif font-bold text-base sm:text-lg text-stone-900">
+              Transparency reports will be published here when approved documents are available.
             </h3>
-            <p className="text-xs text-stone-500 max-w-md mx-auto leading-relaxed">
-              {t.transparency.noReportsDesc}
+            <p className="text-xs text-stone-600 max-w-md mx-auto leading-relaxed">
+              Approved annual activity reports, verified financial statements, and program expense summaries will be published directly by Trust officers once formal filings are released.
             </p>
-            <div className="pt-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  setSelectedType("All");
-                  setSelectedYear("All");
-                  setSearchQuery("");
-                  fetchReports();
-                }}
-                className="text-xs text-emerald-800 border-emerald-800/30"
-              >
-                Reset Filters
-              </Button>
-            </div>
+            {(selectedType !== "All" || selectedYear !== "All" || searchQuery) && (
+              <div className="pt-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedType("All");
+                    setSelectedYear("All");
+                    setSearchQuery("");
+                    fetchReports();
+                  }}
+                  className="text-xs text-emerald-800 border-emerald-800/30"
+                >
+                  Reset Filters
+                </Button>
+              </div>
+            )}
           </div>
         )}
 

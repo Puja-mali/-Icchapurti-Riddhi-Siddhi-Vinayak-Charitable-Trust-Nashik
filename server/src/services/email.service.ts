@@ -226,7 +226,7 @@ export class EmailService {
           env.CLIENT_URL
         )}/dashboard" class="btn" style="color: #ffffff !important;">Access Donor Dashboard & Receipts</a>
       </div>
-      <p style="font-size: 12px; color: #94a3b8; margin-top: 24px;">Note: Keep this receipt number and transaction reference for your records. Section 80G tax deduction eligibility is subject to CBDT verified trust credentials and donor PAN submission.</p>
+      <p style="font-size: 12px; color: #94a3b8; margin-top: 24px;">Note: Keep this receipt number and transaction reference for your records. The Trust does not claim Section 80G tax deductions; this receipt confirms your voluntary contribution for personal and Trust accounting records.</p>
     `;
 
     const html = this.wrapTemplate(subject, body);

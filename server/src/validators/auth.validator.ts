@@ -49,6 +49,7 @@ export const loginSchema = z.object({
   password: z
     .string()
     .min(1, 'Password is required'),
+  portal: z.enum(['public', 'admin']).optional(),
 });
 
 export const refreshTokenSchema = z.object({

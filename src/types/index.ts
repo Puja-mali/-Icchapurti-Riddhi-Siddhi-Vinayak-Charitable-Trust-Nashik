@@ -6,6 +6,19 @@ export type CauseCategory =
   | "Environment"
   | "Other";
 
+export interface LocalizedContent {
+  title?: string;
+  shortDescription?: string;
+  tagline?: string;
+  description?: string;
+}
+
+export interface ContentTranslations {
+  mr?: LocalizedContent;
+  hi?: LocalizedContent;
+  en?: LocalizedContent;
+}
+
 export interface Cause {
   id: string;
   _id?: string;
@@ -26,6 +39,7 @@ export interface Cause {
   isKumbhRelated?: boolean;
   startDate?: string;
   endDate?: string;
+  translations?: ContentTranslations;
   allocationBreakdown?: {
     category: string;
     percentage: number;
@@ -102,6 +116,7 @@ export interface EventItem {
   imageUrl: string;
   galleryUrls?: string[];
   isKumbhRelated?: boolean;
+  translations?: ContentTranslations;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -283,6 +298,7 @@ export interface BlogPost {
   isPublished?: boolean;
   isFeatured?: boolean;
   isKumbhRelated?: boolean;
+  translations?: ContentTranslations;
   createdBy?: any;
   updatedBy?: any;
   createdAt?: string;

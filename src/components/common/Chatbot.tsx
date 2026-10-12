@@ -57,7 +57,7 @@ export const Chatbot: React.FC = () => {
     const q = query.toLowerCase();
 
     if (q.includes("80g") || q.includes("tax") || q.includes("receipt") || q.includes("deduction")) {
-      return "All donations to Icchapurti Riddhi Siddhi Vinayak Charitable Trust receive an official donation receipt with our registration number (E-9389 / Nashik). Tax exemption status under Section 80G is subject to verification of the Trust's current statutory documentation and filings.";
+      return "All donations to Icchapurti Riddhi Siddhi Vinayak Charitable Trust receive an official donation receipt with our registration number (E-9389 / Nashik). The Trust does not claim Section 80G tax deductions; receipts serve as certified proof of contribution for personal and Trust records.";
     }
 
     if (q.includes("track") || q.includes("passport") || q.includes("audit") || q.includes("rupee")) {

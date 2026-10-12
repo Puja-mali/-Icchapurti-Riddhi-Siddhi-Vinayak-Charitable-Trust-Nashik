@@ -49,6 +49,7 @@ export const normalizeCause = (item: any): Cause => {
     featured: !!item.featured,
     isKumbhRelated: !!item.isKumbhRelated,
     status: item.status || 'ACTIVE',
+    translations: item.translations,
     allocationBreakdown: Array.isArray(item.allocationBreakdown) ? item.allocationBreakdown : [],
     impactMilestones: Array.isArray(item.impactMilestones) ? item.impactMilestones : [],
     startDate: item.startDate ? new Date(item.startDate).toISOString() : undefined,

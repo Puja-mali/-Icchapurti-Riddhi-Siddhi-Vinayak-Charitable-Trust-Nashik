@@ -767,8 +767,8 @@ async function runE2ESuite() {
     // Create notification for User A
     const notifA = await Notification.create({
       recipient: new mongoose.Types.ObjectId(donorId),
-      title: 'Tax Receipt Ready',
-      message: 'Your 80G tax certificate for donation is ready for download.',
+      title: 'Donation Receipt Ready',
+      message: 'Your official donation receipt is ready for download.',
       type: 'DONATION_SUCCESS',
       isRead: false,
     });

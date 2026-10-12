@@ -5,18 +5,31 @@ import { MapPin, Users, ArrowRight, Heart } from "lucide-react";
 import { Cause } from "@/src/types";
 import { Button } from "../common/Button";
 import { formatCurrency, cn } from "@/src/lib/utils";
+import { useLanguage } from "@/src/context/LanguageContext";
+import { getLocalizedCause, getLocalizedCategory } from "@/src/lib/localization";
 
 interface CauseCardProps {
   cause: Cause;
   className?: string;
 }
 
-export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
+export const CauseCard: React.FC<CauseCardProps> = ({ cause: rawCause, className }) => {
+  const { language, t } = useLanguage();
+  const cause = getLocalizedCause(rawCause, language);
   const shouldReduceMotion = useReducedMotion();
   const hasTarget = Boolean(cause.targetAmount && cause.targetAmount > 0);
   const percentage = hasTarget
     ? Math.min(100, Math.round(((cause.raisedAmount || 0) / (cause.targetAmount || 1)) * 100))
     : 0;
+
+  const urgentLabel = language === "mr" ? "तातडीची सेवा" : language === "hi" ? "अति आवश्यक सेवा" : "Urgent Seva";
+  const verifiedLabel = language === "mr" ? "सत्यापित उपक्रम" : language === "hi" ? "सत्यापित उपक्रम" : "Verified Initiative";
+  const ofTargetLabel = language === "mr" ? "लक्ष्य" : language === "hi" ? "लक्ष्य" : "target";
+  const accountedLabel = language === "mr" ? "निधी संकलित" : language === "hi" ? "धनराशि एकत्रित" : "Accounted";
+  const contributionsLabel = language === "mr" ? "सहभाग" : language === "hi" ? "योगदान" : "contributions";
+  const openSupportLabel = language === "mr" ? "सहभागासाठी खुले" : language === "hi" ? "सहयोग हेतु खुला" : "Open for seva support";
+  const viewDetailsLabel = language === "mr" ? "तपशील पहा" : language === "hi" ? "विवरण देखें" : "View Details";
+  const supportLabel = language === "mr" ? "सहकार्य करा" : language === "hi" ? "सहयोग करें" : "Support";
 
   return (
     <motion.div
@@ -48,7 +61,7 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
             </div>
             {cause.urgent && (
               <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-black/50 px-2 py-0.5 rounded border border-amber-400/40 shrink-0">
-                Urgent Seva
+                {urgentLabel}
               </span>
             )}
           </div>
@@ -58,9 +71,9 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
         <div className="p-5 sm:p-6 pb-4">
           {/* Unboxed category kicker */}
           <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-800/90 mb-1.5 flex items-center gap-2">
-            <span>{cause.category}</span>
+            <span>{getLocalizedCategory(cause.category, language)}</span>
             <span aria-hidden="true" className="text-stone-300">·</span>
-            <span className="text-stone-500 font-normal normal-case">Verified Initiative</span>
+            <span className="text-stone-500 font-normal normal-case">{verifiedLabel}</span>
           </div>
 
           <h3 className="text-base sm:text-lg font-serif font-bold text-stone-900 group-hover:text-stone-950 transition-colors line-clamp-2 leading-snug">
@@ -75,11 +88,11 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
             {hasTarget ? (
               <>
                 <div className="flex justify-between items-baseline text-xs">
-                  <span className="font-bold text-stone-900">
+                  <span className="font-bold text-stone-900 font-mono">
                     {formatCurrency(cause.raisedAmount || 0)}
                   </span>
                   <span className="text-stone-500">
-                    of {formatCurrency(cause.targetAmount)} target
+                    {ofTargetLabel} <span className="font-mono">{formatCurrency(cause.targetAmount)}</span>
                   </span>
                 </div>
 
@@ -94,20 +107,20 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
                 </div>
 
                 <div className="flex justify-between items-center text-[11px] text-stone-500 pt-0.5">
-                  <span className="font-semibold text-stone-800">{percentage}% Accounted</span>
+                  <span className="font-semibold text-stone-800">{percentage}% {accountedLabel}</span>
                   {cause.donorCount > 0 ? (
                     <span className="flex items-center gap-1">
                       <Users className="w-3 h-3 text-stone-400" />
-                      {cause.donorCount} contributions
+                      {cause.donorCount} {contributionsLabel}
                     </span>
                   ) : (
-                    <span>Open for seva support</span>
+                    <span>{openSupportLabel}</span>
                   )}
                 </div>
               </>
             ) : (
               <div className="text-[11px] text-stone-500 flex items-center justify-between">
-                <span className="italic text-stone-500">Target allocation verified per program drive.</span>
+                <span className="italic text-stone-500">{openSupportLabel}</span>
                 {cause.donorCount > 0 && (
                   <span className="flex items-center gap-1 font-medium text-stone-700">
                     <Users className="w-3 h-3 text-stone-400" />
@@ -126,7 +139,7 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
           to={`/causes/${cause.id}`}
           className="text-xs font-semibold text-stone-700 hover:text-[#14532d] flex items-center gap-1.5 transition-colors group/link"
         >
-          <span>View Details</span>
+          <span>{viewDetailsLabel}</span>
           <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/link:translate-x-1" />
         </Link>
 
@@ -137,7 +150,7 @@ export const CauseCard: React.FC<CauseCardProps> = ({ cause, className }) => {
             className="text-xs px-3.5 py-1.5 h-8 bg-[#14532d] hover:bg-[#0f4023] text-white"
             leftIcon={<Heart className="w-3 h-3 fill-current text-amber-300" />}
           >
-            Support
+            {supportLabel}
           </Button>
         </Link>
       </div>

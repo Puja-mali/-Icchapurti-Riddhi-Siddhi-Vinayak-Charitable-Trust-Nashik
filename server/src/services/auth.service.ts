@@ -151,6 +151,20 @@ export class AuthService {
       throw new AppError('Invalid email or password credentials.', 401);
     }
 
+    // Strict Portal Separation:
+    // When authenticating via the public supporter portal ('public'), ADMIN and STAFF
+    // credentials are strictly rejected with the identical generic 401 error to avoid
+    // disclosing administrative account existence.
+    if (input.portal === 'public' && (user.role === 'ADMIN' || user.role === 'STAFF')) {
+      throw new AppError('Invalid email or password credentials.', 401);
+    }
+
+    // When authenticating via the private secretariat portal ('admin'), non-administrative
+    // accounts (DONOR, VOLUNTEER) are rejected with the identical generic 401 error.
+    if (input.portal === 'admin' && (user.role === 'DONOR' || user.role === 'VOLUNTEER')) {
+      throw new AppError('Invalid email or password credentials.', 401);
+    }
+
     const payload: AuthUserPayload = {
       id: user._id.toString(),
       email: user.email,

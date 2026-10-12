@@ -32,6 +32,11 @@ export interface ICause extends Document {
   urgent: boolean;
   allocationBreakdown: IAllocationItem[];
   impactMilestones: IImpactMilestone[];
+  translations?: {
+    mr?: { title?: string; shortDescription?: string; description?: string };
+    hi?: { title?: string; shortDescription?: string; description?: string };
+    en?: { title?: string; shortDescription?: string; description?: string };
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -148,6 +153,23 @@ const causeSchema = new Schema<ICause>(
         },
       },
     ],
+    translations: {
+      mr: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
+      hi: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
+      en: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
+    },
   },
   {
     timestamps: true,

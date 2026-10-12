@@ -41,24 +41,20 @@ export const AdminLogin: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const loggedUser = await login({ email: cleanEmail, password });
+      const loggedUser = await login({ email: cleanEmail, password, portal: "admin" });
 
       if (loggedUser.role === "ADMIN" || loggedUser.role === "STAFF") {
         const fromPath = (location.state as any)?.from?.pathname;
         navigate(fromPath && fromPath !== "/admin/login" ? fromPath : "/admin", { replace: true });
       } else {
         await logout();
-        setErrorMessage(
-          "Access denied: Your account is registered with the role of '" +
-            loggedUser.role +
-            "', which does not have administrative privileges. Please sign in at the standard donor dashboard."
-        );
+        setErrorMessage("Invalid email or password credentials.");
       }
     } catch (err: any) {
       if (err instanceof ApiError) {
         setErrorMessage(err.message);
       } else {
-        setErrorMessage(err?.message || "Failed to sign in. Please check your credentials.");
+        setErrorMessage(err?.message || "Invalid email or password credentials.");
       }
     } finally {
       setIsLoading(false);

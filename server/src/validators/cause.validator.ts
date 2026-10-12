@@ -72,6 +72,31 @@ export const createCauseSchema = z.object({
   donorCount: z.number().min(0).optional().default(0),
   allocationBreakdown: z.array(allocationItemSchema).optional().default([]),
   impactMilestones: z.array(impactMilestoneSchema).optional().default([]),
+  translations: z
+    .object({
+      mr: z
+        .object({
+          title: z.string().trim().optional(),
+          shortDescription: z.string().trim().optional(),
+          description: z.string().trim().optional(),
+        })
+        .optional(),
+      hi: z
+        .object({
+          title: z.string().trim().optional(),
+          shortDescription: z.string().trim().optional(),
+          description: z.string().trim().optional(),
+        })
+        .optional(),
+      en: z
+        .object({
+          title: z.string().trim().optional(),
+          shortDescription: z.string().trim().optional(),
+          description: z.string().trim().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
 });
 
 export const updateCauseSchema = createCauseSchema.partial();

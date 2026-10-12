@@ -239,33 +239,37 @@ export const Navbar: React.FC = () => {
             </motion.div>
 
             <div className="flex flex-col min-w-0 justify-center">
-              {/* Desktop & Tablet Full Official Trust Title */}
+              {/* Desktop & Tablet Full Official Marathi Trust Title */}
               <span
                 className={cn(
-                  "hidden sm:block text-sm md:text-base lg:text-[17px] font-serif font-bold leading-snug tracking-tight transition-colors truncate",
+                  "hidden sm:block text-sm md:text-[15px] lg:text-[16px] font-serif font-bold leading-normal tracking-tight transition-colors truncate pt-0.5 pb-0.5",
                   isTransparent
                     ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
-                    : "text-stone-900 group-hover:text-[#14532d]"
+                    : "text-[#143d2c] group-hover:text-[#0b271b]"
                 )}
               >
-                {t.trustName}
+                इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
               </span>
 
-              {/* Mobile Shortened & Compact Title */}
-              <span
+              {/* Mobile Compact Two-Line Treatment to prevent clipping and unreadable shrinking */}
+              <div
                 className={cn(
-                  "block sm:hidden text-xs xs:text-sm font-serif font-bold leading-tight tracking-tight transition-colors truncate",
+                  "block sm:hidden text-[12.5px] xs:text-[13.5px] font-serif font-bold leading-tight tracking-normal transition-colors py-0.5",
                   isTransparent
                     ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
-                    : "text-stone-900 group-hover:text-[#14532d]"
+                    : "text-[#143d2c] group-hover:text-[#0b271b]"
                 )}
               >
-                {language === "mr"
-                  ? "इच्छापूर्ती विनायक ट्रस्ट"
-                  : language === "hi"
-                  ? "इच्छापूर्ति विनायक ट्रस्ट"
-                  : "Icchapurti Vinayak Trust"}
-              </span>
+                <span className="block truncate">इच्छापूर्ती ऋद्धी सिद्धी विनायक</span>
+                <span
+                  className={cn(
+                    "block text-[11px] xs:text-xs font-semibold truncate",
+                    isTransparent ? "text-amber-300" : "text-[#1b4332]"
+                  )}
+                >
+                  चॅरिटेबल ट्रस्ट, नाशिक
+                </span>
+              </div>
 
               {/* Official Registration & Nashik Identity */}
               <span className="text-[10px] sm:text-[11px] flex items-center gap-1.5 mt-0.5 min-w-0">
@@ -545,11 +549,11 @@ export const Navbar: React.FC = () => {
               <div className="flex flex-col min-w-0">
                 <span
                   className={cn(
-                    "text-xs font-serif font-bold leading-tight",
-                    isTransparent ? "text-white" : "text-stone-900"
+                    "text-xs font-serif font-bold leading-snug",
+                    isTransparent ? "text-white" : "text-[#143d2c]"
                   )}
                 >
-                  {t.trustName}
+                  इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
                 </span>
                 <span
                   className={cn(

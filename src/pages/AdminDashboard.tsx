@@ -331,6 +331,7 @@ export const AdminDashboard: React.FC = () => {
   const [editingCause, setEditingCause] = useState<Cause | null>(null);
   const [isSavingCause, setIsSavingCause] = useState<boolean>(false);
   const [causeFormError, setCauseFormError] = useState<string | null>(null);
+  const [causeFormTab, setCauseFormTab] = useState<"en" | "mr" | "hi">("en");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -343,6 +344,12 @@ export const AdminDashboard: React.FC = () => {
     status: "ACTIVE" as "DRAFT" | "ACTIVE" | "COMPLETED" | "ARCHIVED",
     isKumbhRelated: false,
     urgent: false,
+    title_mr: "",
+    shortDescription_mr: "",
+    description_mr: "",
+    title_hi: "",
+    shortDescription_hi: "",
+    description_hi: "",
   });
 
   const fetchAdminCauses = useCallback(async () => {
@@ -368,6 +375,7 @@ export const AdminDashboard: React.FC = () => {
   const openCreateModal = () => {
     setEditingCause(null);
     setCauseFormError(null);
+    setCauseFormTab("en");
     setFormData({
       title: "",
       category: "Education",
@@ -379,6 +387,12 @@ export const AdminDashboard: React.FC = () => {
       status: "ACTIVE",
       isKumbhRelated: false,
       urgent: false,
+      title_mr: "",
+      shortDescription_mr: "",
+      description_mr: "",
+      title_hi: "",
+      shortDescription_hi: "",
+      description_hi: "",
     });
     setIsCauseModalOpen(true);
   };
@@ -386,6 +400,7 @@ export const AdminDashboard: React.FC = () => {
   const openEditModal = (cause: Cause) => {
     setEditingCause(cause);
     setCauseFormError(null);
+    setCauseFormTab("en");
     setFormData({
       title: cause.title,
       category: cause.category,
@@ -397,6 +412,12 @@ export const AdminDashboard: React.FC = () => {
       status: cause.status || "ACTIVE",
       isKumbhRelated: !!cause.isKumbhRelated,
       urgent: !!cause.urgent,
+      title_mr: cause.translations?.mr?.title || "",
+      shortDescription_mr: cause.translations?.mr?.shortDescription || "",
+      description_mr: cause.translations?.mr?.description || "",
+      title_hi: cause.translations?.hi?.title || "",
+      shortDescription_hi: cause.translations?.hi?.shortDescription || "",
+      description_hi: cause.translations?.hi?.description || "",
     });
     setIsCauseModalOpen(true);
   };
@@ -429,6 +450,22 @@ export const AdminDashboard: React.FC = () => {
 
     setIsSavingCause(true);
     try {
+      const translationsPayload: any = {};
+      if (formData.title_mr.trim() || formData.shortDescription_mr.trim() || formData.description_mr.trim()) {
+        translationsPayload.mr = {
+          title: formData.title_mr.trim() || undefined,
+          shortDescription: formData.shortDescription_mr.trim() || undefined,
+          description: formData.description_mr.trim() || undefined,
+        };
+      }
+      if (formData.title_hi.trim() || formData.shortDescription_hi.trim() || formData.description_hi.trim()) {
+        translationsPayload.hi = {
+          title: formData.title_hi.trim() || undefined,
+          shortDescription: formData.shortDescription_hi.trim() || undefined,
+          description: formData.description_hi.trim() || undefined,
+        };
+      }
+
       const payload: Partial<Cause> = {
         title: formData.title.trim(),
         category: formData.category,
@@ -441,6 +478,7 @@ export const AdminDashboard: React.FC = () => {
         status: formData.status,
         isKumbhRelated: formData.isKumbhRelated,
         urgent: formData.urgent,
+        translations: Object.keys(translationsPayload).length > 0 ? translationsPayload : undefined,
       };
 
       if (editingCause) {
@@ -4146,22 +4184,198 @@ export const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Title */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Campaign Title <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="e.g., Rural School Digital Literacy Drive"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
+          {/* Language / Translation Selector Tabs */}
+          <div className="flex items-center gap-1.5 p-1 bg-stone-100 rounded-lg text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setCauseFormTab("en")}
+              className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer text-center ${
+                causeFormTab === "en" ? "bg-white text-stone-900 shadow-xs" : "text-stone-600 hover:text-stone-900"
+              }`}
+            >
+              English (Primary Content)
+            </button>
+            <button
+              type="button"
+              onClick={() => setCauseFormTab("mr")}
+              className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+                causeFormTab === "mr" ? "bg-[#14532d] text-white shadow-xs" : "text-stone-600 hover:text-stone-900"
+              }`}
+            >
+              <span>मराठी भाषांतर</span>
+              {formData.title_mr ? (
+                <span className="text-[10px] bg-emerald-100 text-emerald-900 px-1 rounded font-bold">✓</span>
+              ) : (
+                <span className="text-[10px] text-amber-500 font-normal">Pending</span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCauseFormTab("hi")}
+              className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+                causeFormTab === "hi" ? "bg-amber-600 text-white shadow-xs" : "text-stone-600 hover:text-stone-900"
+              }`}
+            >
+              <span>हिंदी अनुवाद</span>
+              {formData.title_hi ? (
+                <span className="text-[10px] bg-amber-100 text-amber-900 px-1 rounded font-bold">✓</span>
+              ) : (
+                <span className="text-[10px] text-amber-400 font-normal">Pending</span>
+              )}
+            </button>
+          </div>
 
+          {causeFormTab === "en" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Title */}
+              <div className="sm:col-span-2 space-y-1">
+                <label className="font-semibold text-stone-800 block">
+                  Campaign Title (English) <span className="text-rose-600">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  placeholder="e.g., Rural School Digital Literacy Drive"
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
+                />
+              </div>
+
+              {/* Short Description / Tagline */}
+              <div className="sm:col-span-2 space-y-1">
+                <label className="font-semibold text-stone-800 block">
+                  Short Description / Tagline (English) <span className="text-rose-600">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.shortDescription}
+                  onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
+                  placeholder="One-sentence impact summary shown on cards"
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
+                />
+              </div>
+
+              {/* Full Narrative Description */}
+              <div className="sm:col-span-2 space-y-1">
+                <label className="font-semibold text-stone-800 block">
+                  Full Description / Narrative (English) <span className="text-rose-600">*</span>
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Detailed explanation of the need, target beneficiaries, and execution plan..."
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
+                />
+              </div>
+            </div>
+          )}
+
+          {causeFormTab === "mr" && (
+            <div className="space-y-4 p-4 rounded-xl bg-emerald-50/50 border border-emerald-200/80">
+              <div className="text-xs text-[#14532d] space-y-0.5">
+                <div className="font-semibold">मराठी भाषांतर पुनरावलोकन (Marathi Translation Review)</div>
+                <p className="text-[11px] text-stone-600">
+                  मराठी भाषेतील अधिकृत शीर्षक व माहिती येथे प्रविष्ट करा. रिक्त ठेवल्यास इंग्रजी मूळ मजकूर सुरक्षितपणे दर्शवला जाईल.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-stone-800 block text-xs">
+                  मोहिमेचे शीर्षक (मराठी)
+                </label>
+                <input
+                  type="text"
+                  value={formData.title_mr}
+                  onChange={(e) => setFormData({ ...formData, title_mr: e.target.value })}
+                  placeholder="उदा. ग्रामीण शाळा डिजिटल साक्षरता अभियान"
+                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-[#14532d]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-stone-800 block text-xs">
+                  संक्षिप्त घोषवाक्य / माहिती (मराठी)
+                </label>
+                <input
+                  type="text"
+                  value={formData.shortDescription_mr}
+                  onChange={(e) => setFormData({ ...formData, shortDescription_mr: e.target.value })}
+                  placeholder="एका वाक्यात उपक्रमाची ओळख..."
+                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-[#14532d]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-stone-800 block text-xs">
+                  सविस्तर वर्णन (मराठी)
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.description_mr}
+                  onChange={(e) => setFormData({ ...formData, description_mr: e.target.value })}
+                  placeholder="उपक्रमाची सविस्तर माहिती, लाभार्थी व प्रत्यक्ष कार्यप्रणाली..."
+                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-[#14532d]"
+                />
+              </div>
+            </div>
+          )}
+
+          {causeFormTab === "hi" && (
+            <div className="space-y-4 p-4 rounded-xl bg-amber-50/50 border border-amber-200/80">
+              <div className="text-xs text-amber-950 space-y-0.5">
+                <div className="font-semibold">हिंदी अनुवाद समीक्षा (Hindi Translation Review)</div>
+                <p className="text-[11px] text-stone-600">
+                  हिंदी भाषा में शीर्षक एवं विवरण दर्ज करें। रिक्त रहने पर अंग्रेजी मूल विवरण सुरक्षित प्रदर्शित होगा।
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-stone-800 block text-xs">
+                  अभियान का शीर्षक (हिंदी)
+                </label>
+                <input
+                  type="text"
+                  value={formData.title_hi}
+                  onChange={(e) => setFormData({ ...formData, title_hi: e.target.value })}
+                  placeholder="उदा. ग्रामीण शाला डिजिटल साक्षरता अभियान"
+                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-amber-600"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-stone-800 block text-xs">
+                  संक्षिप्त विवरण / टैगलाइन (हिंदी)
+                </label>
+                <input
+                  type="text"
+                  value={formData.shortDescription_hi}
+                  onChange={(e) => setFormData({ ...formData, shortDescription_hi: e.target.value })}
+                  placeholder="एक वाक्य में प्रकल्प का सार..."
+                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-amber-600"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-stone-800 block text-xs">
+                  विस्तृत विवरण (हिंदी)
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.description_hi}
+                  onChange={(e) => setFormData({ ...formData, description_hi: e.target.value })}
+                  placeholder="प्रकल्प का विस्तृत विवरण, लाभार्थी एवं क्रियान्वयन..."
+                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-amber-600"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Operational Fields (Shared across languages) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-stone-100">
             {/* Category */}
             <div className="space-y-1">
               <label className="font-semibold text-stone-800 block">
@@ -4235,36 +4449,6 @@ export const AdminDashboard: React.FC = () => {
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                 placeholder="https://example.com/activity-photo.jpg"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Short Description / Tagline */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Short Description / Tagline <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.shortDescription}
-                onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                placeholder="One-sentence impact summary shown on cards"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Full Narrative Description */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Full Description / Narrative <span className="text-rose-600">*</span>
-              </label>
-              <textarea
-                rows={4}
-                required
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Detailed explanation of the need, target beneficiaries, and execution plan..."
                 className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
               />
             </div>

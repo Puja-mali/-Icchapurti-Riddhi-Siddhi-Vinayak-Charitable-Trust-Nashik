@@ -19,10 +19,13 @@ import { causeService } from "@/src/services/causeService";
 import { Button } from "@/src/components/common/Button";
 import { EmptyState } from "@/src/components/common/EmptyState";
 import { formatCurrency } from "@/src/lib/utils";
+import { useLanguage } from "@/src/context/LanguageContext";
+import { getLocalizedCause, getLocalizedCategory } from "@/src/lib/localization";
 
 export const CauseDetails: React.FC = () => {
+  const { language } = useLanguage();
   const { id } = useParams<{ id: string }>();
-  const [cause, setCause] = useState<Cause | null>(null);
+  const [rawCause, setCause] = useState<Cause | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,19 +74,20 @@ export const CauseDetails: React.FC = () => {
     );
   }
 
-  if (error || !cause) {
+  if (error || !rawCause) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16">
         <EmptyState
-          title="Campaign Not Found"
-          description={error || "The charitable project you requested could not be located in our catalog."}
-          actionLabel="Back to All Programs"
+          title={language === "mr" ? "उपक्रम आढळला नाही" : language === "hi" ? "सेवा प्रकल्प नहीं मिला" : "Campaign Not Found"}
+          description={error || (language === "mr" ? "विनंती केलेला प्रकल्प डेटाबेसमध्ये उपलब्ध नाही." : "The charitable project you requested could not be located in our catalog.")}
+          actionLabel={language === "mr" ? "सर्व उपक्रम पहा" : language === "hi" ? "सभी प्रकल्प देखें" : "Back to All Programs"}
           onAction={() => (window.location.href = "/causes")}
         />
       </div>
     );
   }
 
+  const cause = getLocalizedCause(rawCause, language);
   const hasTarget = Boolean(cause.targetAmount && cause.targetAmount > 0);
   const raisedAmount = cause.raisedAmount || 0;
   const percentage = hasTarget
@@ -102,7 +106,7 @@ export const CauseDetails: React.FC = () => {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-[#14532d] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to All Programs</span>
+          <span>{language === "mr" ? "सर्व उपक्रम पहा" : language === "hi" ? "सभी प्रकल्प देखें" : "Back to All Programs"}</span>
         </Link>
       </div>
 
@@ -114,11 +118,11 @@ export const CauseDetails: React.FC = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-semibold px-2.5 py-0.5 rounded bg-stone-100 text-stone-800 border border-stone-200">
-                {cause.category}
+                {getLocalizedCategory(cause.category, language)}
               </span>
               {cause.urgent && (
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-200">
-                  Urgent Requirement
+                  {language === "mr" ? "तातडीची गरज" : language === "hi" ? "अति आवश्यक" : "Urgent Requirement"}
                 </span>
               )}
             </div>

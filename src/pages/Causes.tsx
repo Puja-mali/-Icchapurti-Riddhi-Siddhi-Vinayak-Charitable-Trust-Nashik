@@ -16,6 +16,7 @@ import { EmptyState } from "@/src/components/common/EmptyState";
 import { Button } from "@/src/components/common/Button";
 import { PageHeader } from "@/src/components/common/PageHeader";
 
+import { getLocalizedCategory } from "@/src/lib/localization";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
 
@@ -66,33 +67,8 @@ export const Causes: React.FC = () => {
     fetchCauses();
   }, [fetchCauses]);
 
-  const getCategoryLabel = (
-    cat: "All" | CauseCategory
-  ) => {
-    if (language !== "mr") return cat;
-
-    switch (cat) {
-      case "All":
-        return "सर्व उपक्रम";
-
-      case "Education":
-        return "शिक्षण";
-
-      case "Medical Support":
-        return "वैद्यकीय मदत";
-
-      case "Food & Nutrition":
-        return "अन्नदान";
-
-      case "Emergency Relief":
-        return "आपत्ती मदत";
-
-      case "Environment":
-        return "पर्यावरण";
-
-      default:
-        return cat;
-    }
+  const getCategoryLabel = (cat: "All" | CauseCategory) => {
+    return getLocalizedCategory(cat, language);
   };
 
   const filteredCauses = useMemo(() => {
@@ -186,6 +162,8 @@ export const Causes: React.FC = () => {
                   placeholder={
                     language === "mr"
                       ? "प्रकल्प, विषय किंवा जिल्हा शोधा..."
+                      : language === "hi"
+                      ? "प्रकल्प, विषय या जिला खोजें..."
                       : "Search by program title, keyword, or district..."
                   }
                   value={searchQuery}
@@ -218,6 +196,8 @@ export const Causes: React.FC = () => {
                 <span>
                   {language === "mr"
                     ? "फक्त तातडीच्या गरजा"
+                    : language === "hi"
+                    ? "केवल आवश्यक सेवाएं"
                     : "Urgent Needs Only"}
                 </span>
               </button>
@@ -301,16 +281,22 @@ export const Causes: React.FC = () => {
                 title={
                   language === "mr"
                     ? "सध्या कोणतेही उपक्रम उपलब्ध नाहीत."
+                    : language === "hi"
+                    ? "वर्तमान में कोई सेवा प्रकल्प उपलब्ध नहीं है।"
                     : "No campaigns available at the moment."
                 }
                 description={
                   language === "mr"
                     ? "सध्या डेटाबेसमध्ये कोणतेही सक्रिय उपक्रम नोंदवलेले नाहीत. नवीन मोहिमेसाठी कृपया लवकरच पुन्हा भेट द्या."
+                    : language === "hi"
+                    ? "वर्तमान में डेटाबेस में कोई सक्रिय सेवा प्रकल्प पंजीकृत नहीं है। कृपया जल्द पुनः देखें।"
                     : "There are currently no active charitable campaigns published in the database. Please check back soon."
                 }
                 actionLabel={
                   language === "mr"
                     ? "रिफ्रेश करा"
+                    : language === "hi"
+                    ? "ताज़ा करें"
                     : "Refresh"
                 }
                 onAction={fetchCauses}
@@ -322,6 +308,8 @@ export const Causes: React.FC = () => {
                 <div className="text-xs font-medium text-stone-500">
                   {language === "mr"
                     ? `${filteredCauses.length} उपक्रम उपलब्ध`
+                    : language === "hi"
+                    ? `${filteredCauses.length} सेवा प्रकल्प उपलब्ध`
                     : `Showing ${filteredCauses.length} programs`}
                 </div>
 
@@ -339,6 +327,8 @@ export const Causes: React.FC = () => {
                   >
                     {language === "mr"
                       ? "फिल्टर रीसेट करा"
+                      : language === "hi"
+                      ? "फ़िल्टर हटाएं"
                       : "Reset Filters"}
                   </button>
                 )}
@@ -359,16 +349,22 @@ export const Causes: React.FC = () => {
                 title={
                   language === "mr"
                     ? "कोणतेही उपक्रम आढळले नाहीत"
+                    : language === "hi"
+                    ? "कोई सेवा प्रकल्प नहीं मिला"
                     : "No Matching Programs Found"
                 }
                 description={
                   language === "mr"
                     ? "आपल्या शोध निकषांशी जुळणारे कोणतेही उपक्रम सापडले नाहीत. कृपया फिल्टर रीसेट करा."
+                    : language === "hi"
+                    ? "चयनित श्रेणी या खोज के अनुसार कोई प्रकल्प नहीं मिला। कृपया फ़िल्टर हटाएं।"
                     : "We couldn't find any initiatives matching your filter criteria. Try clearing filters to view all programs."
                 }
                 actionLabel={
                   language === "mr"
                     ? "फिल्टर रीसेट करा"
+                    : language === "hi"
+                    ? "फ़िल्टर हटाएं"
                     : "Reset Filters"
                 }
                 onAction={() => {

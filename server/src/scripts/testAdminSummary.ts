@@ -382,7 +382,7 @@ async function runTests() {
     // 6g. Add real transparency report
     await TransparencyReport.create({
       title: 'Statutory Annual Audit FY 2025-26',
-      description: 'Audited financial balance sheet and 80G tax utilization report.',
+      description: 'Annual financial statement and fund utilization summary.',
       reportType: 'Audit Report',
       financialYear: '2025-2026',
       fileUrl: 'https://example.com/audit-2025-26.pdf',

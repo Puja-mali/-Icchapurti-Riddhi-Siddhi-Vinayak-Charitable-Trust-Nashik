@@ -53,6 +53,19 @@ export type HelpRequestStatus =
 
 export type ContactStatus = 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'SPAM';
 
+export interface LocalizedContent {
+  title?: string;
+  shortDescription?: string;
+  tagline?: string;
+  description?: string;
+}
+
+export interface ContentTranslations {
+  mr?: LocalizedContent;
+  hi?: LocalizedContent;
+  en?: LocalizedContent;
+}
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;

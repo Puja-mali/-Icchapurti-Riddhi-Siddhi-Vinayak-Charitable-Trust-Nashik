@@ -529,24 +529,6 @@ export const TrustManagementTab: React.FC<Props> = ({ onNotify }) => {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="font-semibold text-stone-700 block">Section 80G Order No.</label>
-                    <input
-                      type="text"
-                      value={profile.registrationDetails?.taxExemption80G || ""}
-                      onChange={(e) =>
-                        setProfile({
-                          ...profile,
-                          registrationDetails: {
-                            ...profile.registrationDetails,
-                            taxExemption80G: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md focus:bg-white focus:outline-none focus:border-emerald-800 text-xs sm:text-sm font-mono"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
                     <label className="font-semibold text-stone-700 block">FCRA Number</label>
                     <input
                       type="text"

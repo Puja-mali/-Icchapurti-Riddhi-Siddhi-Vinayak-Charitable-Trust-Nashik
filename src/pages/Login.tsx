@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Lock, Mail, Eye, EyeOff, ArrowRight, AlertCircle, Loader2, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Lock, Mail, Eye, EyeOff, ArrowRight, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
 import { useAuth } from "@/src/context/AuthContext";
 import { useTrust } from "@/src/context/TrustContext";
@@ -20,15 +20,7 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Administrative account notification state
-  const [adminNotice, setAdminNotice] = useState<{
-    role: string;
-    email: string;
-  } | null>(null);
-
-  // If already authenticated:
-  // - DONOR and VOLUNTEER are safely directed to their portal or requested non-administrative path.
-  // - ADMIN and STAFF are NOT redirected automatically into /admin; instead they are shown session status with options.
+  // If already authenticated as DONOR or VOLUNTEER, redirect to their home portal
   useEffect(() => {
     if (user) {
       if (user.role === "DONOR") {
@@ -52,7 +44,6 @@ export const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    setAdminNotice(null);
 
     const cleanEmail = email.trim();
     if (!cleanEmail || !password) {
@@ -63,20 +54,8 @@ export const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const authenticatedUser = await login({ email: cleanEmail, password });
-
-      // SECURITY & UX SEPARATION:
-      // If someone enters valid ADMIN or STAFF credentials through normal user login,
-      // do not silently route them into the Admin Dashboard.
-      // Cleanly terminate the public session and provide the administrative sign-in guidance.
-      if (authenticatedUser.role === "ADMIN" || authenticatedUser.role === "STAFF") {
-        await logout();
-        setAdminNotice({
-          role: authenticatedUser.role,
-          email: cleanEmail,
-        });
-        return;
-      }
+      // Authenticate strictly for the public portal
+      const authenticatedUser = await login({ email: cleanEmail, password, portal: "public" });
 
       // Safe return path for legitimate public users (DONOR / VOLUNTEER)
       const fromPath = (location.state as any)?.from?.pathname;
@@ -96,7 +75,7 @@ export const Login: React.FC = () => {
       if (err instanceof ApiError) {
         setErrorMessage(err.message);
       } else {
-        setErrorMessage(err?.message || "Failed to sign in. Please verify your credentials.");
+        setErrorMessage(err?.message || "Invalid email or password.");
       }
     } finally {
       setIsLoading(false);
@@ -132,7 +111,7 @@ export const Login: React.FC = () => {
               <div>
                 <p className="font-bold text-stone-900">Active Administrative Session</p>
                 <p className="text-stone-600 mt-0.5 leading-relaxed">
-                  You are currently logged in with administrative access ({user.role}: <span className="font-mono font-medium">{user.email}</span>). Normal public login is reserved for donors and volunteers.
+                  You are currently logged in with administrative access ({user.role}: <span className="font-mono font-medium">{user.email}</span>).
                 </p>
               </div>
             </div>
@@ -153,39 +132,6 @@ export const Login: React.FC = () => {
                 className="text-xs font-semibold text-rose-700 hover:text-rose-900 underline cursor-pointer"
               >
                 Sign Out
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Administrative Account Detected Warning (when ADMIN/STAFF logs in here) */}
-        {adminNotice && (
-          <div className="p-3.5 sm:p-4 bg-amber-50 border border-amber-300 rounded-lg text-xs text-amber-950 space-y-2.5 shadow-2xs">
-            <div className="flex items-start gap-2.5">
-              <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-bold text-amber-900">
-                  Administrative Account Detected ({adminNotice.role})
-                </p>
-                <p className="text-amber-800 mt-0.5 leading-relaxed">
-                  The account <strong className="font-mono">{adminNotice.email}</strong> holds administrative privileges. For security and governance separation, administrative access must be authenticated through the dedicated Secretariat Desk.
-                </p>
-              </div>
-            </div>
-            <div className="pt-2 border-t border-amber-200/80 flex items-center justify-between gap-2">
-              <Link
-                to="/admin/login"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-900 text-amber-200 hover:bg-stone-800 font-semibold text-xs shadow-2xs transition-colors"
-              >
-                <span>Proceed to Admin Login</span>
-                <ArrowRight className="w-3 h-3" />
-              </Link>
-              <button
-                type="button"
-                onClick={() => setAdminNotice(null)}
-                className="text-[11px] text-amber-800 hover:underline cursor-pointer"
-              >
-                Dismiss
               </button>
             </div>
           </div>
