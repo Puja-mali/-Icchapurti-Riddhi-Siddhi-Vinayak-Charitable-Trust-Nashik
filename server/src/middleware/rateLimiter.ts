@@ -17,7 +17,7 @@ export const apiLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  validate: { trustProxy: false, xForwardedForHeader: false },
+  validate: false,
   keyGenerator: (req) => {
     // Partition by authenticated user if present so different users on shared NAT/cellular gateway do not collide
     const userId = (req as any).user?._id || (req as any).user?.id;

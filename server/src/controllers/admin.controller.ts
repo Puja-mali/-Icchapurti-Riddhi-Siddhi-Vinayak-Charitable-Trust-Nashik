@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AdminService } from '../services/admin.service';
 import { SettingsService } from '../services/settings.service';
+import { TranslationService } from '../services/translation.service';
 import { sendSuccess } from '../utils/apiResponse';
 
 export class AdminController {
@@ -78,7 +79,6 @@ export class AdminController {
   ): Promise<void> {
     try {
       const { text, targetLang, sourceLang } = req.body;
-      const { TranslationService } = await import('../services/translation.service');
       const result = await TranslationService.translateDraft({
         text,
         targetLang: targetLang || 'mr',

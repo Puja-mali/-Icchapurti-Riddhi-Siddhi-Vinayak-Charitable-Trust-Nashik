@@ -42,7 +42,10 @@ const setupConnectionListeners = () => {
   });
 
   mongoose.connection.on('error', (err) => {
-    logger.error('MongoDB connection error encountered:', (err as Error)?.message || err);
+    // Only log runtime errors on established connections to avoid duplicate logs during startup attempts
+    if (mongoose.connection.readyState === 1) {
+      logger.error('MongoDB connection error encountered:', (err as Error)?.message || err);
+    }
   });
 
   mongoose.connection.on('disconnected', () => {
@@ -65,7 +68,10 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
   }
 
   const isProd = process.env.NODE_ENV === 'production' || env.isProduction;
-  let uri = options.uri !== undefined ? options.uri : (process.env.MONGODB_URI || env.MONGODB_URI);
+  const forceInMemory = !isProd && (process.env.USE_IN_MEMORY_DB === 'true' || env.USE_IN_MEMORY_DB);
+  let uri = options.uri !== undefined 
+    ? options.uri 
+    : (forceInMemory ? '' : (process.env.MONGODB_URI || env.MONGODB_URI));
 
   // 1. Production Validation: Real MongoDB connection strictly required
   if (isProd) {
@@ -77,25 +83,37 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
     }
   }
 
+  setupConnectionListeners();
+
+  // Helper to start and connect to isolated in-memory DB in development
+  const startInMemoryDb = async (reason?: string): Promise<boolean> => {
+    try {
+      logger.info(
+        reason || 'Initializing local in-memory MongoDB instance for development & preview...'
+      );
+      const { MongoMemoryServer } = await import('mongodb-memory-server');
+      if (!mongodInstance) {
+        mongodInstance = await MongoMemoryServer.create();
+      }
+      const memUri = mongodInstance.getUri();
+      await mongoose.connect(memUri, {
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+      });
+      logger.info('Local in-memory MongoDB instance initialized successfully.');
+      return true;
+    } catch (memErr) {
+      logger.warn('Failed to launch in-memory MongoDB instance:', (memErr as Error)?.message || memErr);
+      return false;
+    }
+  };
+
   // 2. Fallback: Automatically launch in-memory MongoDB when no remote URI is configured
   if (!uri) {
     const useInMemory = options.allowInMemory !== false;
 
-    if (useInMemory) {
-      try {
-        logger.info(
-          'No external MONGODB_URI configured. Initializing local in-memory MongoDB instance for development & preview...'
-        );
-        const { MongoMemoryServer } = await import('mongodb-memory-server');
-        if (!mongodInstance) {
-          mongodInstance = await MongoMemoryServer.create();
-        }
-        uri = mongodInstance.getUri();
-        logger.info('Local in-memory MongoDB instance initialized successfully.');
-      } catch (memErr) {
-        logger.warn('Failed to launch in-memory MongoDB instance:', (memErr as Error)?.message || memErr);
-        return false;
-      }
+    if (useInMemory && !isProd) {
+      return await startInMemoryDb('No external MONGODB_URI configured. Initializing local in-memory MongoDB instance for development & preview...');
     } else {
       logger.warn(
         'Database connection omitted: MONGODB_URI is unset and in-memory database is disabled.'
@@ -104,17 +122,10 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
     }
   }
 
-  if (!uri) {
-    logger.error('[FATAL] No valid MongoDB URI available for connection.');
-    return false;
-  }
-
-  setupConnectionListeners();
-
   // Determine appropriate timeout: if uri already specifies serverSelectionTimeoutMS, let it take precedence
   const isRemote = uri.startsWith('mongodb+srv://') || (!uri.includes('127.0.0.1') && !uri.includes('localhost'));
-  const defaultSelectionTimeout = isRemote ? 10000 : 5000;
-  const maxAttempts = isRemote ? 3 : 1;
+  const defaultSelectionTimeout = isRemote ? (isProd ? 10000 : 3000) : 5000;
+  const maxAttempts = isProd && isRemote ? 3 : 1;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -139,23 +150,36 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
         continue;
       }
 
-      logger.error('Failed to establish MongoDB connection after maximum attempts:', errorMsg);
+      if (isProd) {
+        logger.error('Failed to establish MongoDB connection after maximum attempts:', errorMsg);
 
-      // Provide actionable diagnostic advice without revealing secrets or URI strings
-      if (error?.name === 'MongooseServerSelectionError' || errorMsg.includes('ECONNREFUSED') || errorMsg.includes('ETIMEDOUT')) {
-        logger.warn(
-          '[MONGODB ATLAS DIAGNOSTIC] Cluster unreachable or server selection timed out. Typical root causes: ' +
-          '1) Client IP is not permitted in MongoDB Atlas Network Access (whitelist your hosting IP or 0.0.0.0/0 for Cloud Run/Container hosting). ' +
-          '2) MongoDB Atlas shared M0 cluster is in pause/resume transition. ' +
-          '3) Network restricts direct outbound TCP on port 27017.'
-        );
-      } else if (errorMsg.includes('Authentication failed') || errorMsg.includes('auth error')) {
-        logger.warn(
-          '[MONGODB ATLAS DIAGNOSTIC] Authentication failed. Ensure MongoDB Atlas username and password in MONGODB_URI are URL-encoded and match a user in Atlas Database Access.'
-        );
+        // Provide actionable diagnostic advice without revealing secrets or URI strings
+        if (error?.name === 'MongooseServerSelectionError' || errorMsg.includes('ECONNREFUSED') || errorMsg.includes('ETIMEDOUT') || errorMsg.includes('whitelisted') || errorMsg.includes('SSL')) {
+          logger.warn(
+            '[MONGODB ATLAS DIAGNOSTIC] Cluster unreachable or server selection timed out. Typical root causes: ' +
+            '1) Client IP is not permitted in MongoDB Atlas Network Access (whitelist your hosting IP or 0.0.0.0/0 for Cloud Run/Container hosting). ' +
+            '2) MongoDB Atlas shared M0 cluster is in pause/resume transition. ' +
+            '3) Network restricts direct outbound TCP on port 27017.'
+          );
+        } else if (errorMsg.includes('Authentication failed') || errorMsg.includes('auth error')) {
+          logger.warn(
+            '[MONGODB ATLAS DIAGNOSTIC] Authentication failed. Ensure MongoDB Atlas username and password in MONGODB_URI are URL-encoded and match a user in Atlas Database Access.'
+          );
+        }
+
+        return false;
       }
 
-      return false;
+      // In development / preview mode:
+      if (options.allowInMemory !== false) {
+        logger.warn(
+          `[MONGODB NOTICE] Remote MongoDB Atlas connection unavailable (${errorMsg.includes('SSL') || errorMsg.includes('whitelisted') ? 'Atlas IP whitelist restriction or SSL alert' : errorMsg}). Falling back to isolated local in-memory database for development & preview.`
+        );
+        return await startInMemoryDb('Initializing isolated local in-memory MongoDB fallback...');
+      } else {
+        logger.warn('Failed to establish MongoDB connection and in-memory fallback is disabled:', errorMsg);
+        return false;
+      }
     }
   }
 

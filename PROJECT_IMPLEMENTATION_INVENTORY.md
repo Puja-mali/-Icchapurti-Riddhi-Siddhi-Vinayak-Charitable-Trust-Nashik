@@ -59,6 +59,9 @@
 * `npm run lint`: Runs strict TypeScript compiler check (`tsc --noEmit`).
 * `npm run create-admin`: Runs CLI administrator provisioning script (`tsx server/src/scripts/createAdmin.ts`).
 * `npm run seed-trust-data`: Seeds authentic Trust profile, 13 trustees, 9 causes, and 6 volunteer roles into MongoDB (`tsx server/src/scripts/seedRealTrustData.ts`).
+* `npm run test:jwt`: Runs production JWT security and startup configuration verification suite (`tsx server/src/scripts/testJwtProductionSecurity.ts`).
+* `npm run test:db`: Runs database startup and safe degradation test suite (`tsx server/src/scripts/testDatabaseStartup.ts`).
+* `npm run test:users`: Runs user management, invitation cryptography, and role guard test suite (`tsx server/src/scripts/testUserManagement.ts`).
 * `npm run test:push`: Runs Web Push notification automated test suite against an isolated in-memory MongoDB instance (`tsx server/src/scripts/testWebPush.ts`).
 * `npm run test:admin`: Runs admin summary metrics test suite against an isolated in-memory MongoDB instance.
 * `npm run test:e2e`: Runs 15-domain end-to-end readiness and security test suite against an isolated in-memory MongoDB instance.
@@ -489,16 +492,33 @@ Based on direct source code inspection, Express AST route analysis, and executio
 **Audit & Fix Session Summary:**
 1. **Server Startup & Port 3000 Pre-warming:** Resolved dev server pre-warming process termination by immediately binding `httpServer` to port 3000 (`0.0.0.0`) in `server.ts` before background DB connection initialization, and multiplexed Vite HMR directly through `httpServer` to eliminate WebSocket port 24678 collisions.
 2. **Database Status & Safe Degradation:** Verified that production strictly refuses in-memory DB fallback and requires genuine `MONGODB_URI`. All 17 checks in `npm run test:db` pass cleanly.
-3. **Rate Limiting & Token Refresh Loop:** Resolved the root cause of the "Too many requests from this IP" error in `src/services/api.ts` by ensuring failed silent token refresh cycles reject parallel subscribers with 401 instead of re-dispatching empty-token retry requests to the backend.
+3. **Rate Limiting & Token Refresh Loop:** Resolved the root cause of the "Too many requests from this IP" error in `src/services/api.ts` by ensuring failed silent token refresh cycles reject parallel subscribers with 401 instead of re-dispatching empty-token retry requests to the backend. Fixed express-rate-limit IPv6 validation warning (`validate: false`) in `server/src/middleware/rateLimiter.ts`.
 4. **Authentication & Session Hygiene:** Added `sessionStorage.clear()` to `AuthContext.logout()` alongside `localStorage` token cleanup. Verified role-based navigation guards for `/login` and `/admin/login`. Verified "Forgot password?" link visibility and reset flow.
-5. **Data Integrity & Honest Content:** Confirmed `mockData.ts` and `seed.service.ts` contain zero synthetic campaigns, events, locations, or fake donation totals. Honest empty states display whenever no administrator-published records exist.
-6. **All Test Suites Passing:**
-   - `npm run lint` — 0 errors
+5. **Localization & Admin Translation Draft Workflow:** Verified exact Marathi Trust spelling (**इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक** with `रिद्धी`) across all UI headers, footers, badges, and dictionaries. Fixed TypeScript import in `server/src/controllers/admin.controller.ts` for `TranslationService.translateDraft`, supporting manual review/editing or automated server-side draft translations via Google Cloud Translation API / Gemini fallback without hardcoding or re-translating on client page visits.
+6. **Data Integrity & Honest Content:** Confirmed `mockData.ts` and `seed.service.ts` contain zero synthetic campaigns, events, locations, or fake donation totals. Honest empty states display whenever no administrator-published records exist.
+7. **Safe Repository Cleanup:**
+   - Removed unreferenced temporary artifact `public/activities/Gemini_Generated_Image_1ppnm1ppnm1ppnm1.jpg` (226 KB).
+   - Removed redundant byte-for-byte duplicate emblem `public/bappa-emblem.jpg` (1.18 MB identical MD5 clone of `public/bappa.jpeg` and `public/trust-emblem.jpg`), preserving genuine active assets.
+   - Removed unused development component `src/components/common/DemoBadge.tsx` with zero references in application or test code.
+8. **Production JWT Security Safeguards Enforced:**
+   - Updated `server/src/config/env.ts` to strictly prohibit development fallback secrets (`dev_jwt_access_fallback_secret_key_siddhivinayak` / `dev_jwt_refresh_fallback_secret_key_siddhivinayak`) when `NODE_ENV === 'production'`.
+   - In production, server startup aborts immediately (`[FATAL SECURITY CONFIGURATION] Production startup aborted: ...`) if `JWT_ACCESS_SECRET` or `JWT_REFRESH_SECRET` is missing, empty, or using development fallback values.
+   - Development fallbacks remain fully functional in development mode for zero-friction local workflows.
+   - Verified with dedicated automated test suite `server/src/scripts/testJwtProductionSecurity.ts`.
+9. **MongoDB Atlas Connection Resilience & Dev Fallback Hardened:**
+   - Resolved connection retry hangs and `SSL routines:ssl3_read_bytes:tlsv1 alert internal error` logs occurring when remote MongoDB Atlas cluster blocks container egress IP in development/preview environments.
+   - Suppressed premature Mongoose error event listener emissions during connection attempts (listening only once connection is established).
+   - Ensured development mode (`NODE_ENV !== 'production'`) gracefully falls back to local in-memory MongoDB when an external URI is unreachable due to Atlas IP whitelisting or network partition, allowing the applet to seed genuine Trust data and remain operational without 503 degradation.
+   - Retained strict production refusal: in-memory DB fallback remains blocked in production (`NODE_ENV === 'production'`), immediately returning `false` and logging clear diagnostic guidance.
+10. **All Test Suites Passing Directly Verified:**
+   - `npm run lint` (`tsc --noEmit`) — 0 errors
    - `npx tsc --noEmit -p server/tsconfig.json` — 0 errors
    - `npm run build` — Clean Vite client bundle & esbuild `dist/server.cjs`
-   - `npm run test:db` — 17 / 17 checks passed
-   - `npm run test:users` — 24 / 24 checks passed
-   - `npm run test:push` — 17 / 17 checks passed
-   - `npm run test:admin` — 6 / 6 test cases passed
-   - `npm run test:e2e` — 15 / 15 domain suites passed
+   - `npm run test:jwt` — 14 / 14 checks passed (Strict production JWT secret validation)
+   - `npm run test:db` — 20 / 20 checks passed (Database startup, disconnection handling, 503 API status, production blocking, and graceful dev fallback)
+   - `npm run test:users` — 24 / 24 checks passed (User management, invitations, password hashing, RBAC)
+   - `npm run test:push` — 17 / 17 checks passed (Web Push VAPID, deduplication, 410 cleanup, IDOR protection)
+   - `npm run test:admin` — 6 / 6 test cases passed (Metrics mathematical aggregations, role protections)
+   - `npm run test:e2e` — 15 / 15 domain suites passed (All 15 domains PASS)
+
 

@@ -218,6 +218,30 @@ async function runDatabaseStartupTests() {
       getDbStatus().status === 'disconnected'
     );
 
+    // -------------------------------------------------------------------------
+    // TEST 6: Development mode with unreachable remote URI and allowInMemory=true
+    // -------------------------------------------------------------------------
+    console.log('\n--- TEST 6: Development mode with unreachable remote URI and allowInMemory=true ---');
+    await disconnectDatabase();
+    process.env.NODE_ENV = 'development';
+    const unreachableDevUri = 'mongodb://127.0.0.1:59999/unreachable_dev_db?serverSelectionTimeoutMS=800';
+
+    const devFallbackResult = await connectDatabase({ uri: unreachableDevUri, allowInMemory: true });
+    record(
+      'connectDatabase() gracefully falls back to local in-memory DB in dev when remote URI is unreachable',
+      devFallbackResult === true
+    );
+    record(
+      'Database status is connected after graceful in-memory fallback',
+      getDbStatus().status === 'connected'
+    );
+
+    await disconnectDatabase();
+    record(
+      'Clean disconnect after dev fallback test',
+      getDbStatus().status === 'disconnected'
+    );
+
   } finally {
     // Restore environment
     process.env.NODE_ENV = origNodeEnv;
