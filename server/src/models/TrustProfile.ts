@@ -181,7 +181,7 @@ const trustProfileSchema = new Schema<ITrustProfile>(
       default: () => ({
         registrationNumber: 'E-9389 / Nashik',
         establishedYear: '',
-        taxExemption80G: 'Subject to verification of official documentation',
+        taxExemption80G: '',
         fcraNumber: '',
         entityType: 'Public Charitable Trust',
       }),

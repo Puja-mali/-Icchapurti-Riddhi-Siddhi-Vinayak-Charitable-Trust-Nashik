@@ -68,11 +68,13 @@ export const connectDatabase = async (options: ConnectDatabaseOptions = {}): Pro
   let uri = options.uri !== undefined ? options.uri : (process.env.MONGODB_URI || env.MONGODB_URI);
 
   // 1. Production Validation: Real MongoDB connection strictly required
-  if (isProd && !uri && options.allowInMemory !== true) {
-    logger.warn(
-      '[WARNING] Production database configuration notice: MONGODB_URI is not set in environment.'
-    );
-    return false;
+  if (isProd) {
+    if (!uri) {
+      logger.warn(
+        '[WARNING] Production database configuration notice: MONGODB_URI is not set in environment. In-memory database fallback is strictly blocked in production.'
+      );
+      return false;
+    }
   }
 
   // 2. Fallback: Automatically launch in-memory MongoDB when no remote URI is configured

@@ -55,6 +55,25 @@ export const createBlogSchema = z.object({
     .optional(),
   isFeatured: z.boolean().optional().default(false),
   isKumbhRelated: z.boolean().optional().default(false),
+  translations: z
+    .object({
+      mr: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      hi: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      en: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+    })
+    .optional(),
 });
 
 export const updateBlogSchema = z.object({
@@ -109,6 +128,25 @@ export const updateBlogSchema = z.object({
     .optional(),
   isFeatured: z.boolean().optional(),
   isKumbhRelated: z.boolean().optional(),
+  translations: z
+    .object({
+      mr: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      hi: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      en: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+    })
+    .optional(),
 });
 
 export const blogQuerySchema = z.object({

@@ -87,14 +87,14 @@ export const ImpactTimeline: React.FC<ImpactTimelineProps> = ({
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-300 bg-amber-950 px-2 py-0.5 rounded border border-amber-800">
-                Audited Record
+                Impact Passport
               </span>
               <span className="font-mono text-xs text-stone-300 font-medium">
                 #{passport.passportNumber}
               </span>
               <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
                 <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                Verified Trust Record
+                Registered Receipt
               </span>
             </div>
             <h3 className="text-lg sm:text-xl font-serif font-bold text-white mt-1">

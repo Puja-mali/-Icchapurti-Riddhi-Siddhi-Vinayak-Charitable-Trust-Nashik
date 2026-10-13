@@ -65,4 +65,28 @@ export class AdminController {
       next(error);
     }
   }
+
+  /**
+   * POST /api/admin/translate
+   * Draft automated translation of community content with server-side validation and cost controls
+   * @access Private (ADMIN or STAFF)
+   */
+  public static async translateText(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { text, targetLang, sourceLang } = req.body;
+      const { TranslationService } = await import('../services/translation.service');
+      const result = await TranslationService.translateDraft({
+        text,
+        targetLang: targetLang || 'mr',
+        sourceLang: sourceLang || 'en',
+      });
+      sendSuccess(res, result, 'Draft translation generated successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
 }

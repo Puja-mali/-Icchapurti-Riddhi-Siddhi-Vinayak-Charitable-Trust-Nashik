@@ -19,6 +19,11 @@ export interface IEvent extends Document {
   category?: string;
   registeredVolunteers?: Types.ObjectId[];
   capacity?: number;
+  translations?: {
+    mr?: { title?: string; shortDescription?: string; description?: string };
+    hi?: { title?: string; shortDescription?: string; description?: string };
+    en?: { title?: string; shortDescription?: string; description?: string };
+  };
   createdBy?: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -113,6 +118,23 @@ const eventSchema = new Schema<IEvent>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       index: true,
+    },
+    translations: {
+      mr: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
+      hi: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
+      en: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
     },
   },
   {

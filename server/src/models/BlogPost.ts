@@ -13,6 +13,11 @@ export interface IBlogPost extends Document {
   publishedAt: Date;
   isFeatured: boolean;
   isKumbhRelated: boolean;
+  translations?: {
+    mr?: { title?: string; shortDescription?: string; description?: string };
+    hi?: { title?: string; shortDescription?: string; description?: string };
+    en?: { title?: string; shortDescription?: string; description?: string };
+  };
   createdBy?: Types.ObjectId;
   updatedBy?: Types.ObjectId;
   createdAt: Date;
@@ -97,6 +102,23 @@ const blogPostSchema = new Schema<IBlogPost>(
     updatedBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+    },
+    translations: {
+      mr: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
+      hi: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
+      en: {
+        title: { type: String, trim: true },
+        shortDescription: { type: String, trim: true },
+        description: { type: String, trim: true },
+      },
     },
   },
   {

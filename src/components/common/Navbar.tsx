@@ -120,6 +120,88 @@ export const Navbar: React.FC = () => {
 
   const isSecondaryActive = secondaryLinks.some((l) => location.pathname === l.path);
 
+  // Dedicated Admin Interface Header: Separate from full public navbar
+  if (location.pathname === "/admin") {
+    return (
+      <header className="sticky top-0 bg-[#0f2418] text-white border-b border-emerald-900 shadow-md z-50">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <Link to="/" className="flex items-center gap-2.5 group min-w-0">
+              <TrustEmblem size="sm" isTransparent={true} />
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs sm:text-sm font-serif font-bold text-amber-200 truncate">
+                  इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
+                </span>
+                <span className="text-[10px] text-emerald-300 font-medium truncate">
+                  {user?.role === "STAFF" ? "Staff Operations Console" : "Trust Governance & Admin Desk"}
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Language Switcher */}
+            <div className="hidden sm:inline-flex rounded-full p-0.5 text-[11px] border border-emerald-800 bg-[#0b2315] text-stone-200">
+              {languages.map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => setLanguage(l.code)}
+                  className={cn(
+                    "px-2 py-0.5 rounded-full transition-all cursor-pointer font-medium",
+                    language === l.code ? "bg-[#14532d] text-white font-bold" : "text-stone-300 hover:text-white"
+                  )}
+                  title={`Switch language to ${l.label}`}
+                >
+                  {l.nativeName}
+                </button>
+              ))}
+            </div>
+
+            <NotificationBell />
+
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold bg-emerald-900/60 hover:bg-emerald-800 text-stone-200 border border-emerald-700/60 transition-colors"
+            >
+              <span>{language === "mr" ? "← मुख्य संकेतस्थळ" : language === "hi" ? "← मुख्य वेबसाइट" : "← Back to Public Website"}</span>
+            </Link>
+
+            <UserProfileMenu />
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  if (location.pathname === "/admin/login") {
+    return (
+      <header className="sticky top-0 bg-[#0f2418] text-white border-b border-emerald-900 shadow-md z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2.5">
+            <TrustEmblem size="sm" isTransparent={true} />
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs sm:text-sm font-serif font-bold text-amber-200 truncate">
+                इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
+              </span>
+              <span className="text-[10px] text-emerald-300 font-medium">
+                Secretariat & Board Gateway
+              </span>
+            </div>
+          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-semibold bg-emerald-900/60 hover:bg-emerald-800 text-stone-200 border border-emerald-700/60 transition-colors"
+            >
+              <span>{language === "mr" ? "← मुख्य संकेतस्थळ" : language === "hi" ? "← मुख्य वेबसाइट" : "← Back to Public Website"}</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   // Home top bar transparent mode vs solid mode
   const isTransparent = isHome && !isScrolled;
 
@@ -248,22 +330,22 @@ export const Navbar: React.FC = () => {
                     : "text-[#143d2c] group-hover:text-[#0b271b]"
                 )}
               >
-                इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
+                इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
               </span>
 
               {/* Mobile Compact Two-Line Treatment to prevent clipping and unreadable shrinking */}
               <div
                 className={cn(
-                  "block sm:hidden text-[12.5px] xs:text-[13.5px] font-serif font-bold leading-tight tracking-normal transition-colors py-0.5",
+                  "block sm:hidden text-[12px] xs:text-[13px] font-serif font-bold leading-tight tracking-normal transition-colors py-0.5",
                   isTransparent
                     ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
                     : "text-[#143d2c] group-hover:text-[#0b271b]"
                 )}
               >
-                <span className="block truncate">इच्छापूर्ती ऋद्धी सिद्धी विनायक</span>
+                <span className="block truncate">इच्छापूर्ती रिद्धी सिद्धी विनायक</span>
                 <span
                   className={cn(
-                    "block text-[11px] xs:text-xs font-semibold truncate",
+                    "block text-[10.5px] xs:text-[11px] font-semibold truncate",
                     isTransparent ? "text-amber-300" : "text-[#1b4332]"
                   )}
                 >
@@ -553,7 +635,7 @@ export const Navbar: React.FC = () => {
                     isTransparent ? "text-white" : "text-[#143d2c]"
                   )}
                 >
-                  इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
+                  इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
                 </span>
                 <span
                   className={cn(

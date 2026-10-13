@@ -221,6 +221,7 @@ export class EventService {
       isKumbhRelated: input.isKumbhRelated ?? false,
       category: input.category || 'Community Outreach',
       createdBy: new mongoose.Types.ObjectId(creatorUserId),
+      translations: input.translations,
     });
 
     return event;

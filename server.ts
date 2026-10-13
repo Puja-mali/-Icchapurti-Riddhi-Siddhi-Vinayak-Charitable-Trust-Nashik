@@ -11,8 +11,8 @@ async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
 
-  // Trust proxy for reverse proxies in container / cloud environment
-  app.set('trust proxy', true);
+  // Trust proxy for reverse proxies (e.g. Cloud Run / ALB - single upstream hop)
+  app.set('trust proxy', 1);
 
   // Route all /api/* requests strictly to the backend Express application
   app.use((req: Request, res: Response, next) => {
@@ -58,7 +58,7 @@ async function startServer() {
   });
 
   // Initialize backend database connection in the background without blocking port 3000 readiness
-  connectDatabase({ allowInMemory: true })
+  connectDatabase({ allowInMemory: process.env.NODE_ENV !== 'production' })
     .then(async (dbConnected) => {
       if (dbConnected) {
         await autoSeedTrustData();

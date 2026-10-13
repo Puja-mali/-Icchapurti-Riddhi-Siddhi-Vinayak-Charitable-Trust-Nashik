@@ -1189,7 +1189,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       prompt3: "How to volunteer?",
       prompt4: "Where is the trust office?",
       promptKumbh: "Tell me about Kumbh Seva 2027",
-      placeholder: "Ask about donations, tax exemption, volunteering, or causes...",
+      placeholder: "Ask about donations, receipts, volunteering, or causes...",
       send: "Send",
     },
 
@@ -1246,7 +1246,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
 
   mr: {
     // Top-level legacy keys in natural Marathi
-    trustName: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक",
+    trustName: "इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक",
     trustShort: "इच्छापूर्ती विनायक ट्रस्ट",
     tagline: "करुणा, सामाजिक जबाबदारी आणि पारदर्शकतेने समाजसेवा.",
     academicNotice: "नोंदणीकृत सार्वजनिक चॅरिटेबल ट्रस्ट • ई-९३८९ / नाशिक",
@@ -1320,7 +1320,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
 
     // Modularized schema
     common: {
-      trustName: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक",
+      trustName: "इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक",
       trustShort: "इच्छापूर्ती विनायक ट्रस्ट",
       tagline: "करुणा, सामाजिक जबाबदारी आणि पारदर्शकतेने समाजसेवा.",
       academicNotice: "नोंदणीकृत सार्वजनिक चॅरिटेबल ट्रस्ट • ई-९३८९ / नाशिक",
@@ -1390,9 +1390,9 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       replay: "पुन्हा ऐका",
       voiceOn: "ध्वनी सुरू",
       voiceOff: "ध्वनी बंद",
-      speechSentence1: "नमस्कार! इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टमध्ये आपले मनःपूर्वक स्वागत आहे.",
+      speechSentence1: "नमस्कार! इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टमध्ये आपले मनःपूर्वक स्वागत आहे.",
       speechSentence2: "आपण आज कोणत्या सेवेसाठी आला आहात?",
-      subtitle1: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टमध्ये आपले मनःपूर्वक स्वागत आहे.",
+      subtitle1: "इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टमध्ये आपले मनःपूर्वक स्वागत आहे.",
       subtitle2: "आपण आज कोणत्या सेवेसाठी आला आहात?",
       directSevaFood: "🍲 अन्नदान",
       directSevaHealth: "🩺 आरोग्य सेवा",
@@ -1411,7 +1411,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     about: {
-      title: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टविषयी",
+      title: "इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टविषयी",
       subtitle:
         "पारदर्शक समाजसेवा, प्रत्यक्ष पडताळणी आणि वंचित घटकांच्या सर्वांगीण विकासासाठी कटिबद्ध असलेली विश्वस्त संस्था.",
       missionTitle: "आमचे ध्येय",
@@ -1824,13 +1824,13 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       title: "सेवा सहायक • मदतनीस",
       online: "मदत कक्ष सक्रिय",
       greeting:
-        "नमस्कार! मी इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टचा 'सेवा सहायक' आहे. मी आज आपल्या सेवा प्रवासात कशी मदत करू?",
-      prompt1: "८०जी कर सवलत पावती कशी मिळेल?",
+        "नमस्कार! मी इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्टचा 'सेवा सहायक' आहे. मी आज आपल्या सेवा प्रवासात कशी मदत करू?",
+      prompt1: "अधिकृत देणगी पावती कशी मिळेल?",
       prompt2: "माझ्या देणगीचा मागोवा कसा घ्यावा?",
       prompt3: "स्वयंसेवक कसे व्हावे?",
       prompt4: "ट्रस्टचे कार्यालय कुठे आहे?",
       promptKumbh: "कुंभ सेवा २०२७ बद्दल सांगा",
-      placeholder: "देणगी, कर सवलत, स्वयंसेवक किंवा कार्याबद्दल विचारा...",
+      placeholder: "देणगी, पावती, स्वयंसेवक किंवा सेवाकार्याबद्दल विचारा...",
       send: "पाठवा",
     },
 
@@ -1887,7 +1887,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
 
   hi: {
     // Top-level legacy keys in Hindi
-    trustName: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट, नाशिक",
+    trustName: "इच्छापूर्ती रिद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट, नाशिक",
     trustShort: "इच्छापूर्ती विनायक ट्रस्ट",
     tagline: "करुणा, सामाजिक उत्तरदायित्व और पारदर्शिता के साथ समाज सेवा।",
     academicNotice: "पंजीकृत सार्वजनिक चैरिटेबल ट्रस्ट • ई-९३८९ / नाशिक",
@@ -1944,7 +1944,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     samplePassportLabel: "सत्यापित सार्वजनिक ऑडिट रिकॉर्ड",
 
     common: {
-      trustName: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट, नाशिक",
+      trustName: "इच्छापूर्ती रिद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट, नाशिक",
       trustShort: "इच्छापूर्ती विनायक ट्रस्ट",
       tagline: "करुणा, सामाजिक उत्तरदायित्व और पारदर्शिता के साथ समाज सेवा।",
       academicNotice: "पंजीकृत सार्वजनिक चैरिटेबल ट्रस्ट • ई-९३८९ / नाशिक",
@@ -2014,9 +2014,9 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       replay: "दोबारा सुनें",
       voiceOn: "ध्वनि चालू",
       voiceOff: "ध्वनि बंद",
-      speechSentence1: "नमस्ते! इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट में आपका हार्दिक स्वागत है।",
+      speechSentence1: "नमस्ते! इच्छापूर्ती रिद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट में आपका हार्दिक स्वागत है।",
       speechSentence2: "आज हम आपकी क्या सेवा कर सकते हैं?",
-      subtitle1: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट में आपका हार्दिक स्वागत है।",
+      subtitle1: "इच्छापूर्ती रिद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट में आपका हार्दिक स्वागत है।",
       subtitle2: "आप आज किस सेवा के लिए पधारे हैं?",
       directSevaFood: "🍲 अन्नदान",
       directSevaHealth: "🩺 चिकित्सा सहायता",
@@ -2035,7 +2035,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     about: {
-      title: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट के बारे में",
+      title: "इच्छापूर्ती रिद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट के बारे में",
       subtitle: "पारदर्शी सेवा, सत्यापित वितरण और सामाजिक उत्थान के आधार पर स्थापित ट्रस्ट।",
       missionTitle: "हमारा उद्देश्य",
       missionDesc: "गरीबी उन्मूलन, बालिका शिक्षा, ग्रामीण स्वास्थ्य और आपदा राहत में पूर्ण वित्तीय पारदर्शिता।",
@@ -2421,13 +2421,13 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     chatbot: {
       title: "सेवा सहायक • वर्चुअल असिस्टेंट",
       online: "मदद डेस्क ऑनलाइन",
-      greeting: "नमस्ते! मैं इच्छापूर्ती ऋद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट का 'सेवा सहायक' हूँ। आज मैं आपकी क्या सहायता कर सकता हूँ?",
+      greeting: "नमस्ते! मैं इच्छापूर्ती रिद्धी सिद्धी विनायक चैरिटेबल ट्रस्ट का 'सेवा सहायक' हूँ। आज मैं आपकी क्या सहायता कर सकता हूँ?",
       prompt1: "अधिकृत दान रसीद कैसे मिलेगी?",
       prompt2: "मैं अपने दान को कैसे ट्रैक कर सकता हूँ?",
       prompt3: "स्वयंसेवक कैसे बनें?",
       prompt4: "ट्रस्ट का कार्यालय कहाँ है?",
       promptKumbh: "कुंभ सेवा २०२७ के बारे में बताएं",
-      placeholder: "दान, कर छूट, स्वयंसेवक या सेवा प्रकल्पों के बारे में पूछें...",
+      placeholder: "दान, रसीद, स्वयंसेवक या सेवा प्रकल्पों के बारे में पूछें...",
       send: "भेजें",
     },
 

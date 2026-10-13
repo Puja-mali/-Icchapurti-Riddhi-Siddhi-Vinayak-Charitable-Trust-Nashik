@@ -13,8 +13,9 @@ import { getDbStatus } from './config/database';
 export const createApp = (): Express => {
   const app = express();
 
-  // Trust proxy for reverse proxies in container / cloud environment
-  app.set('trust proxy', true);
+  // Trust proxy: 1 hop for upstream reverse proxy (Cloud Run, ALB, Nginx)
+  // Prevents arbitrary client-spoofed X-Forwarded-For bypasses
+  app.set('trust proxy', 1);
 
   // Basic Security Headers via Helmet
   // Configured to allow standard API consumption and preview iframes

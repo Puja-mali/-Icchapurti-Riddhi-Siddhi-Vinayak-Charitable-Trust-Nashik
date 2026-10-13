@@ -24,9 +24,10 @@ import { Modal } from "@/src/components/common/Modal";
 import { PageHeader } from "@/src/components/common/PageHeader";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
+import { getLocalizedEvent } from "@/src/lib/localization";
 
 export const Events: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { isKumbhMode } = useKumbhMode();
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
@@ -368,7 +369,8 @@ export const Events: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {events.map((event, index) => {
+              {events.map((rawEvent, index) => {
+                const event = getLocalizedEvent(rawEvent, language);
                 const capacity = event.capacity || event.registrationLimit || 0;
                 const registeredCount = event.registeredCount || event.registrationCount || 0;
                 const fillPercent =

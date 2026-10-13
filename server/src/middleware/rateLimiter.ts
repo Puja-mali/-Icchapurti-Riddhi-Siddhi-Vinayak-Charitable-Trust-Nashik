@@ -8,16 +8,39 @@ import { sendError } from '../utils/apiResponse';
  */
 export const apiLimiter = rateLimit({
   windowMs: env.RATE_LIMIT_WINDOW_MS,
-  max: env.RATE_LIMIT_MAX_REQUESTS,
+  max: (req) => {
+    // In local development or loopback, allow higher threshold so local test runs don't lock out developers
+    if (!env.isProduction || req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1') {
+      return env.RATE_LIMIT_MAX_REQUESTS * 4;
+    }
+    return env.RATE_LIMIT_MAX_REQUESTS;
+  },
   standardHeaders: true,
   legacyHeaders: false,
-  validate: false,
-  skip: (req) =>
-    process.env.NODE_ENV === 'test' ||
-    req.path === '/health' ||
-    req.path === '/health/' ||
-    req.originalUrl === '/api/health' ||
-    req.originalUrl === '/api/health/',
+  validate: { trustProxy: false, xForwardedForHeader: false },
+  keyGenerator: (req) => {
+    // Partition by authenticated user if present so different users on shared NAT/cellular gateway do not collide
+    const userId = (req as any).user?._id || (req as any).user?.id;
+    if (userId) {
+      return `user_${userId}`;
+    }
+    return req.ip || '127.0.0.1';
+  },
+  skip: (req) => {
+    if (process.env.NODE_ENV === 'test') return true;
+    const path = req.path || '';
+    const originalUrl = req.originalUrl || '';
+    // Exclude health check and lightweight background unread-count polling so background tab polling never exhausts user quota
+    if (
+      path === '/health' ||
+      path === '/health/' ||
+      originalUrl.includes('/api/health') ||
+      originalUrl.includes('/notifications/unread-count')
+    ) {
+      return true;
+    }
+    return false;
+  },
   handler: (req, res) => {
     const retryAfterSeconds =
       Math.ceil(

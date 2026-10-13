@@ -40,4 +40,16 @@ router.patch(
   AdminController.updateKumbhMode
 );
 
+/**
+ * @route   POST /api/admin/translate
+ * @desc    Generate draft translation for admin content review
+ * @access  Private (ADMIN or STAFF)
+ */
+router.post(
+  '/translate',
+  authenticate,
+  authorize('ADMIN', 'STAFF'),
+  AdminController.translateText
+);
+
 export default router;

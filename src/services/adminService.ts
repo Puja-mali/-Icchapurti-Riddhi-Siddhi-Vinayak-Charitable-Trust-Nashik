@@ -80,4 +80,17 @@ export const adminService = {
   async updateKumbhMode(enabled: boolean): Promise<{ siteName: string; kumbhMode: boolean }> {
     return api.patch<{ siteName: string; kumbhMode: boolean }>('/admin/settings/kumbh-mode', { enabled });
   },
+
+  /**
+   * Request draft translation for review
+   * Endpoint: POST /api/admin/translate
+   * Access: Protected (ADMIN or STAFF)
+   */
+  async translateDraft(params: {
+    text: string;
+    targetLang: 'mr' | 'hi' | 'en';
+    sourceLang?: string;
+  }): Promise<{ translatedText: string; provider: string; isConfigured: boolean; message?: string }> {
+    return api.post('/admin/translate', params);
+  },
 };

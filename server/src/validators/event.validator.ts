@@ -68,6 +68,25 @@ export const createEventSchema = z.object({
     .default([]),
   isKumbhRelated: z.boolean().optional().default(false),
   category: z.string().optional().default('Community Outreach'),
+  translations: z
+    .object({
+      mr: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      hi: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      en: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+    })
+    .optional(),
 }).refine((data) => {
   if (data.endDate && data.startDate) {
     return new Date(data.endDate).getTime() >= new Date(data.startDate).getTime();
@@ -110,6 +129,25 @@ export const updateEventSchema = z.object({
   })).optional(),
   isKumbhRelated: z.boolean().optional(),
   category: z.string().optional(),
+  translations: z
+    .object({
+      mr: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      hi: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+      en: z.object({
+        title: z.string().optional(),
+        shortDescription: z.string().optional(),
+        description: z.string().optional(),
+      }).optional(),
+    })
+    .optional(),
 });
 
 export const listEventsQuerySchema = z.object({

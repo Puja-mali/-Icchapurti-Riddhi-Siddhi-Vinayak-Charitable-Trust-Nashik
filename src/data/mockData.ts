@@ -8,7 +8,7 @@ import {
 
 export const TRUST_INFO = {
   name: "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik",
-  marathiName: "इच्छापूर्ती ऋद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट",
+  marathiName: "इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक",
   shortName: "Icchapurti Vinayak Trust",
   subtitle: "Reg. No. E-9389 / Nashik • Dedicated to Grassroots Social Welfare",
   registrationNumber: "E-9389 / Nashik",

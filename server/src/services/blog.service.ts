@@ -276,6 +276,7 @@ export class BlogService {
     if (input.publishedAt !== undefined) post.publishedAt = new Date(input.publishedAt);
     if (input.isFeatured !== undefined) post.isFeatured = input.isFeatured;
     if (input.isKumbhRelated !== undefined) post.isKumbhRelated = input.isKumbhRelated;
+    if (input.translations !== undefined) post.translations = input.translations;
 
     post.updatedBy = new mongoose.Types.ObjectId(updaterUserId);
 

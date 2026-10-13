@@ -49,7 +49,7 @@ export const TrustEmblem: React.FC<TrustEmblemProps> = ({
         dimensions.container,
         className
       )}
-      title="इच्छापूर्ती रिद्धी-सिध्दी विनायक चॅरिटेबल ट्रस्ट, नाशिक"
+      title="इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक"
     >
       {/* 1. Main Vertical Plaque / Badge Body */}
       <div
