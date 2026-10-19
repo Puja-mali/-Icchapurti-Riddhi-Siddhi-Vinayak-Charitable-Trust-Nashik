@@ -64,7 +64,7 @@ async function run(): Promise<void> {
   console.log(' Siddhivinayak Charitable Trust - Create First Admin Account');
   console.log('===========================================================\n');
 
-  const connected = await connectDatabase();
+  const connected = await connectDatabase({ allowInMemory: false });
   if (!connected) {
     console.error('\n[ERROR] Could not connect to MongoDB.');
     console.error('Please verify your MONGODB_URI in .env or provide real MongoDB Atlas credentials.\n');
