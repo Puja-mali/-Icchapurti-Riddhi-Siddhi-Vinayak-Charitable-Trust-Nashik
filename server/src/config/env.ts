@@ -36,15 +36,15 @@ export const env = {
   EMAIL_PORT: parseInt(process.env.EMAIL_PORT || '587', 10),
   EMAIL_USER: process.env.EMAIL_USER || '',
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || '',
-  EMAIL_FROM: process.env.EMAIL_FROM || 'donations@siddhivinayaktrust.org',
-  EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'Shree Siddhivinayak Charitable Trust',
+  EMAIL_FROM: process.env.EMAIL_FROM || 'ichhapurtiriddhisiddhivinayak@gmail.com',
+  EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'Icchapurti Riddhi Siddhi Vinayak Charitable Trust',
   EMAIL_SECURE: process.env.EMAIL_SECURE === 'true',
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
   VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY || '',
   VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY || '',
-  VAPID_SUBJECT: process.env.VAPID_SUBJECT || 'mailto:contact@siddhivinayaktrust.org',
+  VAPID_SUBJECT: process.env.VAPID_SUBJECT || 'mailto:ichhapurtiriddhisiddhivinayak@gmail.com',
   isProduction,
 };
 

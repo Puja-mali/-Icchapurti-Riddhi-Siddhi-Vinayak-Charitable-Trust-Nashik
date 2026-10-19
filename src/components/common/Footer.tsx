@@ -12,6 +12,7 @@ import {
 import { TrustEmblem } from "./TrustEmblem";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useTrust } from "@/src/context/TrustContext";
+import { TRUST_BRAND } from "@/src/config/trustBrand";
 
 export const Footer: React.FC = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -19,13 +20,23 @@ export const Footer: React.FC = () => {
   const [emailInput, setEmailInput] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const trustName = trustProfile?.trustName || "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik";
-  const regNumber = trustProfile?.registrationDetails?.registrationNumber || "E/1341";
-  const address = trustProfile?.address || "7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004";
-  const phone = trustProfile?.phone || "0253 6029200 / 0253 6018200";
-  const email = trustProfile?.email || "contact@siddhivinayaktrust.org";
-  const officeHours = trustProfile?.officeHours || "Mon - Sat: 9:30 AM - 5:30 PM IST";
-  const trustCharterNotice = trustProfile?.academicNote || "Registered Public Charitable Trust. Committed to auditable social philanthropy, statutory compliance, and verified grassroots empowerment across Nashik and surrounding rural regions.";
+  const trustName = trustProfile?.trustName || TRUST_BRAND.name;
+  const regNumber = trustProfile?.registrationDetails?.registrationNumber || TRUST_BRAND.registrationNumber;
+  const address =
+    trustProfile?.address && trustProfile.address.trim() !== "" && !trustProfile.address.includes("Pokar")
+      ? trustProfile.address
+      : TRUST_BRAND.unverifiedAddressPlaceholder;
+  const email =
+    trustProfile?.email && trustProfile.email.trim() !== "" && !trustProfile.email.includes("siddhivinayaktrust.org")
+      ? trustProfile.email
+      : TRUST_BRAND.contact.email;
+  const officeHours =
+    trustProfile?.officeHours && trustProfile.officeHours.trim() !== ""
+      ? trustProfile.officeHours
+      : "Public desk timings will be updated soon.";
+  const trustCharterNotice =
+    trustProfile?.academicNote ||
+    "Registered Public Charitable Trust. Committed to auditable social philanthropy, statutory compliance, and grassroots empowerment across Nashik and surrounding rural regions.";
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,13 +168,32 @@ export const Footer: React.FC = () => {
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>{address}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>{phone}</span>
+              <div className="flex items-start gap-2">
+                <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <a
+                    href="tel:9922271777"
+                    className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline"
+                  >
+                    9922271777
+                  </a>
+                  <span className="text-stone-500">/</span>
+                  <a
+                    href="tel:7588833127"
+                    className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline"
+                  >
+                    7588833127
+                  </a>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>{email}</span>
+              <div className="flex items-start gap-2">
+                <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                <a
+                  href={`mailto:${email}`}
+                  className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline break-all"
+                >
+                  {email}
+                </a>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -176,11 +206,11 @@ export const Footer: React.FC = () => {
         {/* Bottom Strip */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
           <div className="flex items-center gap-2 flex-wrap">
-            <span>© {new Date().getFullYear()} {trustName}.</span>
+            <span>© {new Date().getFullYear()} {trustName}. All rights reserved.</span>
             <span>•</span>
             <span>Reg. No: {regNumber}</span>
             <span>•</span>
-            <span className="text-emerald-400/90 font-medium">Nashik, Maharashtra • Regd. Public Charitable Trust</span>
+            <span className="text-emerald-400/90 font-medium">Nashik, Maharashtra</span>
           </div>
 
           {/* Language selector in footer */}

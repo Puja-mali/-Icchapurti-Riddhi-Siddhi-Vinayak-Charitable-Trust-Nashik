@@ -94,7 +94,7 @@ export const KumbhSeva: React.FC = () => {
         roleTitle: selectedRole || "Kumbh Sevadar",
         fullName: volunteerName,
         phone: volunteerPhone,
-        email: volunteerEmail.trim() || `${volunteerPhone.replace(/\D/g, "") || "volunteer"}@kumbh.sct.org`,
+        email: volunteerEmail.trim() || `volunteer_${volunteerPhone.replace(/\D/g, "") || "kumbh"}@volunteer.local`,
         city: volunteerCity,
         preferredSevaArea,
         availability,

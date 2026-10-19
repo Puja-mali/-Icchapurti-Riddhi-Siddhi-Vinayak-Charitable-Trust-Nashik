@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { cn } from "@/src/lib/utils";
+import { TRUST_LOGO_PATH, TRUST_LOGO_FALLBACK, TRUST_BRAND } from "@/src/config/trustBrand";
 
 interface TrustEmblemProps {
   /** Size variant */
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   /** Is rendered on top of the hero video / transparent navbar */
   isTransparent?: boolean;
   /** Additional custom classes */
   className?: string;
   /** Whether to show the bottom ornamental ribbon tab */
   showRibbonTab?: boolean;
+  /** Optional custom logo image source */
+  logoSrc?: string;
 }
 
 export const TrustEmblem: React.FC<TrustEmblemProps> = ({
@@ -17,11 +20,19 @@ export const TrustEmblem: React.FC<TrustEmblemProps> = ({
   isTransparent = false,
   className,
   showRibbonTab = true,
+  logoSrc,
 }) => {
   const [imageError, setImageError] = useState(false);
+  const activeLogo = logoSrc || TRUST_LOGO_PATH;
 
   // Dimensions based on vertical badge structure inspired by traditional temple plaques
   const dimensions = {
+    xs: {
+      container: "w-[28px] min-h-[36px]",
+      imageBox: "w-[22px] h-[22px]",
+      omText: "text-[7px]",
+      ribbonHeight: "h-1.5",
+    },
     sm: {
       container: "w-[34px] min-h-[44px]",
       imageBox: "w-[28px] h-[28px]",
@@ -79,15 +90,15 @@ export const TrustEmblem: React.FC<TrustEmblemProps> = ({
         >
           {/* Inner ring background */}
           <div className="w-full h-full rounded-full bg-[#0a2714] flex items-center justify-center overflow-hidden p-0.5">
-            {!imageError ? (
+            {!imageError && activeLogo ? (
               <img
-                src="/src/assets/images/trust_bappa_emblem_1791393897279.jpg"
-                alt="श्री इच्छापूर्ती रिद्धी सिद्धी विनायक"
-                className="w-full h-full object-contain object-center scale-[1.08] transition-transform duration-300 group-hover/emblem:scale-[1.14]"
+                src={activeLogo}
+                alt={TRUST_BRAND.altText}
+                className="w-full h-full object-contain object-center scale-[1.05] transition-transform duration-300 group-hover/emblem:scale-[1.12]"
                 onError={(e) => {
                   const target = e.currentTarget;
-                  if (target.src.includes("trust_bappa_emblem")) {
-                    target.src = "/bappa.jpeg";
+                  if (target.src !== TRUST_LOGO_FALLBACK && !target.src.endsWith(TRUST_LOGO_FALLBACK)) {
+                    target.src = TRUST_LOGO_FALLBACK;
                   } else {
                     setImageError(true);
                   }

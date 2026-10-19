@@ -12,6 +12,7 @@ import {
 import { Button } from "@/src/components/common/Button";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useTrust } from "@/src/context/TrustContext";
+import { TRUST_BRAND } from "@/src/config/trustBrand";
 
 const FAQS = [
   {
@@ -43,11 +44,19 @@ export const Contact: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const regNumber = trustProfile?.registrationDetails?.registrationNumber || "E/1341";
-  const address = trustProfile?.address || "7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004";
-  const phone = trustProfile?.phone || "0253 6029200 / 0253 6018200";
-  const emailAddress = trustProfile?.email || "contact@siddhivinayaktrust.org";
-  const officeHours = trustProfile?.officeHours || "Mon - Sat: 9:30 AM - 5:30 PM IST";
+  const regNumber = trustProfile?.registrationDetails?.registrationNumber || TRUST_BRAND.registrationNumber;
+  const address =
+    trustProfile?.address && trustProfile.address.trim() !== "" && !trustProfile.address.includes("Pokar")
+      ? trustProfile.address
+      : TRUST_BRAND.unverifiedAddressPlaceholder;
+  const emailAddress =
+    trustProfile?.email && trustProfile.email.trim() !== "" && !trustProfile.email.includes("siddhivinayaktrust.org")
+      ? trustProfile.email
+      : TRUST_BRAND.contact.email;
+  const officeHours =
+    trustProfile?.officeHours && trustProfile.officeHours.trim() !== ""
+      ? trustProfile.officeHours
+      : "Public desk timings will be updated soon.";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,23 +226,44 @@ export const Contact: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-900/80 border border-emerald-700/60 flex items-center justify-center shrink-0">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-900/80 border border-emerald-700/60 flex items-center justify-center shrink-0 mt-0.5">
                   <Phone className="w-4 h-4 text-amber-300" />
                 </div>
                 <div>
                   <div className="font-semibold text-white">Public Desk Phone</div>
-                  <div className="text-stone-300 text-xs mt-0.5">{phone}</div>
+                  <div className="flex flex-wrap items-center gap-1.5 text-stone-300 text-xs mt-0.5">
+                    <a
+                      href="tel:9922271777"
+                      className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline"
+                    >
+                      9922271777
+                    </a>
+                    <span className="text-stone-500">/</span>
+                    <a
+                      href="tel:7588833127"
+                      className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline"
+                    >
+                      7588833127
+                    </a>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-900/80 border border-emerald-700/60 flex items-center justify-center shrink-0">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-900/80 border border-emerald-700/60 flex items-center justify-center shrink-0 mt-0.5">
                   <Mail className="w-4 h-4 text-amber-300" />
                 </div>
                 <div>
                   <div className="font-semibold text-white">Secretariat Email</div>
-                  <div className="text-stone-300 text-xs mt-0.5">{emailAddress}</div>
+                  <div className="text-stone-300 text-xs mt-0.5">
+                    <a
+                      href={`mailto:${emailAddress}`}
+                      className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline break-all"
+                    >
+                      {emailAddress}
+                    </a>
+                  </div>
                 </div>
               </div>
 

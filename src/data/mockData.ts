@@ -6,17 +6,20 @@ import {
   GalleryItem,
 } from "../types";
 
+import { TRUST_BRAND } from "../config/trustBrand";
+
 export const TRUST_INFO = {
-  name: "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik",
-  marathiName: "इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक",
-  shortName: "Icchapurti Vinayak Trust",
-  subtitle: "Reg. No. E/1341 • Dedicated to Grassroots Social Welfare",
-  registrationNumber: "E/1341",
-  establishedYear: "2019",
-  email: "contact@siddhivinayaktrust.org",
-  phone: "0253 6029200 / 0253 6018200",
-  address: "7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004",
-  officeHours: "Mon - Sat: 9:30 AM - 5:30 PM IST",
+  name: TRUST_BRAND.name,
+  marathiName: TRUST_BRAND.marathiName,
+  shortName: TRUST_BRAND.shortName,
+  subtitle: `Reg. No. ${TRUST_BRAND.registrationNumber} • Dedicated to Grassroots Social Welfare`,
+  registrationNumber: TRUST_BRAND.registrationNumber,
+  establishedYear: "", // Awaiting official confirmation from Trust
+  email: TRUST_BRAND.contact.email,
+  phone: TRUST_BRAND.contact.phoneDisplay,
+  phones: TRUST_BRAND.contact.phones,
+  address: TRUST_BRAND.unverifiedAddressPlaceholder,
+  officeHours: "Public desk timings will be updated soon.",
 };
 
 /**

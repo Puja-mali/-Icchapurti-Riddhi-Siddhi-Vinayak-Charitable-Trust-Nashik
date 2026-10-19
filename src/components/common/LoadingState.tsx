@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/src/lib/utils";
+import { TrustEmblem } from "./TrustEmblem";
 
 interface LoadingStateProps {
   message?: string;
@@ -17,10 +18,11 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
         className
       )}
     >
-      <div className="relative w-12 h-12">
-        <div className="w-12 h-12 rounded-full border-3 border-emerald-100 border-t-emerald-700 animate-spin" />
+      <TrustEmblem size="sm" showRibbonTab={false} className="mb-3" />
+      <div className="relative w-10 h-10">
+        <div className="w-10 h-10 rounded-full border-2 border-emerald-100 border-t-emerald-700 animate-spin" />
       </div>
-      <p className="mt-4 text-sm font-medium text-slate-600">{message}</p>
+      <p className="mt-3 text-sm font-medium text-slate-600">{message}</p>
     </div>
   );
 };

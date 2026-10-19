@@ -147,8 +147,8 @@ export class EmailService {
     </div>
     <div class="footer">
       <p><strong>Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik</strong></p>
-      <p>7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004</p>
-      <p>Phone: 0253 6029200 / 0253 6018200 • Email: contact@siddhivinayaktrust.org</p>
+      <p>Reg. No. E/1341 • Nashik, Maharashtra</p>
+      <p>Email: <a href="mailto:ichhapurtiriddhisiddhivinayak@gmail.com" style="color: #14532d;">ichhapurtiriddhisiddhivinayak@gmail.com</a> • Phone: <a href="tel:9922271777" style="color: #14532d;">9922271777</a> / <a href="tel:7588833127" style="color: #14532d;">7588833127</a></p>
       <p>For verified audit records, visit our Public Transparency Registry online.</p>
       <p>This is an automated operational notification. Please do not reply directly.</p>
     </div>
@@ -605,7 +605,7 @@ export class EmailService {
       </p>
 
       <p style="font-size: 11px; color: #94a3b8; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
-        Security Notice: Never forward this invitation link. Trust administrators will never ask for your password. If you did not expect this invitation, please notify trust security at contact@siddhivinayaktrust.org immediately.
+        Security Notice: Never forward this invitation link. Trust administrators will never ask for your password. If you did not expect this invitation, please notify trust leadership immediately.
       </p>
     `;
 

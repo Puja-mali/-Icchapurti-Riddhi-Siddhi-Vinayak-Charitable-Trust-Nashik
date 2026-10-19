@@ -928,7 +928,7 @@ export const UsersManagementTab: React.FC = () => {
             <input
               type="email"
               required
-              placeholder="e.g. officer@siddhivinayaktrust.org"
+              placeholder="e.g. officer@example.org"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
               className="w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]"

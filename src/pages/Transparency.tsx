@@ -124,11 +124,11 @@ export const Transparency: React.FC = () => {
                 </div>
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
                   <div className="font-serif font-bold text-base text-stone-900">Governance</div>
-                  <div className="text-[11px] text-stone-600 font-medium">Board of 13 Trustees & monthly secretarial reviews</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Governed by Board of Trustees under statutory trust bylaws</div>
                 </div>
                 <div className="bg-[#f7f2ea] p-3.5 rounded-2xl border border-[#e2d8c6] space-y-0.5">
                   <div className="font-serif font-bold text-base text-stone-900">Public Record</div>
-                  <div className="text-[11px] text-stone-600 font-medium">Approved annual reports published transparently</div>
+                  <div className="text-[11px] text-stone-600 font-medium">Statutory records and verified accounting dockets</div>
                 </div>
               </div>
             </div>
@@ -141,8 +141,8 @@ export const Transparency: React.FC = () => {
               <div className="space-y-1.5 text-stone-700 text-[11px]">
                 <div><strong className="text-stone-900">Trust Reg. No:</strong> E/1341</div>
                 <div><strong className="text-stone-900">Governing Act:</strong> Maharashtra Public Trusts Act</div>
-                <div><strong className="text-stone-900">PAN Number:</strong> AAATI2734K</div>
-                <div><strong className="text-stone-900">Registered Office:</strong> 7, Pokar Avenue, Nandanvan Garden Apt, Nashik 422004</div>
+                <div><strong className="text-stone-900">Registered City:</strong> Nashik, Maharashtra</div>
+                <div><strong className="text-stone-900">Contact & Address:</strong> Official contact details will be updated soon</div>
               </div>
               <div className="pt-2 text-[10px] text-stone-500 border-t border-[#e2d8c7] leading-relaxed">
                 *The Trust does not claim Section 80G tax deductions. Official numbered donation receipts are issued for personal records and Trust accounting.

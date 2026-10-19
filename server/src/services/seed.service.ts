@@ -64,14 +64,14 @@ export const REAL_TRUST_PROFILE = {
       'Zero-tolerance for misrepresentation. Strict adherence to trust bylaws, transparent bookkeeping, and public accountability for every rupee received.',
   },
   registrationNumber: 'E/1341',
-  panNumber: 'AAATI2734K',
-  registrationDate: '2019-10-18T00:00:00.000Z',
-  registeredAddress: '7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004',
+  panNumber: '',
+  registrationDate: '',
+  registeredAddress: 'Official address will be updated soon.',
   primaryContact: {
     name: 'Secretariat Office',
-    phone: '0253 6029200 / 0253 6018200',
-    email: 'contact@siddhivinayaktrust.org',
-    address: '7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004',
+    phone: '9922271777 / 7588833127',
+    email: 'ichhapurtiriddhisiddhivinayak@gmail.com',
+    address: 'Official address will be updated soon.',
   },
   socialLinks: {
     facebook: '',
@@ -79,129 +79,15 @@ export const REAL_TRUST_PROFILE = {
     instagram: '',
     youtube: '',
   },
-  establishedYear: '2019',
+  establishedYear: '',
   isVerified: true,
 };
 
-export const REAL_TRUSTEES = [
-  {
-    name: 'Adv. Shri Suresh Vasantrao Maru',
-    designation: 'President / अध्यक्ष',
-    role: 'President',
-    bio: 'Founder President, providing legal and statutory leadership, community advocacy, and overall governance for trust initiatives.',
-    qualification: 'Advocate',
-    displayOrder: 1,
-    isActive: true,
-  },
-  {
-    name: 'Sau. Chhayatai Suresh Maru',
-    designation: 'Vice President / उपाध्यक्षा',
-    role: 'Vice President',
-    bio: 'Vice President, leading women self-employment initiatives, orphan student mentoring, and family relief drives.',
-    qualification: '',
-    displayOrder: 2,
-    isActive: true,
-  },
-  {
-    name: 'Sau. Vimal Balu Gaidhani',
-    designation: 'Secretary / सचिव',
-    role: 'Secretary',
-    bio: 'Secretary, managing official secretarial records, public communications, statutory correspondence, and seva scheduling.',
-    qualification: '',
-    displayOrder: 3,
-    isActive: true,
-  },
-  {
-    name: 'Shri Vaibhav Darugade',
-    designation: 'Treasurer / खजिनदार',
-    role: 'Treasurer',
-    bio: 'Treasurer, overseeing financial accounts, transparent accounting, itemized disbursement records, and annual compliance.',
-    qualification: '',
-    displayOrder: 4,
-    isActive: true,
-  },
-  {
-    name: 'Shri Shailesh Maru',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, actively coordinating community health camps, blood donation initiatives, and social welfare distribution.',
-    qualification: '',
-    displayOrder: 5,
-    isActive: true,
-  },
-  {
-    name: 'Shri Ashok Vishnu Wagh',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, contributing to community assistance programs, educational supply drives, and public outreach.',
-    qualification: '',
-    displayOrder: 6,
-    isActive: true,
-  },
-  {
-    name: 'Shri Eknath Ramchandra Kedare',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, guiding environmental initiatives, tree plantation drives, and local civic assistance.',
-    qualification: '',
-    displayOrder: 7,
-    isActive: true,
-  },
-  {
-    name: 'Shri Vaibhav Madhukar Ujale',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, assisting in youth sports activities, library operations, and student study center coordination.',
-    qualification: '',
-    displayOrder: 8,
-    isActive: true,
-  },
-  {
-    name: 'Shri Vilas Eknath Kadale',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, supporting senior citizen welfare (Jyeshtha Nagrik Sangh) and community care programs.',
-    qualification: '',
-    displayOrder: 9,
-    isActive: true,
-  },
-  {
-    name: 'Shri Ravindra Wagh',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, supporting medical camps, health awareness drives, and emergency assistance.',
-    qualification: '',
-    displayOrder: 10,
-    isActive: true,
-  },
-  {
-    name: 'Shri Mohinesh Mahendra Nikale',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, coordinating social awareness programs, cultural events, and government schemes guidance.',
-    qualification: '',
-    displayOrder: 11,
-    isActive: true,
-  },
-  {
-    name: 'Shri Rajendra Ganpat Khode',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, contributing to food distribution, clothing drives, and seasonal relief for families in need.',
-    qualification: '',
-    displayOrder: 12,
-    isActive: true,
-  },
-  {
-    name: 'Shri Bhushan Sunil Wadane',
-    designation: 'Trustee / विश्वस्त',
-    role: 'Trustee',
-    bio: 'Trustee, active in volunteer mobilization, ladies self-employment programs, and grassroots field seva.',
-    qualification: '',
-    displayOrder: 13,
-    isActive: true,
-  },
-];
+/**
+ * Real trustees list is initialized empty pending verified names and designations from Trust leadership.
+ * Verified trustees can be added through the admin dashboard.
+ */
+export const REAL_TRUSTEES: any[] = [];
 
 /**
  * Data Integrity:
@@ -242,7 +128,7 @@ export async function autoSeedTrustData(): Promise<void> {
         role: 'ADMIN',
         isActive: true,
         isEmailVerified: true,
-        phone: '+91 253 6029200',
+        phone: '',
       });
       logger.info('[Seed] Initial Trust Admin account provisioned: admin@trust.org');
     }

@@ -37,17 +37,17 @@ const siteSettingsSchema = new Schema<ISiteSettings>(
     },
     contactEmail: {
       type: String,
-      default: 'trust@siddhivinayaktrust.org',
+      default: 'ichhapurtiriddhisiddhivinayak@gmail.com',
       trim: true,
     },
     contactPhone: {
       type: String,
-      default: '0253 6029200 / 0253 6018200',
+      default: '9922271777 / 7588833127',
       trim: true,
     },
     officeAddress: {
       type: String,
-      default: '7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004',
+      default: 'Official address will be updated soon.',
       trim: true,
     },
   },

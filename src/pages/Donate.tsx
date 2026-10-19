@@ -21,6 +21,7 @@ import {
   Clock,
 } from "lucide-react";
 import { TRUST_INFO } from "@/src/data/mockData";
+import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 import { Cause, DonationRecord } from "@/src/types";
 import { causeService } from "@/src/services/causeService";
 import { DonationService, PaymentConfigResponse } from "@/src/services/donationService";
@@ -605,13 +606,16 @@ export const Donate: React.FC = () => {
             {/* Generated Official Receipt Slip */}
             <div className="bg-stone-50 rounded-md p-5 border border-stone-200 text-xs space-y-3 font-mono print:p-0 print:border-none">
               <div className="flex justify-between items-center border-b border-stone-200 pb-2">
-                <div>
-                  <span className="font-bold text-stone-900 text-sm block">
-                    {TRUST_INFO.name.toUpperCase()}
-                  </span>
-                  <span className="text-[10px] text-stone-500 font-sans block">
-                    Official Charitable Trust Contribution Receipt
-                  </span>
+                <div className="flex items-center gap-3">
+                  <TrustEmblem size="sm" showRibbonTab={false} />
+                  <div>
+                    <span className="font-bold text-stone-900 text-sm block">
+                      {TRUST_INFO.name.toUpperCase()}
+                    </span>
+                    <span className="text-[10px] text-stone-500 font-sans block">
+                      Official Charitable Trust Contribution Receipt
+                    </span>
+                  </div>
                 </div>
                 <span className="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-300">
                   TEST MODE / VERIFIED

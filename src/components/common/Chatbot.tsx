@@ -68,8 +68,8 @@ export const Chatbot: React.FC = () => {
       return "We welcome volunteers across Education, Medical Camps, Hospital Kitchens, and Field Audits! Visit the Volunteer page to view open weekend roles and submit your registration.";
     }
 
-    if (q.includes("office") || q.includes("timing") || q.includes("address") || q.includes("contact") || q.includes("phone")) {
-      return `Our central office is located at: ${TRUST_INFO.address}. Office hours are ${TRUST_INFO.officeHours}. You can also call us at ${TRUST_INFO.phone}.`;
+    if (q.includes("office") || q.includes("timing") || q.includes("address") || q.includes("contact") || q.includes("phone") || q.includes("email")) {
+      return "You can reach Icchapurti Riddhi Siddhi Vinayak Charitable Trust by email at ichhapurtiriddhisiddhivinayak@gmail.com or by phone at 9922271777 / 7588833127. The Trust is registered in Nashik, Maharashtra (Reg. No. E/1341). Full postal address and office visiting timings will be updated soon.";
     }
 
     if (q.includes("kumbh") || q.includes("nashik") || q.includes("simhastha") || q.includes("ramkund")) {

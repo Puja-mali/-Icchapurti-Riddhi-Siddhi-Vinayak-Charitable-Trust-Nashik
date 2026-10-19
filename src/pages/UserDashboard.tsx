@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { TRUST_INFO } from "@/src/data/mockData";
+import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 import { DonationRecord, UserDonation } from "@/src/types";
 import { DonationService } from "@/src/services/donationService";
 import { useAuth } from "@/src/context/AuthContext";
@@ -284,7 +285,8 @@ export const UserDashboard: React.FC = () => {
         >
           <div className="space-y-4 font-mono text-xs">
             <div className="border border-stone-300 rounded p-5 bg-stone-50 space-y-3">
-              <div className="text-center border-b border-stone-200 pb-3">
+              <div className="text-center border-b border-stone-200 pb-3 flex flex-col items-center">
+                <TrustEmblem size="sm" showRibbonTab={false} className="mb-2" />
                 <div className="font-serif font-bold text-stone-900 text-sm">{TRUST_INFO.name.toUpperCase()}</div>
                 <div className="text-[10px] text-stone-500 font-sans">Official Electronic Donation Receipt</div>
                 <div className="text-[10px] text-stone-500 font-sans">Registration No: {TRUST_INFO.registrationNumber}</div>

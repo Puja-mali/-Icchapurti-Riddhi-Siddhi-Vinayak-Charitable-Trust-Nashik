@@ -41,8 +41,11 @@ const AcceptInvitation = React.lazy(() => import("@/src/pages/AcceptInvitation")
 const ForgotPassword = React.lazy(() => import("@/src/pages/ForgotPassword").then((m) => ({ default: m.ForgotPassword })));
 const ResetPassword = React.lazy(() => import("@/src/pages/ResetPassword").then((m) => ({ default: m.ResetPassword })));
 
+import { TrustEmblem } from "@/src/components/common/TrustEmblem";
+
 const RouteLoadingFallback: React.FC = () => (
   <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center">
+    <TrustEmblem size="sm" showRibbonTab={false} className="mb-3" />
     <div className="w-8 h-8 rounded-full border-2 border-emerald-200 border-t-[#14532d] animate-spin mb-3" />
     <span className="text-xs font-semibold text-stone-600">Loading trust portal...</span>
   </div>
