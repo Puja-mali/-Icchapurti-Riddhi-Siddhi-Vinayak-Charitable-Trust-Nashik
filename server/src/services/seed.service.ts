@@ -65,13 +65,13 @@ export const REAL_TRUST_PROFILE = {
   },
   registrationNumber: 'E/1341',
   panNumber: '',
-  registrationDate: '',
-  registeredAddress: 'Official address will be updated soon.',
+  address: 'Nashik, Maharashtra, India (Registered office address updating soon)',
+  registeredAddress: 'Nashik, Maharashtra, India (Registered office address updating soon)',
   primaryContact: {
     name: 'Secretariat Office',
     phone: '9922271777 / 7588833127',
     email: 'ichhapurtiriddhisiddhivinayak@gmail.com',
-    address: 'Official address will be updated soon.',
+    address: 'Nashik, Maharashtra, India (Registered office address updating soon)',
   },
   socialLinks: {
     facebook: '',

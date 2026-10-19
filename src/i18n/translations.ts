@@ -659,7 +659,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       "A four-stage verification protocol ensuring complete accountability from receipt generation to beneficiary delivery.",
     stageDonation: "Donation",
     stageDonationDesc:
-      "Your contribution is securely recorded with an immutable digital transaction token and numbered donation receipt.",
+      "Your contribution is securely recorded with a digital transaction record and numbered donation receipt.",
     stageAllocation: "Allocation",
     stageAllocationDesc:
       "Funds are matched directly with vetted supplier purchase orders or accredited hospital medical estimates.",
@@ -872,7 +872,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       applicantCity: "City / Village & District",
       description: "Describe the situation and required support",
       requiredAmount: "Estimated Financial Assistance Needed (₹)",
-      uploadDocs: "Upload Doctor's Prescription / Income Certificate (Simulated)",
+      uploadDocs: "Upload Doctor's Prescription / Income Certificate",
       urgency: "Urgency Level",
       urgencyCritical: "Immediate (within 48 hours)",
       urgencyModerate: "Within 1 to 2 weeks",

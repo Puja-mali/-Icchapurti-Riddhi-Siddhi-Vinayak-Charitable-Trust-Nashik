@@ -137,7 +137,7 @@ const trustProfileSchema = new Schema<ITrustProfile>(
       required: [true, 'Trust address is required'],
       trim: true,
       maxlength: [500, 'Address cannot exceed 500 characters'],
-      default: 'Official address will be updated soon.',
+      default: 'Nashik, Maharashtra, India (Registered office address updating soon)',
     },
     phone: {
       type: String,

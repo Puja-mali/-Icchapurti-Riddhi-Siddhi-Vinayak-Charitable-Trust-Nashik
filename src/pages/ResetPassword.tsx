@@ -5,6 +5,7 @@ import { Button } from "@/src/components/common/Button";
 import { useTrust } from "@/src/context/TrustContext";
 import { authService } from "@/src/services/authService";
 import { ApiError } from "@/src/services/api";
+import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 
 export const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -103,9 +104,7 @@ export const ResetPassword: React.FC = () => {
         {/* Branding header */}
         <div className="text-center space-y-1.5">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-[#14532d] text-white flex items-center justify-center font-serif font-bold text-sm">
-              IT
-            </div>
+            <TrustEmblem size="sm" />
             <span className="text-lg font-serif font-bold text-stone-900 tracking-tight">
               {trustName}
             </span>

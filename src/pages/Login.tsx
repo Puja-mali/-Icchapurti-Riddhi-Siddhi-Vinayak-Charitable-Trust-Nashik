@@ -6,6 +6,7 @@ import { useAuth } from "@/src/context/AuthContext";
 import { useTrust } from "@/src/context/TrustContext";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { ApiError } from "@/src/services/api";
+import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -57,18 +58,25 @@ export const Login: React.FC = () => {
       // Authenticate strictly for the public portal
       const authenticatedUser = await login({ email: cleanEmail, password, portal: "public" });
 
-      // Safe return path for legitimate public users (DONOR / VOLUNTEER)
-      const fromPath = (location.state as any)?.from?.pathname;
-      const target =
-        fromPath &&
-        typeof fromPath === "string" &&
-        !fromPath.startsWith("/admin") &&
-        fromPath !== "/login" &&
-        fromPath !== "/admin/login"
+      // Resolve destination strictly based on verified database role:
+      let target: string;
+      if (authenticatedUser.role === "ADMIN" || authenticatedUser.role === "STAFF") {
+        target = "/admin";
+      } else {
+        const fromPath = (location.state as any)?.from?.pathname;
+        const isSafePath =
+          fromPath &&
+          typeof fromPath === "string" &&
+          !fromPath.startsWith("/admin") &&
+          fromPath !== "/login" &&
+          fromPath !== "/admin/login";
+
+        target = isSafePath
           ? fromPath
           : authenticatedUser.role === "VOLUNTEER"
           ? "/volunteer-portal"
           : "/dashboard";
+      }
 
       navigate(target, { replace: true });
     } catch (err: any) {
@@ -88,9 +96,7 @@ export const Login: React.FC = () => {
         {/* Branding header */}
         <div className="text-center space-y-1.5">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-[#14532d] text-white flex items-center justify-center font-serif font-bold text-sm">
-              IT
-            </div>
+            <TrustEmblem size="sm" />
             <span className="text-base sm:text-lg font-serif font-bold text-stone-900 tracking-tight">
               {trustName}
             </span>

@@ -27,12 +27,12 @@
  */
 
 // Line 26: Set your official logo URL or local path here:
-export const TRUST_LOGO_PATH: string = "\image.png";
+export const TRUST_LOGO_PATH: string = "/image.png";
 
 /**
  * Fallback image path used if the primary logo fails to load or is unconfigured.
  */
-export const TRUST_LOGO_FALLBACK: string = "\image.png";
+export const TRUST_LOGO_FALLBACK: string = "/image.png";
 
 /**
  * Canonical brand metadata and verified statutory trust parameters.

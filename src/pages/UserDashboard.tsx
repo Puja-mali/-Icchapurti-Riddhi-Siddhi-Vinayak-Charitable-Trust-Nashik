@@ -286,15 +286,15 @@ export const UserDashboard: React.FC = () => {
           <div className="space-y-4 font-mono text-xs">
             <div className="border border-stone-300 rounded p-5 bg-stone-50 space-y-3">
               <div className="text-center border-b border-stone-200 pb-3 flex flex-col items-center">
-                <TrustEmblem size="sm" showRibbonTab={false} className="mb-2" />
-                <div className="font-serif font-bold text-stone-900 text-sm">{TRUST_INFO.name.toUpperCase()}</div>
-                <div className="text-[10px] text-stone-500 font-sans">Official Electronic Donation Receipt</div>
-                <div className="text-[10px] text-stone-500 font-sans">Registration No: {TRUST_INFO.registrationNumber}</div>
+                <TrustEmblem size="md" showRibbonTab={false} className="mb-2" />
+                <div className="font-serif font-bold text-stone-900 text-base">{TRUST_INFO.name.toUpperCase()}</div>
+                <div className="text-xs text-stone-600 font-sans">Official Electronic Donation Receipt</div>
+                <div className="text-xs text-stone-600 font-sans font-medium">Registration No: {TRUST_INFO.registrationNumber}</div>
               </div>
 
-              <div className="space-y-1.5 pt-1 text-stone-800 text-[11px]">
+              <div className="space-y-2 pt-2 text-stone-900 text-xs sm:text-sm">
                 <div className="flex justify-between">
-                  <span className="text-stone-500">Receipt Number:</span>
+                  <span className="text-stone-600">Receipt Number:</span>
                   <span className="font-bold text-emerald-900">{selectedReceipt.receiptNumber}</span>
                 </div>
                 <div className="flex justify-between">

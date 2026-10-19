@@ -54,31 +54,31 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-emerald-900/50">
           {/* Trust Branding & Mission */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <TrustEmblem size="sm" isTransparent={true} showRibbonTab={false} />
+            <div className="flex items-center gap-4">
+              <TrustEmblem size="lg" isTransparent={true} showRibbonTab={false} />
               <div>
-                <span className="text-base font-serif font-bold text-white tracking-tight block">
+                <span className="text-lg sm:text-xl font-serif font-bold text-white tracking-tight block">
                   {t.trustName}
                 </span>
-                <span className="text-xs text-amber-400 font-medium">
+                <span className="text-sm text-amber-300 font-semibold">
                   {t.trustShort} • Charitable Trust
                 </span>
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-stone-400 leading-relaxed max-w-md">
+            <p className="text-sm sm:text-base text-stone-300 leading-relaxed max-w-md">
               {t.tagline}
             </p>
 
             {/* Statutory Compliance Notice */}
-            <div className="p-3 rounded-md bg-stone-900/90 border border-stone-800 space-y-1">
+            <div className="p-3.5 rounded-lg bg-stone-900/95 border border-stone-800 space-y-1.5">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span className="text-xs font-semibold text-amber-300">
+                <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="text-xs sm:text-sm font-bold text-amber-300">
                   {t.academicNotice}
                 </span>
               </div>
-              <p className="text-[11px] text-stone-400 leading-normal">
+              <p className="text-xs sm:text-sm text-stone-300 leading-normal">
                 {trustCharterNotice}
               </p>
             </div>
@@ -86,43 +86,43 @@ export const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-stone-100 mb-3 font-serif">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-300 mb-3 font-serif">
               {t.navAbout}
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm">
+            <ul className="space-y-2.5 text-sm sm:text-base">
               <li>
-                <Link to="/about" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/about" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.navAbout}
                 </Link>
               </li>
               <li>
-                <Link to="/causes" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/causes" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.navCauses}
                 </Link>
               </li>
               <li>
                 <Link
                   to="/impact-passport"
-                  className="text-stone-300 hover:text-amber-300 transition-colors flex items-center gap-1 font-medium"
+                  className="text-stone-200 hover:text-amber-300 transition-colors inline-flex items-center gap-1.5 font-medium min-h-[36px]"
                 >
                   <span>{t.navPassport}</span>
-                  <span className="text-[10px] bg-amber-950 text-amber-300 px-1 rounded border border-amber-800/60">
+                  <span className="text-xs bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800/60 font-semibold">
                     Audit
                   </span>
                 </Link>
               </li>
               <li>
-                <Link to="/volunteer" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/volunteer" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.navVolunteer}
                 </Link>
               </li>
               <li>
-                <Link to="/events" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/events" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.navEvents}
                 </Link>
               </li>
               <li>
-                <Link to="/gallery" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/gallery" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {language === "mr" ? "छायाचित्र दालन" : language === "hi" ? "चित्र दीर्घा" : "Visual Field Gallery"}
                 </Link>
               </li>
@@ -134,24 +134,24 @@ export const Footer: React.FC = () => {
             <h4 className="text-xs font-bold uppercase tracking-wider text-stone-100 mb-3 font-serif">
               {t.footer.governance}
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm">
+            <ul className="space-y-2.5 text-sm sm:text-base">
               <li>
-                <Link to="/donate" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/donate" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.ctaDonate}
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/dashboard" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.navDashboard}
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/login" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.navLogin}
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-stone-400 hover:text-white transition-colors">
+                <Link to="/contact" className="text-stone-300 hover:text-white transition-colors min-h-[36px] inline-flex items-center">
                   {t.footer.contactHelpdesk}
                 </Link>
               </li>
@@ -160,43 +160,43 @@ export const Footer: React.FC = () => {
 
           {/* Trust Office Coordinates */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-stone-100 mb-3 font-serif">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-300 mb-3 font-serif">
               {t.footer.secretariat}
             </h4>
-            <div className="text-xs text-stone-400 space-y-2">
-              <div className="flex items-start gap-2">
+            <div className="text-sm text-stone-300 space-y-2.5">
+              <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>{address}</span>
+                <span className="leading-relaxed">{address}</span>
               </div>
-              <div className="flex items-start gap-2">
-                <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                <div className="flex flex-wrap items-center gap-1.5">
+              <div className="flex items-start gap-2.5">
+                <Phone className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="flex flex-wrap items-center gap-1.5 font-medium">
                   <a
                     href="tel:9922271777"
-                    className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline"
+                    className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline min-h-[36px] inline-flex items-center"
                   >
                     9922271777
                   </a>
-                  <span className="text-stone-500">/</span>
+                  <span className="text-stone-400">/</span>
                   <a
                     href="tel:7588833127"
-                    className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline"
+                    className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline min-h-[36px] inline-flex items-center"
                   >
                     7588833127
                   </a>
                 </div>
               </div>
-              <div className="flex items-start gap-2">
-                <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2.5">
+                <Mail className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <a
                   href={`mailto:${email}`}
-                  className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline break-all"
+                  className="hover:text-amber-300 transition-colors underline-offset-2 hover:underline break-all font-medium min-h-[36px] inline-flex items-center"
                 >
                   {email}
                 </a>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <div className="flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>{officeHours}</span>
               </div>
             </div>

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { userService, ValidateInvitationResponse } from '@/src/services/userService';
 import { Button } from '@/src/components/common/Button';
+import { TrustEmblem } from '@/src/components/common/TrustEmblem';
 
 export const AcceptInvitation: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -106,9 +107,7 @@ export const AcceptInvitation: React.FC = () => {
       <div className="max-w-md w-full">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#14532d] text-white shadow-md mb-3">
-            <Building className="w-7 h-7 text-amber-300" />
-          </div>
+          <TrustEmblem size="lg" className="mb-3" />
           <h1 className="text-2xl font-bold text-stone-900 tracking-tight">
             Icchapurti Riddhi Siddhi Vinayak
           </h1>

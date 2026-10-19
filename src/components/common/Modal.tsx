@@ -30,10 +30,19 @@ export const Modal: React.FC<ModalProps> = ({
     };
     if (isOpen) {
       const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
       window.addEventListener("keydown", handleKeyDown);
+      // Accessibility focus management
+      setTimeout(() => dialogRef.current?.focus(), 50);
+
       return () => {
-        document.body.style.overflow = originalOverflow || "unset";
+        document.body.style.overflow = originalOverflow || "";
+        document.body.style.paddingRight = originalPaddingRight || "";
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
@@ -50,36 +59,37 @@ export const Modal: React.FC<ModalProps> = ({
 
   const modalElement = (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+      className="fixed inset-0 z-[9999] overflow-y-auto overscroll-contain bg-stone-950/75 backdrop-blur-xs flex min-h-screen items-center justify-center p-3 sm:p-6"
       role="presentation"
     >
-      {/* Backdrop */}
+      {/* Backdrop click listener */}
       <div
-        className="fixed inset-0 bg-stone-950/70 backdrop-blur-xs transition-opacity cursor-pointer"
+        className="fixed inset-0 -z-10 cursor-pointer"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Dialog */}
+      {/* Modal Dialog Card */}
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
+        tabIndex={-1}
         className={cn(
-          "relative w-full bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden z-10 my-auto max-h-[calc(100vh-2rem)] sm:max-h-[88vh] flex flex-col animate-in fade-in zoom-in-95 duration-200",
+          "relative w-full bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden z-10 m-auto flex flex-col max-h-[calc(100dvh-2.5rem)] sm:max-h-[calc(100dvh-4rem)] animate-in fade-in zoom-in-95 duration-200 outline-none",
           sizeClasses[size],
           className
         )}
       >
-        {/* Header */}
-        <div className="flex items-start justify-between p-4 sm:p-6 border-b border-stone-100 bg-stone-50/80 shrink-0">
+        {/* Header (sticky to top of modal card, shrink-0) */}
+        <div className="flex items-start justify-between p-4 sm:p-5 border-b border-stone-100 bg-stone-50/90 shrink-0">
           <div className="pr-3">
             <h3 id="modal-title" className="text-base sm:text-lg font-bold text-stone-900 leading-snug">
               {title}
             </h3>
             {description && (
-              <p className="text-xs sm:text-sm text-stone-500 mt-1">{description}</p>
+              <p className="text-xs sm:text-sm text-stone-500 mt-0.5">{description}</p>
             )}
           </div>
           <button
@@ -92,7 +102,7 @@ export const Modal: React.FC<ModalProps> = ({
           </button>
         </div>
 
-        {/* Content with internal scroll */}
+        {/* Content with internal smooth scrolling */}
         <div className="p-4 sm:p-6 overflow-y-auto overscroll-contain flex-1 text-stone-800">
           {children}
         </div>

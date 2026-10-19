@@ -8,6 +8,7 @@ import {
   X,
   Globe,
   ChevronDown,
+  Eye,
 } from "lucide-react";
 import { Button } from "./Button";
 import { NotificationBell } from "./NotificationBell";
@@ -17,6 +18,7 @@ import { cn } from "@/src/lib/utils";
 import { useLanguage, Language } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
 import { useAuth } from "@/src/context/AuthContext";
+import { useTheme } from "@/src/context/ThemeContext";
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,6 +30,7 @@ export const Navbar: React.FC = () => {
   const { isKumbhMode } = useKumbhMode();
   const shouldReduceMotion = useReducedMotion();
   const { user } = useAuth();
+  const { fontSize, setFontSize, highContrast, toggleHighContrast } = useTheme();
 
   const isHome = location.pathname === "/";
 
@@ -206,152 +209,223 @@ export const Navbar: React.FC = () => {
   const isTransparent = isHome && !isScrolled;
 
   return (
-    <header
-      className={cn(
-        "w-full transition-all duration-300 z-50",
-        isHome
-          ? isScrolled
-            ? "fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-stone-200/90 shadow-sm"
-            : "absolute top-0 left-0 right-0 bg-gradient-to-b from-stone-950/80 via-stone-950/40 to-transparent border-b border-white/10"
-          : "sticky top-0 bg-white/95 backdrop-blur-md border-b border-stone-200/90 shadow-2xs"
-      )}
-    >
-      {/* 1. TOP CIVIC & CULTURAL TRUST STRIP */}
-      <div
+    <>
+      {/* Skip to Main Content Link for Keyboard & Screen Reader Accessibility */}
+      <a href="#main-content" className="skip-to-content-link">
+        {language === "mr" ? "मुख्य मजकुराकडे जा" : language === "hi" ? "मुख्य सामग्री पर जाएं" : "Skip to main content"}
+      </a>
+
+      <header
         className={cn(
-          "text-xs py-1 px-3 sm:px-6 transition-colors duration-300",
-          isTransparent
-            ? "bg-black/25 text-stone-200 border-b border-white/10"
-            : "bg-[#143823] text-stone-200 border-b border-[#1c4d30]"
+          "w-full transition-all duration-300 z-50",
+          isHome
+            ? isScrolled
+              ? "fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-stone-200/90 shadow-sm"
+              : "absolute top-0 left-0 right-0 bg-gradient-to-b from-stone-950/80 via-stone-950/40 to-transparent border-b border-white/10"
+            : "sticky top-0 bg-white/95 backdrop-blur-md border-b border-stone-200/90 shadow-2xs"
         )}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-1.5 sm:gap-2">
-          {/* Left: Registration & Academic notice */}
-          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs min-w-0">
-            <span className="text-amber-300 font-semibold flex items-center gap-1 shrink-0">
-              <ShieldCheck className="w-3.5 h-3.5 inline text-amber-400 shrink-0" />
-              <span>{t.academicNotice}</span>
-            </span>
-            <span className={cn("hidden md:inline", isTransparent ? "text-stone-400" : "text-emerald-700")}>•</span>
-            <span
-              className={cn(
-                "hidden md:inline text-[11px] truncate",
-                isTransparent ? "text-stone-300" : "text-emerald-100"
-              )}
-            >
-              {language === "mr"
-                ? "नोंदणीकृत विश्वस्त संस्था (नोंदणी क्र. E/1341) • अधिकृत पावती व पारदर्शक हिशोब"
-                : language === "hi"
-                ? "पंजीकृत धर्मार्थ ट्रस्ट (पंजीकरण सं. E/1341) • अधिकृत रसीद एवं पारदर्शी हिसाब"
-                : "Regd. Public Charitable Trust (Reg. E/1341) • Official Receipts & Auditable Accounts"}
-            </span>
-          </div>
-
-          {/* Right: Language Switcher in Top Bar */}
-          <div className="flex items-center gap-2 text-xs shrink-0">
-            <div
-              className={cn(
-                "flex items-center gap-1 text-[11px]",
-                isTransparent ? "text-amber-200" : "text-emerald-100"
-              )}
-            >
-              <Globe className="w-3 h-3 text-amber-400 shrink-0" />
-              <span className="hidden sm:inline font-medium">भाषा / Language:</span>
+        {/* 1. TOP CIVIC & ACCESSIBILITY STRIP */}
+        <div
+          className={cn(
+            "text-xs py-1 px-3 sm:px-6 transition-colors duration-300",
+            isTransparent
+              ? "bg-black/30 text-stone-200 border-b border-white/10"
+              : "bg-[#143823] text-stone-200 border-b border-[#1c4d30]"
+          )}
+        >
+          <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
+            {/* Left: Registration & Academic notice */}
+            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs min-w-0">
+              <span className="text-amber-300 font-semibold flex items-center gap-1 shrink-0">
+                <ShieldCheck className="w-3.5 h-3.5 inline text-amber-400 shrink-0" />
+                <span>{t.academicNotice}</span>
+              </span>
+              <span className={cn("hidden md:inline", isTransparent ? "text-stone-400" : "text-emerald-700")}>•</span>
+              <span
+                className={cn(
+                  "hidden md:inline text-xs truncate font-medium",
+                  isTransparent ? "text-stone-200" : "text-emerald-100"
+                )}
+              >
+                {language === "mr"
+                  ? "नोंदणीकृत विश्वस्त संस्था (नोंदणी क्र. E/1341) • अधिकृत पावती व पारदर्शक हिशोब"
+                  : language === "hi"
+                  ? "पंजीकृत धर्मार्थ ट्रस्ट (पंजीकरण सं. E/1341) • अधिकृत रसीद एवं पारदर्शी हिसाब"
+                  : "Regd. Public Charitable Trust (Reg. E/1341) • Official Receipts & Auditable Accounts"}
+              </span>
             </div>
-            <div
-              className={cn(
-                "inline-flex rounded-full p-0.5 text-[10px] sm:text-[11px] border backdrop-blur-sm transition-colors",
-                isTransparent
-                  ? "border-white/20 bg-black/40 text-stone-200"
-                  : "border-emerald-800 bg-[#0b2315] text-stone-200"
-              )}
-            >
-              {languages.map((l) => (
-                <button
-                  key={l.code}
-                  type="button"
-                  onClick={() => setLanguage(l.code)}
+
+            {/* Right: Accessible Font Size Switcher & Language Switcher */}
+            <div className="flex items-center gap-2 sm:gap-3 text-xs shrink-0">
+              {/* Accessible Font Size Options */}
+              <div className="flex items-center gap-1">
+                <span className={cn("hidden sm:inline text-[11px] font-medium", isTransparent ? "text-stone-300" : "text-emerald-200")}>
+                  {language === "mr" ? "आकार:" : language === "hi" ? "आकार:" : "Size:"}
+                </span>
+                <div
                   className={cn(
-                    "px-2 sm:px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-medium",
-                    language === l.code
-                      ? isTransparent
-                        ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
-                        : "bg-[#14532d] text-white font-bold shadow-xs"
-                      : isTransparent
-                      ? "text-stone-300 hover:text-white"
-                      : "text-stone-300 hover:text-white"
+                    "inline-flex rounded-full p-0.5 border backdrop-blur-sm transition-colors",
+                    isTransparent
+                      ? "border-white/20 bg-black/40 text-stone-200"
+                      : "border-emerald-800 bg-[#0b2315] text-stone-200"
                   )}
-                  title={`Switch language to ${l.label}`}
+                  role="group"
+                  aria-label="Accessible font size options"
                 >
-                  {l.nativeName}
-                </button>
-              ))}
+                  <button
+                    type="button"
+                    onClick={() => setFontSize("normal")}
+                    className={cn(
+                      "px-2 py-0.5 rounded-full text-xs transition-all cursor-pointer",
+                      fontSize === "normal"
+                        ? isTransparent
+                          ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
+                          : "bg-[#14532d] text-white font-bold shadow-xs"
+                        : "text-stone-300 hover:text-white"
+                    )}
+                    title="Normal text size (100%)"
+                    aria-label="Normal text size"
+                    aria-pressed={fontSize === "normal"}
+                  >
+                    A
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFontSize("large")}
+                    className={cn(
+                      "px-2 py-0.5 rounded-full text-xs transition-all cursor-pointer",
+                      fontSize === "large"
+                        ? isTransparent
+                          ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
+                          : "bg-[#14532d] text-white font-bold shadow-xs"
+                        : "text-stone-300 hover:text-white"
+                    )}
+                    title="Large text size for senior citizens (115%)"
+                    aria-label="Large text size for senior citizens"
+                    aria-pressed={fontSize === "large"}
+                  >
+                    A+
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFontSize("xlarge")}
+                    className={cn(
+                      "px-2 py-0.5 rounded-full text-xs transition-all cursor-pointer",
+                      fontSize === "xlarge"
+                        ? isTransparent
+                          ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
+                          : "bg-[#14532d] text-white font-bold shadow-xs"
+                        : "text-stone-300 hover:text-white"
+                    )}
+                    title="Extra Large text size for weak eyesight (130%)"
+                    aria-label="Extra Large text size for weak eyesight"
+                    aria-pressed={fontSize === "xlarge"}
+                  >
+                    A++
+                  </button>
+                </div>
+              </div>
+
+              {/* Language Selector */}
+              <div className="flex items-center gap-1">
+                <div
+                  className={cn(
+                    "inline-flex rounded-full p-0.5 text-[11px] border backdrop-blur-sm transition-colors",
+                    isTransparent
+                      ? "border-white/20 bg-black/40 text-stone-200"
+                      : "border-emerald-800 bg-[#0b2315] text-stone-200"
+                  )}
+                  role="group"
+                  aria-label="Language selection"
+                >
+                  {languages.map((l) => (
+                    <button
+                      key={l.code}
+                      type="button"
+                      onClick={() => setLanguage(l.code)}
+                      className={cn(
+                        "px-2 sm:px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-medium",
+                        language === l.code
+                          ? isTransparent
+                            ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
+                            : "bg-[#14532d] text-white font-bold shadow-xs"
+                          : isTransparent
+                          ? "text-stone-300 hover:text-white"
+                          : "text-stone-300 hover:text-white"
+                      )}
+                      title={`Switch language to ${l.label}`}
+                    >
+                      {l.nativeName}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 2. MAIN NAVIGATION BAR */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-18 gap-3">
-          {/* Logo / Trust Title */}
-          <Link
-            to="/"
-            onClick={closeMobileMenu}
-            className="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 sm:flex-initial"
-          >
-            {/* Sacred Bappa Vertical Plaque Emblem */}
-            <motion.div
-              whileHover={!shouldReduceMotion ? { scale: 1.05 } : undefined}
-              transition={{ duration: 0.2 }}
-              className="shrink-0 flex items-center justify-center"
+        {/* 2. MAIN NAVIGATION BAR */}
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between min-h-[4.75rem] sm:min-h-[5.5rem] py-2 gap-3 sm:gap-4">
+            {/* Logo / Trust Title */}
+            <Link
+              to="/"
+              onClick={closeMobileMenu}
+              className="flex items-center gap-2.5 sm:gap-4 group min-w-0 flex-1 sm:flex-initial"
             >
-              {/* Desktop Emblem */}
-              <TrustEmblem
-                size="md"
-                isTransparent={isTransparent}
-                className="hidden sm:flex"
-              />
-              {/* Mobile Compact Emblem */}
-              <TrustEmblem
-                size="sm"
-                isTransparent={isTransparent}
-                className="flex sm:hidden"
-              />
-            </motion.div>
-
-            <div className="flex flex-col min-w-0 justify-center">
-              {/* Desktop & Tablet Full Official Marathi Trust Title */}
-              <span
-                className={cn(
-                  "hidden sm:block text-sm md:text-[15px] lg:text-[16px] font-serif font-bold leading-normal tracking-tight transition-colors truncate pt-0.5 pb-0.5",
-                  isTransparent
-                    ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
-                    : "text-[#143d2c] group-hover:text-[#0b271b]"
-                )}
+              {/* Sacred Bappa Official Trust Emblem - Noticeably Larger and Highly Visible */}
+              <motion.div
+                whileHover={!shouldReduceMotion ? { scale: 1.04 } : undefined}
+                transition={{ duration: 0.2 }}
+                className="shrink-0 flex items-center justify-center"
               >
-                इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
-              </span>
+                {/* Desktop Emblem */}
+                <TrustEmblem
+                  size="md"
+                  isTransparent={isTransparent}
+                  className="hidden sm:flex shrink-0"
+                />
+                {/* Mobile Compact Emblem */}
+                <TrustEmblem
+                  size="sm"
+                  isTransparent={isTransparent}
+                  className="flex sm:hidden shrink-0"
+                />
+              </motion.div>
 
-              {/* Mobile Compact Two-Line Treatment to prevent clipping and unreadable shrinking */}
-              <div
-                className={cn(
-                  "block sm:hidden text-[12px] xs:text-[13px] font-serif font-bold leading-tight tracking-normal transition-colors py-0.5",
-                  isTransparent
-                    ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
-                    : "text-[#143d2c] group-hover:text-[#0b271b]"
-                )}
-              >
-                <span className="block truncate">इच्छापूर्ती रिद्धी सिद्धी विनायक</span>
+              <div className="flex flex-col min-w-0 justify-center">
+                {/* Desktop & Tablet Full Official Marathi Trust Title */}
                 <span
                   className={cn(
-                    "block text-[10.5px] xs:text-[11px] font-semibold truncate",
-                    isTransparent ? "text-amber-300" : "text-[#1b4332]"
+                    "hidden sm:block text-base md:text-lg lg:text-[19px] font-serif font-bold leading-snug tracking-tight transition-colors truncate py-0.5",
+                    isTransparent
+                      ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
+                      : "text-[#143d2c] group-hover:text-[#0b271b]"
                   )}
                 >
-                  चॅरिटेबल ट्रस्ट, नाशिक
+                  इच्छापूर्ती रिद्धी सिद्धी विनायक चॅरिटेबल ट्रस्ट, नाशिक
                 </span>
-              </div>
+
+                {/* Mobile Compact Two-Line Treatment to prevent clipping and unreadable shrinking */}
+                <div
+                  className={cn(
+                    "block sm:hidden text-[13px] xs:text-[14px] font-serif font-bold leading-tight tracking-normal transition-colors py-0.5",
+                    isTransparent
+                      ? "text-white group-hover:text-amber-200 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.85)]"
+                      : "text-[#143d2c] group-hover:text-[#0b271b]"
+                  )}
+                >
+                  <span className="block truncate">इच्छापूर्ती रिद्धी सिद्धी विनायक</span>
+                  <span
+                    className={cn(
+                      "block text-xs xs:text-[12.5px] font-semibold truncate",
+                      isTransparent ? "text-amber-300" : "text-[#1b4332]"
+                    )}
+                  >
+                    चॅरिटेबल ट्रस्ट, नाशिक
+                  </span>
+                </div>
 
               {/* Official Registration & Nashik Identity */}
               <span className="text-[10px] sm:text-[11px] flex items-center gap-1.5 mt-0.5 min-w-0">
@@ -407,7 +481,7 @@ export const Navbar: React.FC = () => {
                     key={link.path}
                     to={link.path}
                     className={cn(
-                      "relative px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all border",
+                      "relative px-3.5 py-2 rounded-lg text-sm md:text-[15px] font-semibold flex items-center gap-1.5 transition-all border min-h-[44px]",
                       isTransparent
                         ? isActive
                           ? "bg-amber-400 text-stone-950 border-amber-300 shadow-xs"
@@ -427,14 +501,14 @@ export const Navbar: React.FC = () => {
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    "relative px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors",
+                    "relative px-3 py-2 rounded-lg text-sm md:text-[15px] font-semibold transition-colors min-h-[44px] flex items-center",
                     isTransparent
                       ? isActive
                         ? "text-amber-300 font-bold bg-white/10"
                         : "text-stone-100 hover:text-amber-200 hover:bg-white/10"
                       : isActive
                       ? "text-[#14532d] font-bold bg-emerald-50/80"
-                      : "text-stone-700 hover:text-stone-950 hover:bg-stone-100"
+                      : "text-stone-800 hover:text-stone-950 hover:bg-stone-100"
                   )}
                 >
                   <span>{link.label}</span>
@@ -460,14 +534,14 @@ export const Navbar: React.FC = () => {
                 type="button"
                 onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
                 className={cn(
-                  "px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors inline-flex items-center gap-1 cursor-pointer",
+                  "px-3 py-2 rounded-lg text-sm md:text-[15px] font-semibold transition-colors inline-flex items-center gap-1 cursor-pointer min-h-[44px]",
                   isTransparent
                     ? isSecondaryActive || moreDropdownOpen
                       ? "text-amber-300 font-bold bg-white/15"
                       : "text-stone-100 hover:text-amber-200 hover:bg-white/10"
                     : isSecondaryActive || moreDropdownOpen
                     ? "text-[#14532d] font-bold bg-emerald-50/80"
-                    : "text-stone-700 hover:text-stone-950 hover:bg-stone-100"
+                    : "text-stone-800 hover:text-stone-950 hover:bg-stone-100"
                 )}
               >
                 <span>{language === "mr" ? "अधिक" : language === "hi" ? "अन्य" : "More"}</span>
@@ -621,17 +695,17 @@ export const Navbar: React.FC = () => {
             {/* Trust Identity Header in Mobile Drawer */}
             <div
               className={cn(
-                "p-2.5 rounded-lg border flex items-center gap-3",
+                "p-3 rounded-xl border flex items-center gap-3.5",
                 isTransparent
                   ? "bg-white/5 border-white/10"
-                  : "bg-emerald-50/50 border-emerald-100"
+                  : "bg-emerald-50/60 border-emerald-100"
               )}
             >
-              <TrustEmblem size="sm" isTransparent={isTransparent} />
+              <TrustEmblem size="md" isTransparent={isTransparent} className="shrink-0" />
               <div className="flex flex-col min-w-0">
                 <span
                   className={cn(
-                    "text-xs font-serif font-bold leading-snug",
+                    "text-sm xs:text-[15px] font-serif font-bold leading-snug",
                     isTransparent ? "text-white" : "text-[#143d2c]"
                   )}
                 >
@@ -639,7 +713,7 @@ export const Navbar: React.FC = () => {
                 </span>
                 <span
                   className={cn(
-                    "text-[10px] mt-0.5 font-medium",
+                    "text-xs mt-0.5 font-semibold",
                     isTransparent ? "text-amber-300" : "text-[#14532d]"
                   )}
                 >
@@ -648,16 +722,89 @@ export const Navbar: React.FC = () => {
               </div>
             </div>
 
-            {/* Language Selector in Mobile Drawer */}
+            {/* Accessible Font Size Selector in Mobile Drawer */}
             <div
               className={cn(
-                "p-2.5 rounded-lg border flex items-center justify-between",
+                "p-3 rounded-xl border flex items-center justify-between",
                 isTransparent
                   ? "bg-white/5 border-white/10"
                   : "bg-stone-50 border-stone-200"
               )}
             >
-              <span className={cn("text-xs font-medium", isTransparent ? "text-stone-300" : "text-stone-600")}>
+              <span className={cn("text-xs font-semibold", isTransparent ? "text-stone-300" : "text-stone-700")}>
+                {language === "mr" ? "अक्षर आकार / Font Size:" : language === "hi" ? "अक्षर आकार / Font Size:" : "Text Size:"}
+              </span>
+              <div
+                className={cn(
+                  "inline-flex rounded-full border p-0.5 text-xs",
+                  isTransparent
+                    ? "border-white/20 bg-black/40"
+                    : "border-stone-300 bg-white"
+                )}
+                role="group"
+                aria-label="Mobile font size"
+              >
+                <button
+                  type="button"
+                  onClick={() => setFontSize("normal")}
+                  className={cn(
+                    "px-3 py-1 rounded-full text-xs transition-colors cursor-pointer font-bold",
+                    fontSize === "normal"
+                      ? isTransparent
+                        ? "bg-amber-400 text-stone-950"
+                        : "bg-[#14532d] text-white"
+                      : "text-stone-600 hover:text-stone-900"
+                  )}
+                  aria-pressed={fontSize === "normal"}
+                  title="Normal text size (100%)"
+                >
+                  A
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFontSize("large")}
+                  className={cn(
+                    "px-3 py-1 rounded-full text-xs transition-colors cursor-pointer font-bold",
+                    fontSize === "large"
+                      ? isTransparent
+                        ? "bg-amber-400 text-stone-950"
+                        : "bg-[#14532d] text-white"
+                      : "text-stone-600 hover:text-stone-900"
+                  )}
+                  aria-pressed={fontSize === "large"}
+                  title="Large text size (115%)"
+                >
+                  A+
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFontSize("xlarge")}
+                  className={cn(
+                    "px-3 py-1 rounded-full text-xs transition-colors cursor-pointer font-bold",
+                    fontSize === "xlarge"
+                      ? isTransparent
+                        ? "bg-amber-400 text-stone-950"
+                        : "bg-[#14532d] text-white"
+                      : "text-stone-600 hover:text-stone-900"
+                  )}
+                  aria-pressed={fontSize === "xlarge"}
+                  title="Extra Large text size (130%)"
+                >
+                  A++
+                </button>
+              </div>
+            </div>
+
+            {/* Language Selector in Mobile Drawer */}
+            <div
+              className={cn(
+                "p-3 rounded-xl border flex items-center justify-between",
+                isTransparent
+                  ? "bg-white/5 border-white/10"
+                  : "bg-stone-50 border-stone-200"
+              )}
+            >
+              <span className={cn("text-xs font-semibold", isTransparent ? "text-stone-300" : "text-stone-700")}>
                 Language / भाषा:
               </span>
               <div
@@ -691,7 +838,7 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Nav Links */}
-            <div className="space-y-1">
+            <div className="space-y-1.5 pt-1">
               {allNavLinks.map((link) => {
                 const isActive =
                   link.path === "/"
@@ -704,14 +851,14 @@ export const Navbar: React.FC = () => {
                     to={link.path}
                     onClick={closeMobileMenu}
                     className={cn(
-                      "flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-lg text-base font-semibold transition-colors min-h-[44px]",
                       isActive
                         ? isTransparent
                           ? "bg-white/15 text-amber-300 font-bold"
                           : "bg-emerald-50 text-[#14532d] font-bold"
                         : isTransparent
                         ? "text-stone-200 hover:bg-white/10"
-                        : "text-stone-700 hover:bg-stone-50"
+                        : "text-stone-800 hover:bg-stone-50"
                     )}
                   >
                     <span>{link.label}</span>

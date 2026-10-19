@@ -44,10 +44,10 @@ const ResetPassword = React.lazy(() => import("@/src/pages/ResetPassword").then(
 import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 
 const RouteLoadingFallback: React.FC = () => (
-  <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center">
-    <TrustEmblem size="sm" showRibbonTab={false} className="mb-3" />
-    <div className="w-8 h-8 rounded-full border-2 border-emerald-200 border-t-[#14532d] animate-spin mb-3" />
-    <span className="text-xs font-semibold text-stone-600">Loading trust portal...</span>
+  <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center" role="status" aria-live="polite">
+    <TrustEmblem size="md" showRibbonTab={false} className="mb-4" />
+    <div className="w-9 h-9 rounded-full border-3 border-emerald-200 border-t-[#14532d] animate-spin mb-3" />
+    <span className="text-sm font-semibold text-stone-700">Loading trust portal...</span>
   </div>
 );
 
@@ -133,7 +133,7 @@ export default function App() {
                 <ScrollToTop />
                 <div className="flex flex-col min-h-screen bg-[#faf8f5] text-stone-900 font-sans w-full max-w-full overflow-x-hidden">
                   <Navbar />
-                  <main className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">
+                  <main id="main-content" className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden focus:outline-none">
                     <AnimatedRoutes />
                   </main>
                   <Footer />

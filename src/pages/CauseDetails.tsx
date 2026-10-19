@@ -364,7 +364,7 @@ export const CauseDetails: React.FC = () => {
             <div className="space-y-2 pt-3 border-t border-stone-100 text-xs text-stone-600">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                <span>Secure Razorpay 256-Bit Encrypted Payment Gateway</span>
+                <span>Secure 256-Bit Encrypted Payment Gateway</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />

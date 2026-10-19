@@ -57,7 +57,7 @@ const DEFAULT_TRUST_PROFILE = {
         'Conducting skill development and self-employment training centers to foster economic self-reliance for women.',
     },
   ],
-  address: 'Official address will be updated soon.',
+  address: 'Nashik, Maharashtra, India (Registered office address updating soon)',
   phone: '9922271777 / 7588833127',
   email: 'ichhapurtiriddhisiddhivinayak@gmail.com',
   officeHours: 'Public desk timings will be updated soon.',

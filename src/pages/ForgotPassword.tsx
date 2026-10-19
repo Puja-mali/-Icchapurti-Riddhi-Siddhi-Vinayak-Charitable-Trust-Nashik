@@ -5,6 +5,7 @@ import { Button } from "@/src/components/common/Button";
 import { useTrust } from "@/src/context/TrustContext";
 import { authService } from "@/src/services/authService";
 import { ApiError } from "@/src/services/api";
+import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 
 export const ForgotPassword: React.FC = () => {
   const { trustProfile } = useTrust();
@@ -51,9 +52,7 @@ export const ForgotPassword: React.FC = () => {
         {/* Branding Header */}
         <div className="text-center space-y-1.5">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-[#14532d] text-white flex items-center justify-center font-serif font-bold text-sm">
-              IT
-            </div>
+            <TrustEmblem size="sm" />
             <span className="text-lg font-serif font-bold text-stone-900 tracking-tight">
               {trustName}
             </span>
@@ -82,24 +81,6 @@ export const ForgotPassword: React.FC = () => {
                   The link is valid for <strong>60 minutes</strong>. Please check your inbox and spam folder.
                 </p>
               </div>
-
-              {debugUrl && (
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-900 space-y-1">
-                  <div className="font-semibold text-amber-950 flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
-                    <span>Local Development Test Link:</span>
-                  </div>
-                  <p className="text-[11px] text-amber-800">
-                    SMTP credentials are not configured in local environment. Use this link directly:
-                  </p>
-                  <a
-                    href={debugUrl}
-                    className="block text-[11px] text-[#14532d] font-mono break-all hover:underline font-bold"
-                  >
-                    {debugUrl}
-                  </a>
-                </div>
-              )}
 
               <div className="pt-2">
                 <Link to="/login" className="block">

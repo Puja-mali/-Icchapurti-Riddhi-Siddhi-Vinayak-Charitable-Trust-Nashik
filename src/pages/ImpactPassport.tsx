@@ -762,7 +762,7 @@ export const ImpactPassport: React.FC = () => {
                       to Siddhivinayak Charitable Trust yet. Once
                       you contribute to any approved cause and the
                       payment is verified, your unique Impact Passport
-                      and immutable audit ledger will appear here
+                      and transparent donation ledger will appear here
                       automatically.
                     </p>
 
