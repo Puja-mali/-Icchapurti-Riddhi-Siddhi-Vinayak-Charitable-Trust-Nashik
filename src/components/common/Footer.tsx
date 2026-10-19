@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
   const [subscribed, setSubscribed] = useState(false);
 
   const trustName = trustProfile?.trustName || "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik";
-  const regNumber = trustProfile?.registrationDetails?.registrationNumber || "E-9389 / Nashik";
+  const regNumber = trustProfile?.registrationDetails?.registrationNumber || "E/1341";
   const address = trustProfile?.address || "7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004";
   const phone = trustProfile?.phone || "0253 6029200 / 0253 6018200";
   const email = trustProfile?.email || "contact@siddhivinayaktrust.org";

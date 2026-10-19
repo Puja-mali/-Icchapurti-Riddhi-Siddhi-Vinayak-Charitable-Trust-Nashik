@@ -128,10 +128,10 @@ export const Causes: React.FC = () => {
           backgroundImage="/activities/Community Aid Distribution Under the Trees.png"
           kicker={
             language === "mr"
-              ? "नाशिक सेवा प्रकल्प · नोंदणी क्र. E-9389"
+              ? "नाशिक सेवा प्रकल्प · नोंदणी क्र. E/1341"
               : language === "hi"
-              ? "नासिक सेवा प्रकल्प · पंजीकरण सं. E-9389"
-              : "Nashik Community Seva · Reg. E-9389 / Nashik"
+              ? "नासिक सेवा प्रकल्प · पंजीकरण सं. E/1341"
+              : "Nashik Community Seva · Reg. E/1341"
           }
           title={
             language === "mr"

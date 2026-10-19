@@ -36,6 +36,8 @@ export class RazorpayService {
       isConfigured: isRazorpayConfigured(),
       keyId: isRazorpayConfigured() ? env.RAZORPAY_KEY_ID : null,
       currency: 'INR',
+      isTestMode: true, // Razorpay is currently enforced in Test Mode for system verification
+      modeNotice: 'Razorpay Test Mode Active: Payments are processed in Test Mode. No real funds are transferred.',
     };
   }
 

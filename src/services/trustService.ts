@@ -13,7 +13,7 @@ export const normalizeTrustProfile = (raw: any): TrustProfile => {
     _id: id,
     trustName: raw.trustName || 'Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik',
     shortName: raw.shortName || 'Icchapurti Vinayak Trust',
-    subtitle: raw.subtitle || 'Reg. No. E-9389 / Nashik • Dedicated to Grassroots Social Welfare',
+    subtitle: raw.subtitle || 'Reg. No. E/1341 • Dedicated to Grassroots Social Welfare',
     description: raw.description || '',
     vision: raw.vision || '',
     mission: raw.mission || '',

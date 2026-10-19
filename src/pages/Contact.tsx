@@ -20,7 +20,7 @@ const FAQS = [
   },
   {
     q: "Do donors receive an official donation receipt?",
-    a: "Yes. Every verified contribution receives an official numbered Trust donation receipt referencing our registration number (E-9389 / Nashik). Note: The Trust does not claim Section 80G tax deductions; receipts confirm your voluntary contribution for personal and Trust accounting records.",
+    a: "Yes. Every verified contribution receives an official numbered Trust donation receipt referencing our registration number (E/1341). Note: The Trust does not claim Section 80G tax deductions; receipts confirm your voluntary contribution for personal and Trust accounting records.",
   },
   {
     q: "Can college students volunteer for NSS / academic credits?",
@@ -43,7 +43,7 @@ export const Contact: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const regNumber = trustProfile?.registrationDetails?.registrationNumber || "E-9389 / Nashik";
+  const regNumber = trustProfile?.registrationDetails?.registrationNumber || "E/1341";
   const address = trustProfile?.address || "7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004";
   const phone = trustProfile?.phone || "0253 6029200 / 0253 6018200";
   const emailAddress = trustProfile?.email || "contact@siddhivinayaktrust.org";

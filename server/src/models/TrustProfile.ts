@@ -74,7 +74,7 @@ const trustProfileSchema = new Schema<ITrustProfile>(
       type: String,
       trim: true,
       maxlength: [300, 'Subtitle cannot exceed 300 characters'],
-      default: 'Reg. No. E-9389 / Nashik • Dedicated to Grassroots Social Welfare',
+      default: 'Reg. No. E/1341 • Dedicated to Grassroots Social Welfare',
     },
     description: {
       type: String,
@@ -179,7 +179,7 @@ const trustProfileSchema = new Schema<ITrustProfile>(
     registrationDetails: {
       type: trustRegistrationDetailsSchema,
       default: () => ({
-        registrationNumber: 'E-9389 / Nashik',
+        registrationNumber: 'E/1341',
         establishedYear: '',
         taxExemption80G: '',
         fcraNumber: '',

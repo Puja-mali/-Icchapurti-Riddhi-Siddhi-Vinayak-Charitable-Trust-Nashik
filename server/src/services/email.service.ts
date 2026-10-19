@@ -140,7 +140,7 @@ export class EmailService {
   <div class="container">
     <div class="header">
       <h1>Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik</h1>
-      <p>Regd. Public Charitable Trust • Reg. No. E-9389 / Nashik • Official Trust Acknowledgment</p>
+      <p>Regd. Public Charitable Trust • Reg. No. E/1341 • Official Trust Acknowledgment</p>
     </div>
     <div class="content">
       ${bodyContent}

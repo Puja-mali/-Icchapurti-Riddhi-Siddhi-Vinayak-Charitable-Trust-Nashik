@@ -436,7 +436,7 @@ export const HeroNamaste: React.FC = () => {
       <div className="pt-2 border-t border-stone-200/80 text-[11px] sm:text-xs text-stone-600 grid grid-cols-1 xs:grid-cols-3 gap-2">
         <div className="flex items-center gap-1.5 min-w-0">
           <CheckCircle2 className="w-3.5 h-3.5 text-[#14532d] shrink-0" />
-          <span className="truncate">Reg. No. E-9389 / Nashik</span>
+          <span className="truncate">Reg. No. E/1341</span>
         </div>
         <div className="flex items-center gap-1.5 min-w-0">
           <CheckCircle2 className="w-3.5 h-3.5 text-[#14532d] shrink-0" />

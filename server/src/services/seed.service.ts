@@ -11,7 +11,7 @@ import { logger } from '../utils/logger';
 export const REAL_TRUST_PROFILE = {
   trustName: 'Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik',
   shortName: 'Icchapurti Vinayak Trust',
-  subtitle: 'Reg. No. E-9389 / Nashik • Dedicated to Grassroots Social Welfare',
+  subtitle: 'Reg. No. E/1341 • Dedicated to Grassroots Social Welfare',
   description:
     'Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik is a registered charitable trust dedicated to social welfare, educational support for underprivileged and orphan children, community healthcare, environmental conservation, senior citizen care, and women self-employment training.',
   vision:
@@ -63,7 +63,7 @@ export const REAL_TRUST_PROFILE = {
     ethicsPolicy:
       'Zero-tolerance for misrepresentation. Strict adherence to trust bylaws, transparent bookkeeping, and public accountability for every rupee received.',
   },
-  registrationNumber: 'E-9389 / Nashik',
+  registrationNumber: 'E/1341',
   panNumber: 'AAATI2734K',
   registrationDate: '2019-10-18T00:00:00.000Z',
   registeredAddress: '7, Pokar Avenue, Nandanvan Garden Apartment, Nashik, Maharashtra, India, PIN 422004',

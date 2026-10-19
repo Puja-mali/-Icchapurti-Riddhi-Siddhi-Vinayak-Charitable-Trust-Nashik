@@ -240,10 +240,10 @@ export const Navbar: React.FC = () => {
               )}
             >
               {language === "mr"
-                ? "नोंदणीकृत विश्वस्त संस्था (नोंदणी क्र. E-9389 / Nashik) • अधिकृत पावती व पारदर्शक हिशोब"
+                ? "नोंदणीकृत विश्वस्त संस्था (नोंदणी क्र. E/1341) • अधिकृत पावती व पारदर्शक हिशोब"
                 : language === "hi"
-                ? "पंजीकृत धर्मार्थ ट्रस्ट (पंजीकरण सं. E-9389 / Nashik) • अधिकृत रसीद एवं पारदर्शी हिसाब"
-                : "Regd. Public Charitable Trust (Reg. E-9389 / Nashik) • Official Receipts & Auditable Accounts"}
+                ? "पंजीकृत धर्मार्थ ट्रस्ट (पंजीकरण सं. E/1341) • अधिकृत रसीद एवं पारदर्शी हिसाब"
+                : "Regd. Public Charitable Trust (Reg. E/1341) • Official Receipts & Auditable Accounts"}
             </span>
           </div>
 
@@ -364,10 +364,10 @@ export const Navbar: React.FC = () => {
                   )}
                 >
                   {language === "mr"
-                    ? "नाशिक • नोंदणी क्र. E-9389"
+                    ? "नाशिक • नोंदणी क्र. E/1341"
                     : language === "hi"
-                    ? "नासिक • पंजीकरण सं. E-9389"
-                    : "Nashik • Reg. E-9389"}
+                    ? "नासिक • पंजीकरण सं. E/1341"
+                    : "Nashik • Reg. E/1341"}
                 </span>
                 <span
                   className={cn(
@@ -643,7 +643,7 @@ export const Navbar: React.FC = () => {
                     isTransparent ? "text-amber-300" : "text-[#14532d]"
                   )}
                 >
-                  {language === "mr" ? "नाशिक • नोंदणी क्र. E-9389" : language === "hi" ? "नासिक • पंजीकरण सं. E-9389" : "Nashik • Reg. E-9389"}
+                  {language === "mr" ? "नाशिक • नोंदणी क्र. E/1341" : language === "hi" ? "नासिक • पंजीकरण सं. E/1341" : "Nashik • Reg. E/1341"}
                 </span>
               </div>
             </div>

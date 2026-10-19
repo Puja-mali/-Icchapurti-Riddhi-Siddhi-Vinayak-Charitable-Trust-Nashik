@@ -21,6 +21,7 @@ export interface IDonation extends Document {
   paymentVerifiedAt?: Date | null;
   paymentMethod?: string | null;
   failureReason?: string | null;
+  isTestMode?: boolean;
   createdAt: Date;
   updatedAt: Date;
   // Backward compatibility getters
@@ -138,6 +139,11 @@ const donationSchema = new Schema<IDonation>(
       type: String,
       default: null,
       trim: true,
+    },
+    isTestMode: {
+      type: Boolean,
+      default: true,
+      index: true,
     },
   },
   {

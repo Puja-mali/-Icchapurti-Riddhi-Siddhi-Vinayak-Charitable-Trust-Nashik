@@ -12,7 +12,7 @@ import {
 const DEFAULT_TRUST_PROFILE = {
   trustName: 'Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik',
   shortName: 'Icchapurti Vinayak Trust',
-  subtitle: 'Reg. No. E-9389 / Nashik • Dedicated to Grassroots Social Welfare',
+  subtitle: 'Reg. No. E/1341 • Dedicated to Grassroots Social Welfare',
   description:
     'Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik is a registered charitable trust dedicated to social welfare, educational support for underprivileged and orphan children, community healthcare, environmental conservation, senior citizen care, and women self-employment training.',
   vision:
@@ -63,7 +63,7 @@ const DEFAULT_TRUST_PROFILE = {
   officeHours: 'Mon - Sat: 9:30 AM - 5:30 PM IST',
   website: 'https://siddhivinayaktrust.org',
   registrationDetails: {
-    registrationNumber: 'E-9389 / Nashik',
+    registrationNumber: 'E/1341',
     establishedYear: '',
     taxExemption80G: '',
     fcraNumber: '',

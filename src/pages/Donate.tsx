@@ -222,11 +222,27 @@ export const Donate: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10">
       {/* 1. Page Header */}
       <PageHeader
-        badge="Trust Contribution Portal • Razorpay Secure"
+        badge="Trust Contribution Portal • Razorpay Test Mode"
         badgeIcon={<ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />}
         title="Support Our Community Initiatives"
         description="Every contribution is recorded transparently in the trust database, allocated to verified program requirements, and issued an official electronic receipt."
       />
+
+      {/* Razorpay Test Mode Notice */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/90 border border-amber-300 text-xs text-amber-950 flex items-start gap-3.5 shadow-xs">
+        <Info className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+        <div className="space-y-1">
+          <p className="font-semibold text-amber-950 text-sm flex items-center gap-1.5">
+            <span>Razorpay Test Mode Active</span>
+            <span className="bg-amber-200 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-300">
+              TEST MODE ONLY
+            </span>
+          </p>
+          <p className="leading-relaxed text-amber-900">
+            Online donations are currently operating in Razorpay Test Mode for verification and prototyping. No real funds will be debited from your card or bank account. Official live payments will remain disabled until authorized by the Trust.
+          </p>
+        </div>
+      </div>
 
       {/* Gateway Status Alert if not configured */}
       {!isCheckingConfig && !isGatewayReady && (
@@ -597,8 +613,8 @@ export const Donate: React.FC = () => {
                     Official Charitable Trust Contribution Receipt
                   </span>
                 </div>
-                <span className="bg-emerald-100 text-emerald-900 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-300">
-                  VERIFIED SUCCESS
+                <span className="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-300">
+                  TEST MODE / VERIFIED
                 </span>
               </div>
 

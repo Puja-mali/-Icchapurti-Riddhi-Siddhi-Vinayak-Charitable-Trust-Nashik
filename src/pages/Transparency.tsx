@@ -89,10 +89,10 @@ export const Transparency: React.FC = () => {
         <PageHeader
           kicker={
             language === "mr"
-              ? "नोंदणीकृत सार्वजनिक विश्वस्त संस्था · नोंदणी क्र. E-9389 / Nashik"
+              ? "नोंदणीकृत सार्वजनिक विश्वस्त संस्था · नोंदणी क्र. E/1341"
               : language === "hi"
-              ? "पंजीकृत सार्वजनिक धर्मार्थ ट्रस्ट · पंजीकरण सं. E-9389 / Nashik"
-              : "Registered Public Charitable Trust · Reg. E-9389 / Nashik"
+              ? "पंजीकृत सार्वजनिक धर्मार्थ ट्रस्ट · पंजीकरण सं. E/1341"
+              : "Registered Public Charitable Trust · Reg. E/1341"
           }
           title={t.transparency.title}
           description={t.transparency.subtitle}
@@ -113,7 +113,7 @@ export const Transparency: React.FC = () => {
                 Public Accountability & Trust Stewardship
               </h2>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-xl">
-                Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik operates in strict compliance with the Maharashtra Public Trusts Act (Reg. No. E-9389 / Nashik).
+                Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik operates in strict compliance with the Maharashtra Public Trusts Act (Reg. No. E/1341).
                 All program disbursements, purchase invoices, and relief materials are recorded in official ledgers and reviewed by the Board of Trustees.
               </p>
               
@@ -139,7 +139,7 @@ export const Transparency: React.FC = () => {
                 <span>Legal & Registration Standing</span>
               </div>
               <div className="space-y-1.5 text-stone-700 text-[11px]">
-                <div><strong className="text-stone-900">Trust Reg. No:</strong> E-9389 / Nashik</div>
+                <div><strong className="text-stone-900">Trust Reg. No:</strong> E/1341</div>
                 <div><strong className="text-stone-900">Governing Act:</strong> Maharashtra Public Trusts Act</div>
                 <div><strong className="text-stone-900">PAN Number:</strong> AAATI2734K</div>
                 <div><strong className="text-stone-900">Registered Office:</strong> 7, Pokar Avenue, Nandanvan Garden Apt, Nashik 422004</div>

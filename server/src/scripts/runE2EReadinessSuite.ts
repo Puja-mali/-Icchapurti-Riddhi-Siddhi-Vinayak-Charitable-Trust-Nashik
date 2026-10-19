@@ -154,7 +154,7 @@ async function runE2ESuite() {
     recordCheck('1', 'GET /api/trust responds with 200', trust.status === 200);
     const trustData = trust.body?.data?.trust;
     recordCheck('1', 'Trust profile specifies Nashik location', trustData?.address?.includes('Nashik'), trustData?.address);
-    recordCheck('1', 'Trust profile contains official Reg. No: E-9389', trustData?.registrationDetails?.registrationNumber?.includes('E-9389'));
+    recordCheck('1', 'Trust profile contains official Reg. No: E/1341', trustData?.registrationDetails?.registrationNumber?.includes('E/1341'));
     recordCheck('1', 'Trust profile contains NO academic prototype notices', !trustData?.academicNote && !trustData?.address?.includes('Simulated'));
 
     // Trustees public

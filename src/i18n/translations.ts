@@ -603,7 +603,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     trustName: "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik",
     trustShort: "Icchapurti Vinayak Trust",
     tagline: "Serving our community with compassion, responsibility and transparency.",
-    academicNotice: "Regd. Public Charitable Trust • E-9389 / Nashik",
+    academicNotice: "Regd. Public Charitable Trust • E/1341",
     demoDataBadge: "Verified Record",
     navHome: "Home",
     navAbout: "About Trust",
@@ -616,7 +616,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     navDashboard: "Dashboard",
     ctaDonate: "Donate Now",
     ctaSeeWork: "See Our Work",
-    heroNotice: "Regd. Public Charitable Trust • Reg. No. E-9389 / Nashik",
+    heroNotice: "Regd. Public Charitable Trust • Reg. No. E/1341",
 
     whyTrustTitle: "Why people trust us",
     whyTrustSubtitle:
@@ -677,7 +677,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       trustName: "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik",
       trustShort: "Icchapurti Vinayak Trust",
       tagline: "Serving our community with compassion, responsibility and transparency.",
-      academicNotice: "Regd. Public Charitable Trust • E-9389 / Nashik",
+      academicNotice: "Regd. Public Charitable Trust • E/1341",
       demoDataBadge: "Verified Record",
       save: "Save",
       cancel: "Cancel",
@@ -732,7 +732,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     hero: {
-      badge: "Regd. Public Charitable Trust • Reg. No. E-9389 / Nashik",
+      badge: "Regd. Public Charitable Trust • Reg. No. E/1341",
       welcomeTitle: "Empowering Communities Through Transparent Charitable Action",
       welcomeSubtitle:
         "A registered public charitable trust dedicated to education for needy and orphan children, healthcare camps, food and clothing relief, senior citizen care, and tree plantation with auditable impact records.",
@@ -828,7 +828,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       upi: "UPI / QR Code / GPay / PhonePe",
       card: "Debit / Credit Card",
       netBanking: "Net Banking (All Indian Banks)",
-      taxDeductibleBadge: "Official Receipt with Reg. No. E-9389 / Nashik",
+      taxDeductibleBadge: "Official Receipt with Reg. No. E/1341",
       proceedPayment: "Proceed to Secure Payment",
       receiptPromise: "Instant digital receipt & SMS confirmation issued.",
       successTitle: "Thank You for Your Sacred Contribution!",
@@ -1378,7 +1378,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     hero: {
-      badge: "नोंदणीकृत सार्वजनिक धर्मादाय ट्रस्ट • नोंदणी क्र. E-9389 / Nashik",
+      badge: "नोंदणीकृत सार्वजनिक धर्मादाय ट्रस्ट • नोंदणी क्र. E/1341",
       welcomeTitle: "पारदर्शक समाजकार्यातून वंचित घटकांना सशक्त बनवणारे व्यासपीठ",
       welcomeSubtitle:
         "गरजू व अनाथ मुलांचे शिक्षण, आरोग्य शिबिरे, अन्न व वस्त्र मदत, ज्येष्ठ नागरिक सेवा आणि वृक्षारोपणासाठी समर्पित नोंदणीकृत धर्मादाय ट्रस्ट. सर्व सेवाकार्यांचा पडताळणीयोग्य हिशोब.",
@@ -1474,7 +1474,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       upi: "युपीआय / क्यूआर कोड / फोनपे / गुगल पे",
       card: "डेबिट किंवा क्रेडिट कार्ड",
       netBanking: "नेट बँकिंग",
-      taxDeductibleBadge: "अधिकृत नोंदणी क्रमांक E-9389 / नाशिक",
+      taxDeductibleBadge: "अधिकृत नोंदणी क्रमांक E/1341",
       proceedPayment: "सुरक्षित पेमेंटसाठी पुढे जा",
       receiptPromise: "अधिकृत डिजिटल पावती आणि एसएमएस तात्काळ पाठवला जाईल.",
       successTitle: "आपल्या उदार देणगीबद्दल मनःपूर्वक धन्यवाद!",
@@ -2002,7 +2002,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
     },
 
     hero: {
-      badge: "पंजीकृत सार्वजनिक धर्मार्थ ट्रस्ट • पंजीकरण सं. E-9389 / Nashik",
+      badge: "पंजीकृत सार्वजनिक धर्मार्थ ट्रस्ट • पंजीकरण सं. E/1341",
       welcomeTitle: "पारदर्शी सामाजिक कार्यों से जरूरतमंदों को सशक्त बनाना",
       welcomeSubtitle:
         "जरूरतमंद एवं अनाथ बच्चों की शिक्षा, स्वास्थ्य शिविर, अन्न व वस्त्र सहायता, वरिष्ठ नागरिक सेवा और पर्यावरण संरक्षण के लिए समर्पित पंजीकृत चैरिटेबल ट्रस्ट।",
@@ -2092,7 +2092,7 @@ export const translations: Record<SupportedLanguage, TranslationSchema> = {
       upi: "यूपीआई / क्यूआर कोड / फोनपे / गूगल पे",
       card: "डेबिट या क्रेडिट कार्ड",
       netBanking: "नेट बैंकिंग",
-      taxDeductibleBadge: "अधिकृत पंजीकरण क्रमांक E-9389 / नाशिक",
+      taxDeductibleBadge: "अधिकृत पंजीकरण क्रमांक E/1341",
       proceedPayment: "सुरक्षित भुगतान के लिए आगे बढ़ें",
       receiptPromise: "डिजिटल रसीद और एसएमएस तुरंत भेजा जाएगा।",
       successTitle: "आपके उदार दान के लिए हार्दिक धन्यवाद!",

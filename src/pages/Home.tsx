@@ -439,7 +439,7 @@ export const Home: React.FC = () => {
               <div className="pt-4 mt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
                 <span className="flex items-center gap-1 font-mono text-[11px] text-[#14532d]">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-                  <span>{trustProfile?.registrationDetails?.registrationNumber || "Reg. No. E-9389 / Nashik"}</span>
+                  <span>{trustProfile?.registrationDetails?.registrationNumber || "Reg. No. E/1341"}</span>
                 </span>
                 <Link to="/impact-passport" className="text-[#14532d] font-semibold hover:underline flex items-center gap-1">
                   <span>{t.openPassport}</span>

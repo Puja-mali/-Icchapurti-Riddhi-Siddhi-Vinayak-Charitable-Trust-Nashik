@@ -6,7 +6,7 @@
  *   npx tsx server/src/scripts/seedRealTrustData.ts
  *
  * This script seeds authentic, verified Trust data into MongoDB:
- * - Official Trust Profile (Name, Reg. E-9389 / Nashik, Form 10AC Address, Contacts)
+ * - Official Trust Profile (Name, Reg. E/1341, Form 10AC Address, Contacts)
  * - 13 Documented Trustees & Members (Exact roles & names)
  * - Verified Causes & Support Drives (School support, 5 children education, food, clothing, medical camp, senior citizen care)
  * - Authentic Volunteer Roles in Nashik
@@ -29,7 +29,7 @@ import { logger } from '../utils/logger';
 const REAL_TRUST_PROFILE = {
   trustName: 'Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik',
   shortName: 'Icchapurti Vinayak Trust',
-  subtitle: 'Reg. No. E-9389 / Nashik • Dedicated to Grassroots Social Welfare',
+  subtitle: 'Reg. No. E/1341 • Dedicated to Grassroots Social Welfare',
   description:
     'Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik is a registered charitable trust dedicated to social welfare, educational support for underprivileged and orphan children, community healthcare, environmental conservation, senior citizen care, and women self-employment training.',
   vision:
@@ -80,7 +80,7 @@ const REAL_TRUST_PROFILE = {
   officeHours: 'Mon - Sat: 9:30 AM - 5:30 PM IST',
   website: 'https://siddhivinayaktrust.org',
   registrationDetails: {
-    registrationNumber: 'E-9389 / Nashik',
+    registrationNumber: 'E/1341',
     establishedYear: '',
     taxExemption80G: '',
     fcraNumber: '',

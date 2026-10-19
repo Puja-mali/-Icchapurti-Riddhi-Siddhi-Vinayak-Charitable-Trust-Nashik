@@ -87,6 +87,7 @@ export class DonationController {
         purpose: validated.purpose || (cause ? `Support for: ${cause.title}` : 'General Trust Corpus'),
         status: 'CREATED',
         paymentStatus: 'CREATED',
+        isTestMode: true,
       });
 
       // Create corresponding order in Razorpay
@@ -282,48 +283,99 @@ export class DonationController {
 
       const paymentMethod = paymentDetails.method || 'online';
 
-      // 8. Idempotent Atomic Update: Only proceed if status is not already PAID/SUCCESS
+      // 8. Idempotent Atomic Update & Transaction Support: Only proceed if status is not already PAID/SUCCESS
       const now = new Date();
-      const updatedDonation = await Donation.findOneAndUpdate(
-        {
-          _id: donation._id,
-          status: { $nin: ['PAID', 'SUCCESS'] },
-        },
-        {
-          $set: {
-            status: 'PAID',
-            paymentStatus: 'PAID',
-            razorpayPaymentId: validated.razorpayPaymentId,
-            razorpaySignature: validated.razorpaySignature,
-            paymentMethod,
-            paidAt: now,
-            paymentVerifiedAt: now,
-            receiptNumber,
-            receiptUrl: `/api/donations/receipt/${receiptNumber}`,
-            failureReason: null,
-          },
-        },
-        { new: true }
-      ).populate('causeId', 'title slug');
+      let updatedDonation: any = null;
 
-      if (!updatedDonation) {
-        // Was verified in a concurrent request or webhook
-        const current = await Donation.findById(donation._id).populate('causeId', 'title slug');
-        sendSuccess(res, { donation: current }, 'Donation already verified.');
-        return;
-      }
+      let session: mongoose.ClientSession | null = null;
+      let transactionCommitted = false;
 
-      // 9. Atomically increment Cause raisedAmount and donorCount if tied to a cause
-      if (updatedDonation.causeId) {
-        await Cause.findByIdAndUpdate(updatedDonation.causeId, {
-          $inc: {
-            raisedAmount: updatedDonation.amount,
-            donorCount: 1,
+      try {
+        session = await mongoose.startSession();
+        session.startTransaction();
+
+        updatedDonation = await Donation.findOneAndUpdate(
+          {
+            _id: donation._id,
+            status: { $nin: ['PAID', 'SUCCESS'] },
           },
-        });
-        logger.info(
-          `Cause ${updatedDonation.causeId} raisedAmount incremented by ₹${updatedDonation.amount}`
-        );
+          {
+            $set: {
+              status: 'PAID',
+              paymentStatus: 'PAID',
+              razorpayPaymentId: validated.razorpayPaymentId,
+              razorpaySignature: validated.razorpaySignature,
+              paymentMethod,
+              paidAt: now,
+              paymentVerifiedAt: now,
+              receiptNumber,
+              receiptUrl: `/api/donations/receipt/${receiptNumber}`,
+              failureReason: null,
+              isTestMode: true,
+            },
+          },
+          { new: true, session }
+        ).populate('causeId', 'title slug');
+
+        if (updatedDonation && updatedDonation.causeId) {
+          await Cause.findByIdAndUpdate(
+            updatedDonation.causeId,
+            {
+              $inc: {
+                raisedAmount: updatedDonation.amount,
+                donorCount: 1,
+              },
+            },
+            { session }
+          );
+        }
+
+        await session.commitTransaction();
+        transactionCommitted = true;
+      } catch (txErr: any) {
+        // Multi-document transaction not supported (e.g. standalone Mongo) or failed
+        if (session && !transactionCommitted) {
+          try {
+            await session.abortTransaction();
+          } catch (_) {}
+        }
+
+        // Safe atomic fallback without transaction session
+        updatedDonation = await Donation.findOneAndUpdate(
+          {
+            _id: donation._id,
+            status: { $nin: ['PAID', 'SUCCESS'] },
+          },
+          {
+            $set: {
+              status: 'PAID',
+              paymentStatus: 'PAID',
+              razorpayPaymentId: validated.razorpayPaymentId,
+              razorpaySignature: validated.razorpaySignature,
+              paymentMethod,
+              paidAt: now,
+              paymentVerifiedAt: now,
+              receiptNumber,
+              receiptUrl: `/api/donations/receipt/${receiptNumber}`,
+              failureReason: null,
+              isTestMode: true,
+            },
+          },
+          { new: true }
+        ).populate('causeId', 'title slug');
+
+        if (updatedDonation && updatedDonation.causeId) {
+          await Cause.findByIdAndUpdate(updatedDonation.causeId, {
+            $inc: {
+              raisedAmount: updatedDonation.amount,
+              donorCount: 1,
+            },
+          });
+        }
+      } finally {
+        if (session) {
+          await session.endSession().catch(() => {});
+        }
       }
 
       logger.info(
@@ -460,6 +512,7 @@ export class DonationController {
                   receiptNumber,
                   receiptUrl: `/api/donations/receipt/${receiptNumber}`,
                   failureReason: null,
+                  isTestMode: true,
                 },
               },
               { new: true }

@@ -93,7 +93,7 @@ export const HumanImpactStory: React.FC = () => {
                   </div>
                   <div className="text-xs font-bold text-[#14532d] font-mono mt-1 flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#14532d] shrink-0" />
-                    <span>E-9389 / Nashik</span>
+                    <span>E/1341</span>
                   </div>
                 </div>
               </div>
