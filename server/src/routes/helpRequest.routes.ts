@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { HelpRequestController } from '../controllers/helpRequest.controller';
 import { authenticate, authorize, optionalAuthenticate } from '../middleware/auth';
 import { validateBody, validateQuery } from '../middleware/validate';
+import { publicFormLimiter, spamProtection } from '../middleware/spamProtection';
 import {
   createHelpRequestSchema,
   updateHelpRequestAdminSchema,
@@ -86,6 +87,8 @@ router.patch(
  */
 router.post(
   '/',
+  publicFormLimiter,
+  spamProtection,
   optionalAuthenticate,
   validateBody(createHelpRequestSchema),
   HelpRequestController.createHelpRequest

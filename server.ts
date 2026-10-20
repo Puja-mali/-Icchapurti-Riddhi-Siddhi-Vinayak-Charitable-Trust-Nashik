@@ -6,6 +6,7 @@ import { app as apiApp } from './server/src/app';
 import { connectDatabase, disconnectDatabase } from './server/src/config/database';
 import { autoSeedTrustData } from './server/src/services/seed.service';
 import { logger } from './server/src/utils/logger';
+import { getCanonicalBaseUrl, generateRobotsTxt, generateSitemapXml } from './server/src/utils/seoService';
 
 async function startServer() {
   const app = express();
@@ -13,6 +14,26 @@ async function startServer() {
 
   // Trust proxy for reverse proxies (e.g. Cloud Run / ALB - single upstream hop)
   app.set('trust proxy', 1);
+
+  // Dynamic SEO sitemap and robots endpoints
+  app.get('/robots.txt', (req: Request, res: Response) => {
+    const baseUrl = getCanonicalBaseUrl(req);
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(generateRobotsTxt(baseUrl));
+  });
+
+  app.get('/sitemap.xml', async (req: Request, res: Response) => {
+    const baseUrl = getCanonicalBaseUrl(req);
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    try {
+      const xml = await generateSitemapXml(baseUrl);
+      res.send(xml);
+    } catch {
+      res.status(500).send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
+    }
+  });
 
   // Route all /api/* requests strictly to the backend Express application
   app.use((req: Request, res: Response, next) => {

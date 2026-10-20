@@ -20,6 +20,7 @@ import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
+import { SEO } from "@/src/components/common/SEO";
 
 export const Volunteer: React.FC = () => {
   const { t } = useLanguage();
@@ -28,6 +29,10 @@ export const Volunteer: React.FC = () => {
   const [roles, setRoles] = useState<VolunteerRole[]>([]);
   const [isLoadingRoles, setIsLoadingRoles] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Anti-spam states
+  const [botTrap, setBotTrap] = useState("");
+  const [formRenderTime] = useState<number>(() => Date.now());
 
   const [selectedRole, setSelectedRole] =
     useState<VolunteerRole | null>(null);
@@ -94,7 +99,9 @@ export const Volunteer: React.FC = () => {
         isCollegeStudent,
         collegeName,
         motivation,
-      });
+        website_url: botTrap,
+        _form_render_time: formRenderTime,
+      } as any);
 
       setSubmitted(true);
     } catch (err: any) {
@@ -108,7 +115,13 @@ export const Volunteer: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#f7f1e5]">
+    <>
+      <SEO
+        title="Volunteer Fellowship & Community Seva"
+        description="Volunteer with Icchapurti Riddhi Siddhi Vinayak Charitable Trust in Nashik. Join grassroots healthcare camps, student tutoring, and elder care."
+        canonicalPath="/volunteer"
+      />
+      <div className="relative min-h-screen overflow-hidden bg-[#f7f1e5]">
       {/* =========================================================
           TRADITIONAL BACKGROUND DECORATION
       ========================================================= */}
@@ -466,6 +479,20 @@ export const Volunteer: React.FC = () => {
               onSubmit={handleSubmitApplication}
               className="space-y-4 text-xs sm:text-sm"
             >
+              {/* Accessible honeypot trap */}
+              <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
+                <label htmlFor="vol_website_url">Leave this field blank</label>
+                <input
+                  id="vol_website_url"
+                  type="text"
+                  name="website_url"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={botTrap}
+                  onChange={(e) => setBotTrap(e.target.value)}
+                />
+              </div>
+
               {submitError && (
                 <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
                   {submitError}
@@ -610,5 +637,6 @@ export const Volunteer: React.FC = () => {
         </Modal>
       )}
     </div>
+    </>
   );
 };

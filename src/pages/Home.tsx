@@ -34,6 +34,7 @@ import { publicService, PublicHomeData } from "@/src/services/publicService";
 import { formatEventDate } from "@/src/services/eventService";
 import { useTrust } from "@/src/context/TrustContext";
 import { useLanguage } from "@/src/context/LanguageContext";
+import { SEO } from "@/src/components/common/SEO";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -132,7 +133,13 @@ export const Home: React.FC = () => {
   ];
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden pb-16 sm:pb-20">
+    <>
+      <SEO
+        title="Official Portal | Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik"
+        description="Official website of Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik (Reg. No. E/1341). Transparent social welfare, education kits, medical relief, and elder care."
+        canonicalPath="/"
+      />
+      <div className="w-full max-w-full overflow-x-hidden pb-16 sm:pb-20">
       {/* 1. HERO SECTION & WELCOME SEVA HUB - Full-Bleed 100vh Hero Background Video */}
       <section className="relative w-full h-screen min-h-[100dvh] min-h-[640px] flex items-center justify-center overflow-hidden bg-stone-950">
         <video
@@ -1080,5 +1087,6 @@ export const Home: React.FC = () => {
         </section>
       </div>
     </div>
-  );
+  </>
+);
 };

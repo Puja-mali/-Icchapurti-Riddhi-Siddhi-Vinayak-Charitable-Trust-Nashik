@@ -19,6 +19,9 @@ import notificationRoutes from './notification.routes';
 import uploadRoutes from './upload.routes';
 import invitationRoutes from './invitation.routes';
 import pushRoutes from './push.routes';
+import contactRoutes from './contact.routes';
+import faqRoutes from './faq.routes';
+import testimonialRoutes from './testimonial.routes';
 
 const router = Router();
 
@@ -43,5 +46,8 @@ router.use('/volunteers', volunteerRoutes);
 router.use('/help-requests', helpRequestRoutes);
 router.use('/trust', trustRoutes);
 router.use('/trustees', trusteeRoutes);
+router.use('/contact', contactRoutes);
+router.use('/faqs', faqRoutes);
+router.use('/testimonials', testimonialRoutes);
 
 export default router;

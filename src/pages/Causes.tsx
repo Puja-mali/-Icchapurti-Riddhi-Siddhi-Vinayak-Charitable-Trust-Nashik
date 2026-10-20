@@ -19,6 +19,7 @@ import { PageHeader } from "@/src/components/common/PageHeader";
 import { getLocalizedCategory } from "@/src/lib/localization";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useKumbhMode } from "@/src/context/KumbhModeContext";
+import { SEO } from "@/src/components/common/SEO";
 
 const CATEGORIES: ("All" | CauseCategory)[] = [
   "All",
@@ -116,7 +117,13 @@ export const Causes: React.FC = () => {
   ]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#faf8f5]">
+    <>
+      <SEO
+        title="Trust Causes & Charitable Programs"
+        description="Support transparent educational, healthcare, senior citizen care, and community assistance programs in Nashik by Icchapurti Riddhi Siddhi Vinayak Charitable Trust."
+        canonicalPath="/causes"
+      />
+      <div className="relative min-h-screen overflow-hidden bg-[#faf8f5]">
       {/* Subtle warm stone architectural texture overlay */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d6c9b3_1px,transparent_1px)] [background-size:24px_24px] opacity-25" />
 
@@ -378,6 +385,7 @@ export const Causes: React.FC = () => {
         </div>
       </div>
     </div>
+  </>
   );
 };
 

@@ -40,6 +40,11 @@ const BlogPost = React.lazy(() => import("@/src/pages/BlogPost").then((m) => ({ 
 const AcceptInvitation = React.lazy(() => import("@/src/pages/AcceptInvitation").then((m) => ({ default: m.AcceptInvitation })));
 const ForgotPassword = React.lazy(() => import("@/src/pages/ForgotPassword").then((m) => ({ default: m.ForgotPassword })));
 const ResetPassword = React.lazy(() => import("@/src/pages/ResetPassword").then((m) => ({ default: m.ResetPassword })));
+const PrivacyPolicy = React.lazy(() => import("@/src/pages/PrivacyPolicy").then((m) => ({ default: m.PrivacyPolicy })));
+const Terms = React.lazy(() => import("@/src/pages/Terms").then((m) => ({ default: m.Terms })));
+const DonationStatus = React.lazy(() => import("@/src/pages/DonationStatus").then((m) => ({ default: m.DonationStatus })));
+const NotFound = React.lazy(() => import("@/src/pages/NotFound").then((m) => ({ default: m.NotFound })));
+import { CookieConsent } from "@/src/components/common/CookieConsent";
 
 import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 
@@ -113,8 +118,13 @@ const AnimatedRoutes: React.FC = () => {
                 </ProtectedRoute>
               }
             />
-            {/* Catch-all fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/donation-status" element={<DonationStatus />} />
+            <Route path="/donation-confirmation" element={<DonationStatus />} />
+            {/* Custom 404 handler */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </React.Suspense>
       </motion.div>
@@ -138,6 +148,7 @@ export default function App() {
                   </main>
                   <Footer />
                   <Chatbot />
+                  <CookieConsent />
                 </div>
               </BrowserRouter>
             </TrustProvider>

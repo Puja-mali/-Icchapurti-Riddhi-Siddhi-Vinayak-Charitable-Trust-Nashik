@@ -27,11 +27,30 @@ import { SectionHeader } from "@/src/components/common/SectionHeader";
 import { Button } from "@/src/components/common/Button";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useTrust } from "@/src/context/TrustContext";
+import { SEO } from "@/src/components/common/SEO";
+import { apiClient } from "@/src/services/api";
 
 export const About: React.FC = () => {
   const { language } = useLanguage();
   const { trustProfile, trustees, loading, error, refreshAll } = useTrust();
 const shouldReduceMotion = useReducedMotion() ?? false;
+
+  const [testimonials, setTestimonials] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    apiClient
+      .get<{ testimonials: any[] }>('/testimonials')
+      .then((res) => {
+        if (isMounted && res.data?.testimonials) {
+          setTestimonials(res.data.testimonials);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const trustName =
     trustProfile?.trustName ||
@@ -83,7 +102,13 @@ const shouldReduceMotion = useReducedMotion() ?? false;
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#f5f0e7] text-stone-800">
+    <>
+      <SEO
+        title="About Us & Board of Trustees"
+        description="Learn about Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik (Reg. No. E/1341). Vision, mission, board of trustees, and community healthcare initiatives."
+        canonicalPath="/about"
+      />
+      <div className="relative min-h-screen overflow-hidden bg-[#f5f0e7] text-stone-800">
       {/* Ambient editorial background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <motion.div
@@ -511,10 +536,56 @@ const shouldReduceMotion = useReducedMotion() ?? false;
               </Link>
             </div>
           </div>
+        {/* TESTIMONIALS SECTION (Shown only when verified testimonials are published by Admin) */}
+        {testimonials.length > 0 && (
+          <section className="space-y-6 pt-6">
+            <div className="text-center space-y-2 max-w-2xl mx-auto">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#14532d] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                Community Reflections
+              </span>
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-stone-900">
+                {language === "mr" ? "समुदाय आणि लाभार्थ्यांचे अनुभव" : language === "hi" ? "समुदाय और लाभार्थियों के अनुभव" : "Words from the Community"}
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600">
+                Authentic reflections shared by beneficiaries, field volunteers, and local residents.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {testimonials.map((item, idx) => {
+                let quoteText = item.quote;
+                if (language === 'mr' && item.quoteMr) quoteText = item.quoteMr;
+                else if (language === 'hi' && item.quoteHi) quoteText = item.quoteHi;
+
+                return (
+                  <div
+                    key={item._id || idx}
+                    className="p-5 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-3 flex flex-col justify-between"
+                  >
+                    <p className="text-xs sm:text-sm text-stone-700 italic leading-relaxed">
+                      &quot;{quoteText}&quot;
+                    </p>
+                    <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
+                      <div>
+                        <div className="font-bold text-stone-900 text-xs">{item.authorName}</div>
+                        <div className="text-[11px] text-stone-500">{item.roleOrLocation}</div>
+                      </div>
+                      <span className="text-[10px] font-semibold uppercase text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        {item.category}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         </motion.section>
       </div>
     </div>
-  );
+  </>
+);
 };
 
 function getServiceIcon(index: number): React.ReactNode {

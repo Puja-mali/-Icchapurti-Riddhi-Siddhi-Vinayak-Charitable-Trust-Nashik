@@ -31,6 +31,7 @@ import { Modal } from "@/src/components/common/Modal";
 import { PageHeader } from "@/src/components/common/PageHeader";
 import { formatCurrency } from "@/src/lib/utils";
 import { useLanguage } from "@/src/context/LanguageContext";
+import { SEO } from "@/src/components/common/SEO";
 
 const PRESET_AMOUNTS = [500, 1000, 2500, 5000, 10000];
 
@@ -220,7 +221,13 @@ export const Donate: React.FC = () => {
   const isGatewayReady = Boolean(paymentConfig?.isConfigured);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10">
+    <>
+      <SEO
+        title="Contribute & Support Social Causes"
+        description="Make an auditable, voluntary donation to Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik (Reg. No. E/1341). UPI, Cards, and Net Banking supported."
+        canonicalPath="/donate"
+      />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10">
       {/* 1. Page Header */}
       <PageHeader
         badge="Trust Contribution Portal • Official"
@@ -679,5 +686,7 @@ export const Donate: React.FC = () => {
         </Modal>
       )}
     </div>
+    </>
   );
 };
+

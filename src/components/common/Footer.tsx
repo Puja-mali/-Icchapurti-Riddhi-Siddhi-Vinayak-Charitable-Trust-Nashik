@@ -211,6 +211,22 @@ export const Footer: React.FC = () => {
             <span>Reg. No: {regNumber}</span>
             <span>•</span>
             <span className="text-emerald-400/90 font-medium">Nashik, Maharashtra</span>
+            <span>•</span>
+            <Link to="/privacy" className="text-stone-400 hover:text-white underline transition-colors">
+              Privacy Policy
+            </Link>
+            <span>•</span>
+            <Link to="/terms" className="text-stone-400 hover:text-white underline transition-colors">
+              Terms & Conditions
+            </Link>
+            <span>•</span>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('sct_open_cookie_preferences'))}
+              className="text-stone-400 hover:text-white underline transition-colors cursor-pointer"
+            >
+              Cookie Choices
+            </button>
           </div>
 
           {/* Language selector in footer */}

@@ -1,0 +1,37 @@
+# Robots.txt for Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik
+# Reg. No. E/1341 • Public Charitable Trust
+
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /causes
+Allow: /causes/*
+Allow: /donate
+Allow: /impact-passport
+Allow: /volunteer
+Allow: /kumbh-seva
+Allow: /request-help
+Allow: /transparency
+Allow: /gallery
+Allow: /blog
+Allow: /blog/*
+Allow: /events
+Allow: /events/*
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+Allow: /donation-status
+
+# Private & Administrative Endpoints
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/*
+Disallow: /dashboard
+Disallow: /volunteer-portal
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /accept-invitation
+
+Sitemap: /sitemap.xml

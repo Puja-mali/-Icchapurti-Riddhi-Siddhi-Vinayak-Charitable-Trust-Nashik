@@ -14,6 +14,9 @@ import { useLanguage } from "@/src/context/LanguageContext";
 import { useTrust } from "@/src/context/TrustContext";
 import { TRUST_BRAND } from "@/src/config/trustBrand";
 
+import { SEO } from "@/src/components/common/SEO";
+import { apiClient } from "@/src/services/api";
+
 const FAQS = [
   {
     q: "What is the Impact Passport and how does it prevent fund leakage?",
@@ -34,15 +37,60 @@ const FAQS = [
 ];
 
 export const Contact: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { trustProfile } = useTrust();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [subject, setSubject] = useState("");
   const [category, setCategory] = useState("General Query");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [dbFaqs, setDbFaqs] = useState<any[]>([]);
+
+  // Anti-spam states
+  const [botTrap, setBotTrap] = useState("");
+  const [formRenderTime] = useState<number>(() => Date.now());
+
+  // Load published FAQs from backend
+  React.useEffect(() => {
+    let isMounted = true;
+    apiClient
+      .get<{ faqs: any[] }>('/faqs')
+      .then((res) => {
+        if (isMounted && res.data?.faqs && res.data.faqs.length > 0) {
+          setDbFaqs(res.data.faqs);
+        }
+      })
+      .catch(() => {
+        // Fall back gracefully to built-in FAQS
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Compute active FAQ items according to current language
+  const activeFaqList = React.useMemo(() => {
+    if (dbFaqs.length > 0) {
+      return dbFaqs.map((f) => {
+        let q = f.question;
+        let a = f.answer;
+        if (language === 'mr' && f.questionMr) {
+          q = f.questionMr;
+          a = f.answerMr || f.answer;
+        } else if (language === 'hi' && f.questionHi) {
+          q = f.questionHi;
+          a = f.answerHi || f.answer;
+        }
+        return { q, a };
+      });
+    }
+    return FAQS;
+  }, [dbFaqs, language]);
 
   const regNumber = trustProfile?.registrationDetails?.registrationNumber || TRUST_BRAND.registrationNumber;
   const address =
@@ -58,21 +106,46 @@ export const Contact: React.FC = () => {
       ? trustProfile.officeHours
       : "Public desk timings will be updated soon.";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    try {
+      await apiClient.post('/contact', {
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        subject: `[${category}] ${subject.trim()}`,
+        message: message.trim(),
+        website_url: botTrap,
+        _form_render_time: formRenderTime,
+      });
+
+      setSubmitted(true);
       setName("");
       setEmail("");
+      setPhone("");
       setSubject("");
       setMessage("");
-    }, 500);
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Failed to dispatch inquiry. Please check your network and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-12">
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-3">
+    <>
+      <SEO
+        title="Contact Trust Secretariat & Help Desk"
+        description="Connect with the trustees and administrative secretariat of Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik (Reg. No. E/1341). Verified assistance, audits, and inquiries."
+        canonicalPath="/contact"
+        faqItems={activeFaqList.map((f) => ({ question: f.q, answer: f.a }))}
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-12">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-[#14532d] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-2xs">
             Trust Liaison Desk
@@ -121,9 +194,29 @@ export const Contact: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+              {/* Accessible Anti-spam Honeypot Trap - hidden from assistive technologies */}
+              <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
+                <label htmlFor="website_url">Leave this field blank</label>
+                <input
+                  id="website_url"
+                  type="text"
+                  name="website_url"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={botTrap}
+                  onChange={(e) => setBotTrap(e.target.value)}
+                />
+              </div>
+
+              {errorMessage && (
+                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 leading-relaxed">
+                  {errorMessage}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="font-semibold text-stone-700 block mb-1">Your Name</label>
+                  <label className="font-semibold text-stone-700 block mb-1">Your Name *</label>
                   <input
                     type="text"
                     required
@@ -135,7 +228,7 @@ export const Contact: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-stone-700 block mb-1">Your Email</label>
+                  <label className="font-semibold text-stone-700 block mb-1">Your Email *</label>
                   <input
                     type="email"
                     required
@@ -148,6 +241,17 @@ export const Contact: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="font-semibold text-stone-700 block mb-1">Phone Number (Optional)</label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="e.g. +91 99222 71777"
+                    className="w-full px-3.5 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all"
+                  />
+                </div>
+
                 <div>
                   <label className="font-semibold text-stone-700 block mb-1">Inquiry Topic</label>
                   <select
@@ -162,22 +266,22 @@ export const Contact: React.FC = () => {
                     <option value="Educational Support">Educational & Student Support</option>
                   </select>
                 </div>
-
-                <div>
-                  <label className="font-semibold text-stone-700 block mb-1">Subject</label>
-                  <input
-                    type="text"
-                    required
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    placeholder="Brief summary of inquiry..."
-                    className="w-full px-3.5 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all"
-                  />
-                </div>
               </div>
 
               <div>
-                <label className="font-semibold text-stone-700 block mb-1">Message</label>
+                <label className="font-semibold text-stone-700 block mb-1">Subject *</label>
+                <input
+                  type="text"
+                  required
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="Brief summary of inquiry..."
+                  className="w-full px-3.5 py-2.5 bg-stone-50/70 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d] focus:ring-1 focus:ring-[#14532d]/20 transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-stone-700 block mb-1">Message *</label>
                 <textarea
                   rows={4}
                   required
@@ -188,11 +292,17 @@ export const Contact: React.FC = () => {
                 />
               </div>
 
-              <div className="pt-2 flex items-center justify-end flex-wrap gap-2">
+              <div className="pt-2 flex items-center justify-between flex-wrap gap-2">
+                <span className="text-[11px] text-stone-500">
+                  Protected by anti-spam verification. By sending, you accept our{' '}
+                  <a href="/privacy" className="text-[#14532d] underline">Privacy Policy</a>.
+                </span>
                 <Button
                   type="submit"
                   size="md"
                   variant="primary"
+                  disabled={isSubmitting}
+                  isLoading={isSubmitting}
                   className="bg-[#14532d] hover:bg-[#0f4023] text-white px-5 py-2.5"
                   leftIcon={<Send className="w-3.5 h-3.5" />}
                 >
@@ -298,7 +408,7 @@ export const Contact: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          {FAQS.map((faq, idx) => {
+          {activeFaqList.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
               <div
@@ -328,5 +438,6 @@ export const Contact: React.FC = () => {
         </div>
       </div>
     </div>
-  );
+  </>
+);
 };

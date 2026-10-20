@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { VolunteerController } from '../controllers/volunteer.controller';
 import { authenticate, authorize } from '../middleware/auth';
 
+import { publicFormLimiter, spamProtection } from '../middleware/spamProtection';
+
 const router = Router();
 
 // ============================================================================
@@ -20,7 +22,7 @@ router.get('/roles', VolunteerController.getPublicRoles);
  * @desc    Public volunteer application submission
  * @access  Public
  */
-router.post('/apply', VolunteerController.submitApplication);
+router.post('/apply', publicFormLimiter, spamProtection, VolunteerController.submitApplication);
 
 // ============================================================================
 // AUTHENTICATED VOLUNTEER ROUTES (Private, user-isolated)

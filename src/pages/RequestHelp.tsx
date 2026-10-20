@@ -33,6 +33,7 @@ import {
   HelpRequestStatus,
 } from "@/src/types";
 import { formatDate } from "@/src/lib/utils";
+import { SEO } from "@/src/components/common/SEO";
 
 export const RequestHelp: React.FC = () => {
   const { t } = useLanguage();

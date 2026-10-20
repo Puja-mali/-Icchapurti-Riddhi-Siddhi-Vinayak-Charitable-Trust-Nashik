@@ -16,3 +16,5 @@ export * from './BlogPost';
 export * from './TransparencyReport';
 export * from './Notification';
 export * from './Invitation';
+export * from './Faq';
+export * from './Testimonial';
