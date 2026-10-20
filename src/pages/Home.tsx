@@ -141,20 +141,20 @@ export const Home: React.FC = () => {
       />
       <div className="w-full max-w-full overflow-x-hidden pb-16 sm:pb-20">
       {/* 1. HERO SECTION & WELCOME SEVA HUB - Full-Bleed 100vh Hero Background Video */}
-      <section className="relative w-full h-screen min-h-[100dvh] min-h-[640px] flex items-center justify-center overflow-hidden bg-stone-950">
-        <video
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-        >
-          <source src="/assets/aistudio/video/gemini_generated_video_8fc7097b.mp4" type="video/mp4" />
-          <source src="assets/aistudio/video/gemini_generated_video_8fc7097b.mp4" type="video/mp4" />
-          <source src="public/assets/aistudio/video/gemini_generated_video_8fc7097b.mp4" type="video/mp4" />
-        </video>
-
+     <section className="relative w-full h-screen min-h-[100dvh] min-h-[640px] flex items-center justify-center overflow-hidden bg-stone-950">
+  <video
+    className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+    autoPlay
+    muted
+    loop
+    playsInline
+    preload="auto"
+  >
+    <source
+      src="/assets/aistudio/gemini_generated_video_8fc7097b.mp4"
+      type="video/mp4"
+    />
+  </video>
         {/* Multi-tier Ambient Darkening & Contrast Overlay Layers */}
         <div className="absolute inset-0 bg-stone-950/40" />
         <div className="absolute inset-0 bg-gradient-to-r from-stone-950/90 via-stone-950/55 to-stone-950/25" />
