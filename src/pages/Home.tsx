@@ -171,27 +171,33 @@ export const Home: React.FC = () => {
               <MapPin className="w-3.5 h-3.5 text-amber-300" />
               <span className="font-medium text-stone-200">Nashik, Maharashtra</span>
               <span className="text-stone-500">•</span>
-              <span className="text-amber-300 font-semibold">{t.academicNotice}</span>
+              <span className="text-amber-400 font-semibold">{t.academicNotice}</span>
             </div>
 
-            <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-7xl font-serif font-bold leading-[1.08] tracking-tight">
-              {language === "mr" ? (
-                <>
-                  सेवा, विश्वास आणि
-                  <span className="block text-amber-300">समाजासाठी योगदान</span>
-                </>
-              ) : language === "hi" ? (
-                <>
-                  सेवा, विश्वास और
-                  <span className="block text-amber-300">समाज के लिए समर्पण</span>
-                </>
-              ) : (
-                <>
-                  Service, Trust and
-                  <span className="block text-amber-300">Community Upliftment</span>
-                </>
-              )}
-            </h1>
+           <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold leading-tight tracking-tight text-amber-400">
+  {language === "mr" ? (
+    <>
+      सेवा, विश्वास आणि
+      <span className="block text-amber-400">
+        समाजासाठी योगदान
+      </span>
+    </>
+  ) : language === "hi" ? (
+    <>
+      सेवा, विश्वास और
+      <span className="block text-amber-400">
+        समाज के लिए समर्पण
+      </span>
+    </>
+  ) : (
+    <>
+      Service, Trust and
+      <span className="block text-amber-400">
+        Community Upliftment
+      </span>
+    </>
+  )}
+</h1>
 
             <p className="mt-4 sm:mt-5 max-w-xl text-sm sm:text-base lg:text-lg text-stone-100/90 leading-relaxed font-sans">
               <span className="font-semibold block text-white/95">{t.trustName}</span>
