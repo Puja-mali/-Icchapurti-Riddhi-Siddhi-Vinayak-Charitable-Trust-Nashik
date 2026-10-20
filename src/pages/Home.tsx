@@ -148,7 +148,7 @@ export const Home: React.FC = () => {
     muted
     loop
     playsInline
-    preload="auto"
+    preload="metadata"
   >
     <source
       src="/assets/aistudio/gemini_generated_video_8fc7097b.mp4"
