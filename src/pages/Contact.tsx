@@ -15,7 +15,7 @@ import { useTrust } from "@/src/context/TrustContext";
 import { TRUST_BRAND } from "@/src/config/trustBrand";
 
 import { SEO } from "@/src/components/common/SEO";
-import { apiClient } from "@/src/services/api";
+import { api } from "@/src/services/api";
 
 const FAQS = [
   {
@@ -58,13 +58,13 @@ export const Contact: React.FC = () => {
   // Load published FAQs from backend
   React.useEffect(() => {
     let isMounted = true;
-    apiClient
-      .get<{ faqs: any[] }>('/faqs')
-      .then((res) => {
-        if (isMounted && res.data?.faqs && res.data.faqs.length > 0) {
-          setDbFaqs(res.data.faqs);
-        }
-      })
+    api
+    .get<{ faqs: any[] }>('/faqs')
+  .then((res) => {
+    if (isMounted && res?.faqs && res.faqs.length > 0) {
+      setDbFaqs(res.faqs);
+    }
+  })
       .catch(() => {
         // Fall back gracefully to built-in FAQS
       });
@@ -112,7 +112,7 @@ export const Contact: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await apiClient.post('/contact', {
+    await api.post('/contact', {
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim(),

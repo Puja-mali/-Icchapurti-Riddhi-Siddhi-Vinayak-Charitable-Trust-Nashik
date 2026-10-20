@@ -28,7 +28,7 @@ import { Button } from "@/src/components/common/Button";
 import { useLanguage } from "@/src/context/LanguageContext";
 import { useTrust } from "@/src/context/TrustContext";
 import { SEO } from "@/src/components/common/SEO";
-import { apiClient } from "@/src/services/api";
+import { api } from "@/src/services/api";
 
 export const About: React.FC = () => {
   const { language } = useLanguage();
@@ -39,12 +39,12 @@ const shouldReduceMotion = useReducedMotion() ?? false;
 
   React.useEffect(() => {
     let isMounted = true;
-    apiClient
-      .get<{ testimonials: any[] }>('/testimonials')
+   api
+  .get<{ testimonials: any[] }>('/testimonials')
       .then((res) => {
-        if (isMounted && res.data?.testimonials) {
-          setTestimonials(res.data.testimonials);
-        }
+        if (isMounted && res?.testimonials) {
+  setTestimonials(res.testimonials);
+}
       })
       .catch(() => {});
     return () => {

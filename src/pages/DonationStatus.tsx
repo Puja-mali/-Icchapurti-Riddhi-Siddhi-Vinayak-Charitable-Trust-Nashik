@@ -42,7 +42,7 @@ export const DonationStatus: React.FC = () => {
       setIsLoading(false);
       try {
         if (receiptNumber) {
-          const rec = await DonationService.getReceipt(receiptNumber);
+          const rec = await DonationService.getReceiptByNumber(receiptNumber)
           setDonation(rec);
         } else if (donationId) {
           const rec = await DonationService.getDonationById(donationId);
@@ -122,7 +122,8 @@ export const DonationStatus: React.FC = () => {
                     Official Receipt
                   </div>
                   <div className="text-xs font-mono font-bold text-stone-900">
-                    {donation.receiptNumber || `SCT-REC-${donation._id.slice(-8).toUpperCase()}`}
+                   {donation.receiptNumber ||
+  `SCT-REC-${(donation._id || donation.id || "PENDING").slice(-8).toUpperCase()}`}
                   </div>
                 </div>
               </div>
