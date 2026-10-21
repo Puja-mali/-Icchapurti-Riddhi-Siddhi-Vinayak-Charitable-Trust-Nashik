@@ -44,7 +44,11 @@ export const BlogModal: React.FC<BlogModalProps> = ({
         setAuthor(postToEdit.author || "Siddhivinayak Trust");
         setCoverImage(postToEdit.coverImage || "");
         setExcerpt(postToEdit.excerpt || "");
-        setContent(postToEdit.content || "");
+        setContent(
+          Array.isArray(postToEdit.content)
+            ? postToEdit.content.join("\n\n")
+            : postToEdit.content || ""
+        );
         setTags(Array.isArray(postToEdit.tags) ? postToEdit.tags.join(", ") : "");
         setIsPublished(!!postToEdit.isPublished);
         setIsFeatured(!!postToEdit.isFeatured);

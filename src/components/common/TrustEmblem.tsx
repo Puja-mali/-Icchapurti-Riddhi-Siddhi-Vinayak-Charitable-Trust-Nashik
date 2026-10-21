@@ -38,13 +38,13 @@ export const TrustEmblem: React.FC<TrustEmblemProps> = ({
   const [imageError, setImageError] = useState(false);
   const activeLogo = logoSrc || TRUST_LOGO_PATH;
 
-  // Prominently enlarged, responsive dimension styles preserving the natural 1600:1280 aspect ratio
+  // Natural, balanced Trust emblem sizing preserving the original 1600:1280 (1.25) aspect ratio
   const sizeClasses = {
-    xs: "h-9 sm:h-10 w-auto",
-    sm: "h-12 sm:h-14 w-auto",
-    md: "h-16 sm:h-20 w-auto",
-    lg: "h-20 sm:h-26 md:h-28 w-auto",
-    xl: "h-28 sm:h-36 md:h-44 w-auto",
+    xs: "h-7 sm:h-8 w-auto",
+    sm: "h-8 sm:h-9 w-auto",
+    md: "h-10 sm:h-11 md:h-12 w-auto",
+    lg: "h-14 sm:h-16 w-auto",
+    xl: "h-20 sm:h-24 w-auto",
   }[size];
 
   const accessibleAlt = altText || TRUST_BRAND.altText || TRUST_BRAND.name;

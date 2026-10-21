@@ -132,6 +132,7 @@ export const AdminDashboard: React.FC = () => {
   // Real MongoDB Help Requests State
   const [helpRequests, setHelpRequests] = useState<HelpRequest[]>([]);
   const [isHelpLoading, setIsHelpLoading] = useState<boolean>(false);
+  const [helpError, setHelpError] = useState<string | null>(null);
   const [helpSearch, setHelpSearch] = useState<string>("");
   const [debouncedHelpSearch, setDebouncedHelpSearch] = useState<string>("");
 

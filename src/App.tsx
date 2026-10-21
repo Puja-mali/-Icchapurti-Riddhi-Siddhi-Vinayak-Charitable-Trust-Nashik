@@ -141,9 +141,9 @@ export default function App() {
             <TrustProvider>
               <BrowserRouter>
                 <ScrollToTop />
-                <div className="flex flex-col min-h-screen bg-[#faf8f5] text-stone-900 font-sans w-full max-w-full overflow-x-hidden">
+                <div className="flex flex-col min-h-screen bg-[#faf8f5] text-stone-900 font-sans w-full max-w-full overflow-x-clip">
                   <Navbar />
-                  <main id="main-content" className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden focus:outline-none">
+                  <main id="main-content" className="flex-1 flex flex-col w-full max-w-full overflow-x-clip focus:outline-none">
                     <AnimatedRoutes />
                   </main>
                   <Footer />

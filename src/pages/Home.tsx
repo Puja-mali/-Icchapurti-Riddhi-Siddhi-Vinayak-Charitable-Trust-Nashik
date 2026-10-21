@@ -160,7 +160,12 @@ export const Home: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-stone-950/90 via-stone-950/55 to-stone-950/25" />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-stone-950/40" />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-28 sm:pt-32 pb-16 flex items-center">
+        <div
+          className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pb-16 flex items-center"
+          style={{
+            paddingTop: "calc(var(--header-height, 4.25rem) + 1.5rem)",
+          }}
+        >
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}

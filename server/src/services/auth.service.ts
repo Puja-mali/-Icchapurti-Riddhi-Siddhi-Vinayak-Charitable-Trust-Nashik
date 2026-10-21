@@ -153,16 +153,21 @@ export class AuthService {
 
     // Strict Portal Separation:
     // When authenticating via the public supporter portal ('public'), ADMIN and STAFF
-    // credentials are strictly rejected with the identical generic 401 error to avoid
-    // disclosing administrative account existence.
+    // credentials are not permitted for normal login; inform the user clearly to use the administrative login.
     if (input.portal === 'public' && (user.role === 'ADMIN' || user.role === 'STAFF')) {
-      throw new AppError('Invalid email or password credentials.', 401);
+      throw new AppError(
+        'This account is registered for Administrative / Staff access. Please use the Administrative Sign-In page.',
+        403
+      );
     }
 
     // When authenticating via the private secretariat portal ('admin'), non-administrative
-    // accounts (DONOR, VOLUNTEER) are rejected with the identical generic 401 error.
+    // accounts (DONOR, VOLUNTEER) are rejected.
     if (input.portal === 'admin' && (user.role === 'DONOR' || user.role === 'VOLUNTEER')) {
-      throw new AppError('Invalid email or password credentials.', 401);
+      throw new AppError(
+        'This account is registered as a Supporter / Volunteer. Please use the public supporter login page.',
+        403
+      );
     }
 
     const payload: AuthUserPayload = {

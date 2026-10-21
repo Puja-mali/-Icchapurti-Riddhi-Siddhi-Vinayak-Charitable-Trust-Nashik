@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
   const { isKumbhMode } = useKumbhMode();
   const shouldReduceMotion = useReducedMotion();
   const { user } = useAuth();
-  const { fontSize, setFontSize, highContrast, toggleHighContrast } = useTheme();
+  const { highContrast, toggleHighContrast } = useTheme();
 
   const isHome = location.pathname === "/";
 
@@ -256,76 +256,8 @@ export const Navbar: React.FC = () => {
               </span>
             </div>
 
-            {/* Right: Accessible Font Size Switcher & Language Switcher */}
+            {/* Right: Language Switcher */}
             <div className="flex items-center gap-2 sm:gap-3 text-xs shrink-0">
-              {/* Accessible Font Size Options */}
-              <div className="flex items-center gap-1">
-                <span className={cn("hidden sm:inline text-[11px] font-medium", isTransparent ? "text-stone-300" : "text-emerald-200")}>
-                  {language === "mr" ? "आकार:" : language === "hi" ? "आकार:" : "Size:"}
-                </span>
-                <div
-                  className={cn(
-                    "inline-flex rounded-full p-0.5 border backdrop-blur-sm transition-colors",
-                    isTransparent
-                      ? "border-white/20 bg-black/40 text-stone-200"
-                      : "border-emerald-800 bg-[#0b2315] text-stone-200"
-                  )}
-                  role="group"
-                  aria-label="Accessible font size options"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setFontSize("normal")}
-                    className={cn(
-                      "px-2 py-0.5 rounded-full text-xs transition-all cursor-pointer",
-                      fontSize === "normal"
-                        ? isTransparent
-                          ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
-                          : "bg-[#14532d] text-white font-bold shadow-xs"
-                        : "text-stone-300 hover:text-white"
-                    )}
-                    title="Normal text size (100%)"
-                    aria-label="Normal text size"
-                    aria-pressed={fontSize === "normal"}
-                  >
-                    A
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFontSize("large")}
-                    className={cn(
-                      "px-2 py-0.5 rounded-full text-xs transition-all cursor-pointer",
-                      fontSize === "large"
-                        ? isTransparent
-                          ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
-                          : "bg-[#14532d] text-white font-bold shadow-xs"
-                        : "text-stone-300 hover:text-white"
-                    )}
-                    title="Large text size for senior citizens (115%)"
-                    aria-label="Large text size for senior citizens"
-                    aria-pressed={fontSize === "large"}
-                  >
-                    A+
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFontSize("xlarge")}
-                    className={cn(
-                      "px-2 py-0.5 rounded-full text-xs transition-all cursor-pointer",
-                      fontSize === "xlarge"
-                        ? isTransparent
-                          ? "bg-amber-400 text-stone-950 font-bold shadow-xs"
-                          : "bg-[#14532d] text-white font-bold shadow-xs"
-                        : "text-stone-300 hover:text-white"
-                    )}
-                    title="Extra Large text size for weak eyesight (130%)"
-                    aria-label="Extra Large text size for weak eyesight"
-                    aria-pressed={fontSize === "xlarge"}
-                  >
-                    A++
-                  </button>
-                </div>
-              </div>
 
               {/* Language Selector */}
               <div className="flex items-center gap-1">
@@ -722,78 +654,6 @@ export const Navbar: React.FC = () => {
               </div>
             </div>
 
-            {/* Accessible Font Size Selector in Mobile Drawer */}
-            <div
-              className={cn(
-                "p-3 rounded-xl border flex items-center justify-between",
-                isTransparent
-                  ? "bg-white/5 border-white/10"
-                  : "bg-stone-50 border-stone-200"
-              )}
-            >
-              <span className={cn("text-xs font-semibold", isTransparent ? "text-stone-300" : "text-stone-700")}>
-                {language === "mr" ? "अक्षर आकार / Font Size:" : language === "hi" ? "अक्षर आकार / Font Size:" : "Text Size:"}
-              </span>
-              <div
-                className={cn(
-                  "inline-flex rounded-full border p-0.5 text-xs",
-                  isTransparent
-                    ? "border-white/20 bg-black/40"
-                    : "border-stone-300 bg-white"
-                )}
-                role="group"
-                aria-label="Mobile font size"
-              >
-                <button
-                  type="button"
-                  onClick={() => setFontSize("normal")}
-                  className={cn(
-                    "px-3 py-1 rounded-full text-xs transition-colors cursor-pointer font-bold",
-                    fontSize === "normal"
-                      ? isTransparent
-                        ? "bg-amber-400 text-stone-950"
-                        : "bg-[#14532d] text-white"
-                      : "text-stone-600 hover:text-stone-900"
-                  )}
-                  aria-pressed={fontSize === "normal"}
-                  title="Normal text size (100%)"
-                >
-                  A
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFontSize("large")}
-                  className={cn(
-                    "px-3 py-1 rounded-full text-xs transition-colors cursor-pointer font-bold",
-                    fontSize === "large"
-                      ? isTransparent
-                        ? "bg-amber-400 text-stone-950"
-                        : "bg-[#14532d] text-white"
-                      : "text-stone-600 hover:text-stone-900"
-                  )}
-                  aria-pressed={fontSize === "large"}
-                  title="Large text size (115%)"
-                >
-                  A+
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFontSize("xlarge")}
-                  className={cn(
-                    "px-3 py-1 rounded-full text-xs transition-colors cursor-pointer font-bold",
-                    fontSize === "xlarge"
-                      ? isTransparent
-                        ? "bg-amber-400 text-stone-950"
-                        : "bg-[#14532d] text-white"
-                      : "text-stone-600 hover:text-stone-900"
-                  )}
-                  aria-pressed={fontSize === "xlarge"}
-                  title="Extra Large text size (130%)"
-                >
-                  A++
-                </button>
-              </div>
-            </div>
 
             {/* Language Selector in Mobile Drawer */}
             <div
