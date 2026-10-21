@@ -39,21 +39,34 @@ export class EmailService {
     }
 
     const host =
-      (process.env.SMTP_HOST || process.env.EMAIL_HOST || process.env.SMTP_SERVER || '').trim() ||
+      (process.env.SMTP_HOST || process.env.EMAIL_HOST || process.env.MAIL_HOST || process.env.SMTP_SERVER || '').trim() ||
       env.EMAIL_HOST;
     const user =
-      (process.env.SMTP_USER || process.env.EMAIL_USER || process.env.SMTP_USERNAME || process.env.EMAIL_USERNAME || '').trim() ||
+      (process.env.SMTP_USER || process.env.EMAIL_USER || process.env.MAIL_USERNAME || process.env.MAIL_USER || process.env.SMTP_USERNAME || process.env.EMAIL_USERNAME || '').trim() ||
       env.EMAIL_USER;
     let pass =
-      (process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS || '').trim() ||
+      (process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS || process.env.MAIL_PASSWORD || process.env.MAIL_PASS || '').trim() ||
       env.EMAIL_PASSWORD;
-    if (pass && pass.replace(/\s+/g, '').length === 16) {
+
+    // Clean quotes and remove internal spacing for 16-character Google App Passwords
+    pass = pass.replace(/^["']|["']$/g, '').trim();
+    if (pass.replace(/\s+/g, '').length === 16) {
       pass = pass.replace(/\s+/g, '');
     }
-    const resolvedHost = host || (user && user.includes('@gmail.com') ? 'smtp.gmail.com' : 'smtp.gmail.com');
-    const portRaw = process.env.SMTP_PORT || process.env.EMAIL_PORT;
-    const port = portRaw ? parseInt(portRaw, 10) : env.EMAIL_PORT || 587;
-    const secure = port === 465 || process.env.SMTP_SECURE === 'true' || process.env.EMAIL_SECURE === 'true';
+
+    const isGmailService =
+      (process.env.SMTP_SERVICE || process.env.EMAIL_SERVICE || '').toLowerCase() === 'gmail' ||
+      (user && (user.toLowerCase().endsWith('@gmail.com') || user.toLowerCase().endsWith('@googlemail.com')));
+
+    const resolvedHost = host || (isGmailService ? 'smtp.gmail.com' : 'smtp.gmail.com');
+    const portRaw = process.env.SMTP_PORT || process.env.EMAIL_PORT || process.env.MAIL_PORT;
+    let port = portRaw ? parseInt(portRaw, 10) : env.EMAIL_PORT || 587;
+    if (isNaN(port) || port <= 0) {
+      port = 587;
+    }
+
+    // Port 465 is implicit TLS (SSL). Port 587 uses explicit STARTTLS.
+    const secure = port === 465;
 
     try {
       const transportConfig: any = {
@@ -70,12 +83,11 @@ export class EmailService {
         greetingTimeout: 8000,
         socketTimeout: 15000,
         tls: {
-          rejectUnauthorized: env.isProduction,
-          minVersion: 'TLSv1.2',
+          rejectUnauthorized: false,
         },
       };
 
-      if (port === 587) {
+      if (port === 587 || port === 25) {
         transportConfig.requireTLS = true;
       }
 
@@ -97,11 +109,11 @@ export class EmailService {
 
     if (!isEmailConfigured()) {
       logger.info(
-        `[EMAIL SERVICE] Skipped delivery (SMTP credentials not configured in server/.env). To: ${to}, Subject: "${subject}"`
+        `[EMAIL SERVICE] Skipped delivery (SMTP credentials not configured in environment variables). To: ${to}, Subject: "${subject}"`
       );
       return {
         success: false,
-        reason: 'CODE VERIFIED — LIVE EMAIL DELIVERY NOT TESTED (SMTP credentials not configured)',
+        reason: 'SMTP credentials not configured in environment variables (SMTP_USER / SMTP_PASS)',
       };
     }
 
@@ -114,8 +126,17 @@ export class EmailService {
         };
       }
 
+      const senderEmail =
+        (process.env.SMTP_FROM || process.env.EMAIL_FROM || process.env.MAIL_FROM_ADDRESS || process.env.MAIL_FROM || '').trim() ||
+        (process.env.SMTP_USER || process.env.EMAIL_USER || process.env.MAIL_USERNAME || '').trim() ||
+        env.EMAIL_FROM;
+
+      const fromName =
+        (process.env.EMAIL_FROM_NAME || process.env.MAIL_FROM_NAME || '').trim() ||
+        env.EMAIL_FROM_NAME;
+
       const info = await transporter.sendMail({
-        from: `"${env.EMAIL_FROM_NAME}" <${env.EMAIL_FROM}>`,
+        from: `"${fromName}" <${senderEmail}>`,
         to,
         subject,
         html,

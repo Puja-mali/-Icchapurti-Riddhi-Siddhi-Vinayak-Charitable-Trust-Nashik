@@ -191,8 +191,8 @@ export const authService = {
   /**
    * Request password reset email for forgotten credentials
    */
-  async forgotPassword(email: string): Promise<{ success: boolean; message: string; debugResetUrl?: string; emailDelivered?: boolean; deliveryDiagnostic?: string }> {
-    return api.post<{ success: boolean; message: string; debugResetUrl?: string; emailDelivered?: boolean; deliveryDiagnostic?: string }>('/auth/forgot-password', {
+  async forgotPassword(email: string): Promise<{ success: boolean; message: string }> {
+    return api.post<{ success: boolean; message: string }>('/auth/forgot-password', {
       email: email.trim().toLowerCase(),
     });
   },

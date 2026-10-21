@@ -344,19 +344,21 @@ export class AuthService {
   public static async forgotPassword(
     email: string,
     clientOrigin?: string
-  ): Promise<{ success: boolean; message: string; debugResetUrl?: string; emailDelivered?: boolean; deliveryDiagnostic?: string }> {
+  ): Promise<{ success: boolean; message: string }> {
     const cleanEmail = (email || '').toLowerCase().trim();
     if (!cleanEmail || !cleanEmail.includes('@')) {
       throw new AppError('A valid email address is required.', 400);
     }
 
+    const genericResponse = {
+      success: true,
+      message: 'If an account is associated with this email address, password reset instructions will be sent. Please check your inbox and spam folder.',
+    };
+
     const user = await User.findOne({ email: cleanEmail });
     if (!user || user.isActive === false) {
       // Return identical generic response to prevent user enumeration attacks
-      return {
-        success: true,
-        message: 'If an account exists with this email address, password reset instructions have been sent to your inbox.',
-      };
+      return genericResponse;
     }
 
     // Generate cryptographic 32-byte hex token
@@ -373,18 +375,20 @@ export class AuthService {
       },
     });
 
-    // Dynamically resolve public website base URL (prioritize request origin, then RENDER_EXTERNAL_URL / CLIENT_URL)
+    // Dynamically resolve canonical deployed public website base URL
     let baseUrl = '';
-    if (clientOrigin && !clientOrigin.includes('localhost')) {
-      baseUrl = clientOrigin.replace(/\/+$/, '');
-    } else if (process.env.RENDER_EXTERNAL_URL) {
-      baseUrl = process.env.RENDER_EXTERNAL_URL.replace(/\/+$/, '');
-    } else if (process.env.CLIENT_URL && !process.env.CLIENT_URL.includes('localhost')) {
-      baseUrl = process.env.CLIENT_URL.replace(/\/+$/, '');
-    } else if (env.CLIENT_URL && !env.CLIENT_URL.includes('localhost')) {
-      baseUrl = env.CLIENT_URL.replace(/\/+$/, '');
+    const renderExternalUrl = (process.env.RENDER_EXTERNAL_URL || '').trim().replace(/\/+$/, '');
+    const clientEnvUrl = (process.env.CLIENT_URL || env.CLIENT_URL || '').trim().replace(/\/+$/, '');
+    const origin = (clientOrigin || '').trim().replace(/\/+$/, '');
+
+    if (renderExternalUrl && !renderExternalUrl.includes('localhost')) {
+      baseUrl = renderExternalUrl;
+    } else if (clientEnvUrl && !clientEnvUrl.includes('localhost')) {
+      baseUrl = clientEnvUrl;
+    } else if (origin && !origin.includes('localhost')) {
+      baseUrl = origin;
     } else {
-      baseUrl = (clientOrigin || env.CLIENT_URL || 'http://localhost:3000').replace(/\/+$/, '');
+      baseUrl = origin || clientEnvUrl || 'http://localhost:3000';
     }
 
     const resetUrl = `${baseUrl}/reset-password?token=${rawToken}`;
@@ -399,22 +403,15 @@ export class AuthService {
 
     if (!emailResult.success) {
       logger.warn(
-        `[SECURITY] Password reset email could not be delivered to ${user.email}. Diagnostic: ${emailResult.reason || emailResult.error || 'SMTP delivery failure'}. Ensure SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS are set in Render environment variables.`
+        `[AUTH SERVICE] Password reset email could not be delivered to ${user.email}. Diagnostic: ${emailResult.reason || emailResult.error || 'SMTP delivery failure'}. Check SMTP credentials in Render environment variables.`
       );
     } else {
-      logger.info(`[SECURITY] Password reset email successfully dispatched to ${user.email}. MessageId: ${emailResult.messageId}`);
+      logger.info(`[AUTH SERVICE] Password reset email successfully dispatched to ${user.email}. MessageId: ${emailResult.messageId}`);
     }
 
     logger.info(`[SECURITY] Password reset token generated for user ${user.email}. Expires in ${expiresInMinutes}m.`);
 
-    return {
-      success: true,
-      message: 'If an account exists with this email address, password reset instructions have been sent to your inbox.',
-      emailDelivered: emailResult.success,
-      ...(!emailResult.success && emailResult.reason ? { deliveryDiagnostic: emailResult.reason } : {}),
-      // Provide debug reset URL when SMTP is unconfigured or in non-production for verifiable testing
-      ...(!env.isProduction || !emailResult.success ? { debugResetUrl: resetUrl } : {}),
-    };
+    return genericResponse;
   }
 
   /**

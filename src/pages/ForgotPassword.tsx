@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Loader2, ShieldCheck, KeyRound } from "lucide-react";
+import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
 import { useTrust } from "@/src/context/TrustContext";
 import { authService } from "@/src/services/authService";
@@ -18,7 +18,6 @@ export const ForgotPassword: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [debugUrl, setDebugUrl] = useState<string | null>(null);
 
   const trustName = trustProfile?.trustName || "Icchapurti Riddhi Siddhi Vinayak Charitable Trust, Nashik";
 
@@ -35,16 +34,13 @@ export const ForgotPassword: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await authService.forgotPassword(cleanEmail);
+      await authService.forgotPassword(cleanEmail);
       setIsSubmitted(true);
-      if (response?.debugResetUrl) {
-        setDebugUrl(response.debugResetUrl);
-      }
     } catch (err: any) {
       if (err instanceof ApiError) {
         setErrorMessage(err.message);
       } else {
-        setErrorMessage(err?.message || "Unable to send password reset request. Please try again.");
+        setErrorMessage(err?.message || "Unable to process password reset request. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -79,34 +75,15 @@ export const ForgotPassword: React.FC = () => {
               <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-950 space-y-2">
                 <div className="flex items-center gap-2 font-bold text-sm text-emerald-900">
                   <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Password Reset Request Received</span>
+                  <span>Password Reset Request Submitted</span>
                 </div>
                 <p className="text-xs text-emerald-800 leading-relaxed">
-                  If an active account is registered with <strong className="font-mono text-emerald-950">{email}</strong>, a secure single-use password reset link has been dispatched to your inbox.
+                  If an account exists with the email address <strong className="font-mono text-emerald-950">{email}</strong>, password reset instructions will be sent.
                 </p>
                 <p className="text-[11px] text-emerald-700">
-                  The link is valid for <strong>60 minutes</strong>. Please check your inbox and spam folder.
+                  Please check your inbox and spam folder. Reset links are valid for <strong>60 minutes</strong>. If you do not receive an email, please verify your address or contact the Trust Secretariat.
                 </p>
               </div>
-
-              {debugUrl && (
-                <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-md text-amber-950 text-xs space-y-2">
-                  <div className="flex items-center gap-1.5 font-bold text-amber-900">
-                    <KeyRound className="w-4 h-4 text-amber-700 shrink-0" />
-                    <span>Testing & Verification Access Link</span>
-                  </div>
-                  <p className="text-amber-800 text-[11px] leading-relaxed">
-                    For local testing and verification without SMTP delay, you can proceed directly using the generated single-use reset token:
-                  </p>
-                  <a
-                    href={debugUrl}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#14532d] text-white hover:bg-[#0f4023] font-semibold text-xs shadow-2xs cursor-pointer"
-                  >
-                    <span>Proceed to Reset Password</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
-                </div>
-              )}
 
               <div className="pt-2">
                 <Link to={backTo} className="block">

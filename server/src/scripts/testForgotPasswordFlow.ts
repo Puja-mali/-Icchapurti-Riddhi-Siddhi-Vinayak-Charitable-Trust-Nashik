@@ -86,12 +86,15 @@ async function runTests() {
     assert(donorResult.success === true, 'Donor forgot password returns success');
     assert(
       typeof donorResult.message === 'string' && donorResult.message.length > 0,
-      'Donor forgot password returns friendly confirmation message'
+      'Donor forgot password returns generic privacy-safe confirmation message'
     );
     assert(
-      donorResult.debugResetUrl?.includes('https://icchapurti-trust.onrender.com'),
-      'Reset link uses deployed client origin, not localhost',
-      donorResult.debugResetUrl
+      (donorResult as any).debugResetUrl === undefined,
+      'SECURITY VERIFIED: No debugResetUrl returned in production/standard API response'
+    );
+    assert(
+      (donorResult as any).resetToken === undefined,
+      'SECURITY VERIFIED: No raw reset token exposed in API response'
     );
 
     // Verify token was stored hashed in database
@@ -107,29 +110,38 @@ async function runTests() {
     const adminResult = await AuthService.forgotPassword(testAdminEmail, 'https://icchapurti-trust.onrender.com');
     assert(adminResult.success === true, 'Admin forgot password returns success');
     assert(
-      adminResult.debugResetUrl?.includes('https://icchapurti-trust.onrender.com'),
-      'Admin reset link uses deployed client origin',
-      adminResult.debugResetUrl
+      (adminResult as any).debugResetUrl === undefined,
+      'SECURITY VERIFIED: Admin API response contains no debug link or token'
     );
 
     const refreshedAdmin = await User.findById(adminUser._id).select('+resetPasswordToken +resetPasswordExpires');
     assert(Boolean(refreshedAdmin?.resetPasswordToken), 'Reset password token hash stored on admin document');
 
     console.log('\n--- Test 3: Token Validation API ---');
-    // Extract raw token from debugResetUrl
-    const url = new URL(donorResult.debugResetUrl!);
-    const rawToken = url.searchParams.get('token')!;
-    assert(Boolean(rawToken && rawToken.length === 64), 'Raw token is a 64-character hex string (32 cryptographic bytes)');
+    // Generate known single-use test tokens and hash them into test user documents
+    const rawDonorToken = crypto.randomBytes(32).toString('hex');
+    const donorHash = crypto.createHash('sha256').update(rawDonorToken).digest('hex');
+    await User.findByIdAndUpdate(donorUser._id, {
+      resetPasswordToken: donorHash,
+      resetPasswordExpires: new Date(Date.now() + 60 * 60 * 1000),
+    });
 
-    const validateResult = await AuthService.validateResetToken(rawToken);
+    const rawAdminToken = crypto.randomBytes(32).toString('hex');
+    const adminHash = crypto.createHash('sha256').update(rawAdminToken).digest('hex');
+    await User.findByIdAndUpdate(adminUser._id, {
+      resetPasswordToken: adminHash,
+      resetPasswordExpires: new Date(Date.now() + 60 * 60 * 1000),
+    });
+
+    assert(Boolean(rawDonorToken && rawDonorToken.length === 64), 'Raw token is a 64-character hex string (32 cryptographic bytes)');
+
+    const validateResult = await AuthService.validateResetToken(rawDonorToken);
     assert(validateResult.valid === true, 'validateResetToken reports token is valid');
     assert(validateResult.email.includes('***@'), 'validateResetToken returns masked email for privacy');
     assert(validateResult.role === 'DONOR', 'validateResetToken identifies correct user role (DONOR)');
 
     // Validate admin token
-    const adminUrl = new URL(adminResult.debugResetUrl!);
-    const adminRawToken = adminUrl.searchParams.get('token')!;
-    const adminValidateResult = await AuthService.validateResetToken(adminRawToken);
+    const adminValidateResult = await AuthService.validateResetToken(rawAdminToken);
     assert(adminValidateResult.valid === true, 'Admin validateResetToken reports token is valid');
     assert(adminValidateResult.role === 'ADMIN', 'Admin validateResetToken identifies ADMIN role');
 
@@ -145,7 +157,7 @@ async function runTests() {
 
     console.log('\n--- Test 5: Reset Password Execution ---');
     const newDonorPassword = 'NewSecurePassword@2026';
-    await AuthService.resetPassword(rawToken, newDonorPassword);
+    await AuthService.resetPassword(rawDonorToken, newDonorPassword);
 
     // Verify donor can authenticate with new password
     const loginResult = await AuthService.login({
@@ -172,7 +184,7 @@ async function runTests() {
     console.log('\n--- Test 6: Single-Use Token Enforcement ---');
     let reusedRejected = false;
     try {
-      await AuthService.resetPassword(rawToken, 'AnotherPassword@999');
+      await AuthService.resetPassword(rawDonorToken, 'AnotherPassword@999');
     } catch (err: any) {
       reusedRejected = true;
       assert(err.statusCode === 400, 'Reused token rejected with HTTP 400');
@@ -181,7 +193,7 @@ async function runTests() {
 
     console.log('\n--- Test 7: Admin Password Reset Execution ---');
     const newAdminPassword = 'NewAdminSecret@2026!';
-    await AuthService.resetPassword(adminRawToken, newAdminPassword);
+    await AuthService.resetPassword(rawAdminToken, newAdminPassword);
 
     // Verify admin can authenticate with new password via admin portal
     const adminLoginResult = await AuthService.login({
