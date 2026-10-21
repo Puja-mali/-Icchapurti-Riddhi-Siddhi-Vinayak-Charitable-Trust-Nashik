@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 import { Donation } from '../models/Donation';
 import { Cause } from '../models/Cause';
 import { RazorpayService } from '../services/razorpay.service';
@@ -76,7 +77,8 @@ export class DonationController {
       }
 
       // Create internal initial donation record (status: CREATED, paymentStatus: CREATED)
-      const donation = await Donation.create({
+      let donation;
+      const donationPayload = {
         donorId: req.user ? new mongoose.Types.ObjectId(req.user._id) : null,
         donorName: validated.donorName,
         donorEmail: validated.donorEmail,
@@ -85,10 +87,40 @@ export class DonationController {
         currency: validated.currency || 'INR',
         causeId: cause ? cause._id : null,
         purpose: validated.purpose || (cause ? `Support for: ${cause.title}` : 'General Trust Corpus'),
-        status: 'CREATED',
-        paymentStatus: 'CREATED',
+        status: 'CREATED' as const,
+        paymentStatus: 'CREATED' as const,
         isTestMode: true,
-      });
+      };
+
+      try {
+        donation = await Donation.create(donationPayload);
+      } catch (dbErr: any) {
+        // If legacy database index in MongoDB Atlas on receiptNumber lacks partialFilterExpression (colliding on null):
+        if (
+          dbErr.code === 11000 &&
+          (dbErr.keyPattern?.receiptNumber || String(dbErr.message).includes('receiptNumber'))
+        ) {
+          logger.warn(
+            '[DATABASE] Detected legacy non-partial index on receiptNumber in MongoDB Atlas. Auto-repairing index with partialFilterExpression...'
+          );
+          try {
+            await Donation.collection.dropIndex('receiptNumber_1').catch(() => {});
+            await Donation.collection.createIndex(
+              { receiptNumber: 1 },
+              { unique: true, partialFilterExpression: { receiptNumber: { $type: 'string' } } }
+            );
+            donation = await Donation.create(donationPayload);
+          } catch (retryErr: any) {
+            logger.error('[DATABASE] Failed to auto-repair receiptNumber index:', retryErr);
+            throw new AppError(
+              'A temporary record collision occurred while initiating payment. Please try again.',
+              409
+            );
+          }
+        } else {
+          throw dbErr;
+        }
+      }
 
       // Create corresponding order in Razorpay
       const receiptTag = `rcpt_${donation._id.toString().slice(-8)}`;
@@ -276,10 +308,10 @@ export class DonationController {
         throw new AppError('Payment amount mismatch between gateway and recorded pledge.', 400);
       }
 
-      // 7. Generate unique official receipt number
-      const receiptNumber = `SCT-REC-${Date.now().toString(36).toUpperCase()}-${Math.floor(
-        1000 + Math.random() * 9000
-      )}`;
+      // 7. Generate or preserve unique official receipt number
+      const generateUniqueReceipt = () =>
+        `SCT-REC-${new Date().getFullYear()}-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+      const receiptNumber = donation.receiptNumber || generateUniqueReceipt();
 
       const paymentMethod = paymentDetails.method || 'online';
 
@@ -491,9 +523,9 @@ export class DonationController {
             donation.status !== 'SUCCESS' &&
             donation.paymentStatus !== 'PAID'
           ) {
-            const receiptNumber = `SCT-REC-${Date.now().toString(36).toUpperCase()}-${Math.floor(
-              1000 + Math.random() * 9000
-            )}`;
+            const receiptNumber =
+              donation.receiptNumber ||
+              `SCT-REC-${new Date().getFullYear()}-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
             const now = new Date();
 
             const updatedDonation = await Donation.findOneAndUpdate(

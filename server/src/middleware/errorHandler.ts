@@ -70,13 +70,17 @@ export const errorHandler = (
       field: issue.path.join('.'),
       message: issue.message,
     }));
-    return sendError(res, 'Validation failed', 400, formattedErrors);
+    const message = formattedErrors.map((e) => e.message).join('; ') || 'Validation failed';
+    return sendError(res, message, 400, formattedErrors);
   }
 
   // Handle Mongoose duplicate key error (code 11000)
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue || {})[0] || 'field';
-    const message = `A record with this ${field} already exists.`;
+    let message = `A record with this ${field} already exists.`;
+    if (field === 'receiptNumber') {
+      message = 'A contribution receipt or transaction has already been recorded. Please check your donor dashboard.';
+    }
     return sendError(res, message, 409, [{ field, message }]);
   }
 

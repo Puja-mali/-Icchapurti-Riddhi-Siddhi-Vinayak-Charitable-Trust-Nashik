@@ -368,12 +368,20 @@ export class AuthService {
     const resetUrl = `${env.CLIENT_URL}/reset-password?token=${rawToken}`;
 
     // Send transactional email (fail-safe; never throws)
-    await EmailService.sendPasswordResetEmail({
+    const emailResult = await EmailService.sendPasswordResetEmail({
       email: user.email,
       name: user.name,
       resetUrl,
       expiresInMinutes,
     });
+
+    if (!emailResult.success) {
+      logger.warn(
+        `[SECURITY] Password reset email could not be delivered to ${user.email}. Diagnostic: ${emailResult.reason || emailResult.error || 'SMTP delivery failure'}. Ensure SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS are set in Render environment variables.`
+      );
+    } else {
+      logger.info(`[SECURITY] Password reset email successfully dispatched to ${user.email}. MessageId: ${emailResult.messageId}`);
+    }
 
     logger.info(`[SECURITY] Password reset token generated for user ${user.email}. Expires in ${expiresInMinutes}m.`);
 

@@ -10,7 +10,14 @@ import { getCanonicalBaseUrl, generateRobotsTxt, generateSitemapXml } from './se
 
 async function startServer() {
   const app = express();
-  const PORT = Number(process.env.PORT) || 3000;
+  const portIndex = process.argv.indexOf('--port');
+  const cliPort =
+    portIndex !== -1 && process.argv[portIndex + 1]
+      ? parseInt(process.argv[portIndex + 1], 10)
+      : null;
+  const PORT =
+    cliPort ||
+    (process.env.NODE_ENV !== 'production' ? 3000 : Number(process.env.PORT) || 3000);
 
   // Trust proxy for reverse proxies (e.g. Cloud Run / ALB - single upstream hop)
   app.set('trust proxy', 1);
@@ -82,6 +89,25 @@ async function startServer() {
   connectDatabase({ allowInMemory: process.env.NODE_ENV !== 'production' })
     .then(async (dbConnected) => {
       if (dbConnected) {
+        try {
+          const { Donation } = await import('./server/src/models/Donation');
+          // Auto-sync receiptNumber index in MongoDB to ensure partialFilterExpression prevents null key collisions
+          await Donation.collection
+            .createIndex(
+              { receiptNumber: 1 },
+              { unique: true, partialFilterExpression: { receiptNumber: { $type: 'string' } } }
+            )
+            .catch(async (idxErr: any) => {
+              if (idxErr.code === 85 || idxErr.codeName === 'IndexOptionsConflict') {
+                await Donation.collection.dropIndex('receiptNumber_1').catch(() => {});
+                await Donation.collection.createIndex(
+                  { receiptNumber: 1 },
+                  { unique: true, partialFilterExpression: { receiptNumber: { $type: 'string' } } }
+                );
+              }
+            });
+        } catch (_) {}
+
         await autoSeedTrustData();
       } else {
         logger.warn(

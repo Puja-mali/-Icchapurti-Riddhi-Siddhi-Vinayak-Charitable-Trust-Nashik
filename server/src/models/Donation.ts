@@ -112,10 +112,8 @@ const donationSchema = new Schema<IDonation>(
     },
     receiptNumber: {
       type: String,
-      unique: true,
-      sparse: true,
       trim: true,
-      index: true,
+      default: undefined,
     },
     receiptUrl: {
       type: String,
@@ -180,6 +178,14 @@ donationSchema.index({ razorpayOrderId: 1 });
 donationSchema.index({ razorpayPaymentId: 1 });
 donationSchema.index({ status: 1 });
 donationSchema.index({ createdAt: -1 });
+donationSchema.index(
+  { receiptNumber: 1 },
+  {
+    unique: true,
+    sparse: true,
+    partialFilterExpression: { receiptNumber: { $type: 'string' } },
+  }
+);
 
 // Backward-compatible virtual aliases for existing populate / relation structures
 donationSchema.virtual('donor').get(function (this: IDonation) {

@@ -78,14 +78,15 @@ export class StorageService {
 
         const resourceType = category === 'IMAGE' ? 'image' : 'raw';
 
+        // Note: publicIdToken is already cryptographically unique (contains timestamp + random hex).
+        // Omitting redundant boolean flags (overwrite/unique_filename) prevents Cloudinary SDK signature
+        // serialization discrepancies (e.g. overwrite=0 / unique_filename=1).
         const result = await new Promise<UploadApiResponse>((resolve, reject) => {
           const uploadStream = cloudinary.uploader.upload_stream(
             {
               folder,
               public_id: publicIdToken,
               resource_type: resourceType,
-              overwrite: false,
-              unique_filename: true,
             },
             (error, response) => {
               if (error || !response) {
@@ -113,12 +114,15 @@ export class StorageService {
         logger.info(`[STORAGE] Uploaded asset to Cloudinary: ${asset.publicId}`);
         return asset;
       } catch (err: any) {
-        logger.error('[STORAGE] Cloudinary upload failed:', err);
-        throw new AppError(`Storage upload failed: ${err.message || 'Unknown error'}`, 502);
+        logger.warn(
+          `[STORAGE] Cloudinary upload failed (${err.message || 'Signature/API Error'}). Please verify CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET in Render. Falling back to secure persistent storage.`,
+          err
+        );
+        // Resilient fallback to local storage if Cloudinary fails so admin uploads are never blocked
       }
     }
 
-    // Option B: Secure Local Storage
+    // Option B: Secure Local Storage (Primary when Cloudinary not configured or fallback on error)
     try {
       const subFolder = isPublic ? 'public' : 'private';
       const targetDir = path.join(this.uploadsBaseDir, subFolder);

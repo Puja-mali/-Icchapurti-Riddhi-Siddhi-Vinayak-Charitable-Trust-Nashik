@@ -427,24 +427,48 @@ export const AdminDashboard: React.FC = () => {
     setCauseFormError(null);
 
     const parsedTarget = Number(formData.targetAmount);
-    if (!formData.title.trim()) {
+    const cleanTitle = formData.title.trim();
+    const cleanShortDesc = formData.shortDescription.trim();
+    const cleanDesc = formData.description.trim();
+
+    if (!cleanTitle) {
       setCauseFormError("Campaign title is required.");
       return;
     }
-    if (!formData.shortDescription.trim()) {
+    if (cleanTitle.length < 3) {
+      setCauseFormError("Campaign title must be at least 3 characters.");
+      return;
+    }
+    if (cleanTitle.length > 200) {
+      setCauseFormError("Campaign title cannot exceed 200 characters.");
+      return;
+    }
+    if (!cleanShortDesc) {
       setCauseFormError("Short description / tagline is required.");
       return;
     }
-    if (!formData.description.trim()) {
+    if (cleanShortDesc.length < 5) {
+      setCauseFormError("Short description must be at least 5 characters.");
+      return;
+    }
+    if (cleanShortDesc.length > 500) {
+      setCauseFormError("Short description cannot exceed 500 characters.");
+      return;
+    }
+    if (!cleanDesc) {
       setCauseFormError("Full description is required.");
       return;
     }
-    if (isNaN(parsedTarget) || parsedTarget < 1) {
-      setCauseFormError("Target amount must be a positive number (min ₹1).");
+    if (cleanDesc.length < 10) {
+      setCauseFormError("Full description must be at least 10 characters.");
+      return;
+    }
+    if (isNaN(parsedTarget) || parsedTarget < 0) {
+      setCauseFormError("Target amount must be a valid number (or 0 for open drives).");
       return;
     }
     if (!formData.imageUrl.trim()) {
-      setCauseFormError("Image URL is required.");
+      setCauseFormError("Campaign image is required. Please upload an image or provide an image URL.");
       return;
     }
 
@@ -467,11 +491,11 @@ export const AdminDashboard: React.FC = () => {
       }
 
       const payload: Partial<Cause> = {
-        title: formData.title.trim(),
+        title: cleanTitle,
         category: formData.category,
-        shortDescription: formData.shortDescription.trim(),
-        tagline: formData.shortDescription.trim(),
-        description: formData.description.trim(),
+        shortDescription: cleanShortDesc,
+        tagline: cleanShortDesc,
+        description: cleanDesc,
         targetAmount: parsedTarget,
         imageUrl: formData.imageUrl.trim(),
         location: formData.location.trim(),
@@ -483,10 +507,10 @@ export const AdminDashboard: React.FC = () => {
 
       if (editingCause) {
         await causeService.updateCause(editingCause.id, payload);
-        setSuccessToast(`Campaign "${formData.title}" updated successfully!`);
+        setSuccessToast(`Campaign "${cleanTitle}" updated successfully!`);
       } else {
         await causeService.createCause(payload);
-        setSuccessToast(`New campaign "${formData.title}" created successfully!`);
+        setSuccessToast(`New campaign "${cleanTitle}" created successfully!`);
       }
 
       setIsCauseModalOpen(false);
@@ -494,7 +518,11 @@ export const AdminDashboard: React.FC = () => {
       setTimeout(() => setSuccessToast(null), 3500);
     } catch (err: any) {
       console.error("Error saving campaign:", err);
-      setCauseFormError(err?.message || "Failed to save campaign. Please verify fields.");
+      const detailedMessage =
+        err?.errors && Array.isArray(err.errors) && err.errors.length > 0
+          ? err.errors.map((e: any) => e.message).join(". ")
+          : err?.message || "Failed to save campaign. Please check the fields and try again.";
+      setCauseFormError(detailedMessage);
     } finally {
       setIsSavingCause(false);
     }

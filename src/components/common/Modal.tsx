@@ -23,30 +23,56 @@ export const Modal: React.FC<ModalProps> = ({
   size = "md",
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  const hasFocusedRef = useRef(false);
 
   useEffect(() => {
+    if (!isOpen) {
+      hasFocusedRef.current = false;
+      return;
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
-    if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
-      const originalPaddingRight = document.body.style.paddingRight;
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = "hidden";
-      if (scrollBarWidth > 0) {
-        document.body.style.paddingRight = `${scrollBarWidth}px`;
-      }
-      window.addEventListener("keydown", handleKeyDown);
-      // Accessibility focus management
-      setTimeout(() => dialogRef.current?.focus(), 50);
+
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    if (scrollBarWidth > 0) {
+      document.body.style.paddingRight = `${scrollBarWidth}px`;
+    }
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Focus modal container ONLY once on initial mount/open, never when re-rendering while user is typing
+    if (!hasFocusedRef.current) {
+      hasFocusedRef.current = true;
+      const timer = setTimeout(() => {
+        // Only set focus if user hasn't already focused an interactive element inside the modal
+        if (
+          dialogRef.current &&
+          (!document.activeElement || !dialogRef.current.contains(document.activeElement))
+        ) {
+          dialogRef.current.focus();
+        }
+      }, 50);
 
       return () => {
+        clearTimeout(timer);
         document.body.style.overflow = originalOverflow || "";
         document.body.style.paddingRight = originalPaddingRight || "";
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen, onClose]);
+
+    return () => {
+      document.body.style.overflow = originalOverflow || "";
+      document.body.style.paddingRight = originalPaddingRight || "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

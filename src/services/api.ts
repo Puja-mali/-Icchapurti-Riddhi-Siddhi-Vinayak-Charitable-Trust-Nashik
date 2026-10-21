@@ -174,9 +174,14 @@ export async function apiClient<T = any>(
 
     if (!response.ok) {
       const retryAfter = response.headers.get('retry-after');
+      const detailedFromErrors =
+        data?.errors && Array.isArray(data.errors) && data.errors.length > 0
+          ? data.errors.map((e: any) => e.message).join('. ')
+          : null;
       const errorMessage =
+        (data?.message && data.message !== 'Validation failed' ? data.message : detailedFromErrors) ||
         data?.message ||
-        (data?.errors && data.errors.length > 0 ? data.errors[0].message : null) ||
+        detailedFromErrors ||
         (response.status === 429
           ? `Too many requests. Please wait ${retryAfter ? retryAfter + ' seconds' : 'a moment'} before trying again.`
           : `Request failed with status ${response.status}`);

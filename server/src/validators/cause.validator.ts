@@ -21,15 +21,16 @@ export const createCauseSchema = z.object({
     .trim(),
   slug: z
     .string()
-    .min(3, 'Slug must be at least 3 characters')
     .max(200, 'Slug cannot exceed 200 characters')
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   shortDescription: z
     .string()
     .min(5, 'Short description must be at least 5 characters')
     .max(500, 'Short description cannot exceed 500 characters')
     .trim(),
+  tagline: z.string().trim().max(500).optional(),
   description: z
     .string()
     .min(10, 'Full description must be at least 10 characters')
@@ -53,15 +54,16 @@ export const createCauseSchema = z.object({
   ),
   imageUrl: z
     .string()
-    .min(1, 'Image URL is required')
+    .min(1, 'Image URL or uploaded file is required')
     .trim()
     .refine(
       (val) => {
         if (!val) return false;
-        if (val.startsWith('/api/uploads/')) return true;
+        // Allow relative uploaded media paths or local public images
+        if (val.startsWith('/') && !val.includes('..') && !val.includes('\\')) return true;
         return validateAndSanitizeMediaUrl(val, 'IMAGE').isValid;
       },
-      { message: 'Invalid or unsafe image URL. Must be a valid http/https URL pointing to an image format or verified upload.' }
+      { message: 'Invalid or unsafe image URL. Must be an uploaded image or valid http/https image link.' }
     ),
   status: z.enum(['DRAFT', 'ACTIVE', 'COMPLETED', 'ARCHIVED']).optional().default('ACTIVE'),
   isKumbhRelated: z.boolean().optional().default(false),

@@ -17,6 +17,7 @@ export interface ICause extends Document {
   title: string;
   slug: string;
   shortDescription: string;
+  tagline?: string;
   description: string;
   targetAmount: number;
   raisedAmount: number;
@@ -47,6 +48,7 @@ const causeSchema = new Schema<ICause>(
       type: String,
       required: [true, 'Campaign title is required'],
       trim: true,
+      minlength: [3, 'Campaign title must be at least 3 characters'],
       maxlength: [200, 'Title cannot exceed 200 characters'],
       index: true,
     },
@@ -62,12 +64,14 @@ const causeSchema = new Schema<ICause>(
       type: String,
       required: [true, 'Short description is required'],
       trim: true,
+      minlength: [5, 'Short description must be at least 5 characters'],
       maxlength: [500, 'Short description cannot exceed 500 characters'],
     },
     description: {
       type: String,
       required: [true, 'Full campaign description is required'],
       trim: true,
+      minlength: [10, 'Full campaign description must be at least 10 characters'],
     },
     targetAmount: {
       type: Number,
