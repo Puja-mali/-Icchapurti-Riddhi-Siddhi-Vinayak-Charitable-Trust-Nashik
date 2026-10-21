@@ -142,9 +142,17 @@ export const AdminLogin: React.FC = () => {
             </div>
 
             <div>
-              <label className="font-semibold text-stone-700 block mb-1">
-                Security Password
-              </label>
+              <div className="flex justify-between items-center mb-1">
+                <label className="font-semibold text-stone-700">
+                  Security Password
+                </label>
+                <Link
+                  to="/forgot-password?from=admin"
+                  className="text-[11px] text-[#14532d] hover:underline font-semibold cursor-pointer"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -182,9 +190,15 @@ export const AdminLogin: React.FC = () => {
             </div>
           </form>
 
-              <div className="mt-5 pt-4 border-t border-stone-100 text-center text-[11px] text-stone-500">
-                Trust Governance • Role-Based Access Control Strictly Enforced
-              </div>
+          <div className="mt-5 pt-4 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+            <span>Secretariat & Board Gateway</span>
+            <Link
+              to="/forgot-password?from=admin"
+              className="text-[#14532d] hover:underline font-medium cursor-pointer"
+            >
+              Reset Access / Recover Account
+            </Link>
+          </div>
         </div>
       </div>
     </div>

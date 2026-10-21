@@ -20,7 +20,6 @@ export const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [adminNotice, setAdminNotice] = useState<string | null>(null);
 
   // If already authenticated as DONOR or VOLUNTEER, redirect to their home portal.
   // Administrative accounts (ADMIN / STAFF) are safely retained without auto-redirecting to /admin.
@@ -47,7 +46,6 @@ export const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    setAdminNotice(null);
 
     const cleanEmail = email.trim();
     if (!cleanEmail || !password) {
@@ -61,12 +59,10 @@ export const Login: React.FC = () => {
       // Authenticate strictly for the public portal
       const authenticatedUser = await login({ email: cleanEmail, password, portal: "public" });
 
-      // If an administrative role is returned, never route into the admin dashboard from public login
+      // If an administrative role is returned, reject public portal entry and invalidate session
       if (authenticatedUser.role === "ADMIN" || authenticatedUser.role === "STAFF") {
         await logout();
-        setAdminNotice(
-          "Administrative Account Detected: This account holds administrative privileges. Please use the authorized Secretariat & Board sign-in portal."
-        );
+        setErrorMessage("Invalid email or password.");
         return;
       }
 
@@ -87,11 +83,7 @@ export const Login: React.FC = () => {
       navigate(target, { replace: true });
     } catch (err: any) {
       const msg = err?.message || "Invalid email or password.";
-      if (msg.toLowerCase().includes("administrative") || msg.toLowerCase().includes("staff access")) {
-        setAdminNotice(
-          "Administrative Account Detected: This account holds administrative privileges. Administrative accounts must sign in via the Secretariat & Board login desk."
-        );
-      } else if (err instanceof ApiError) {
+      if (err instanceof ApiError) {
         setErrorMessage(err.message);
       } else {
         setErrorMessage(msg);
@@ -151,34 +143,6 @@ export const Login: React.FC = () => {
           </div>
         )}
 
-        {/* Administrative Account Detected Notice */}
-        {adminNotice && (
-          <div className="p-3.5 bg-amber-50/90 border border-amber-300 rounded-md text-xs text-amber-950 space-y-2.5 shadow-2xs">
-            <div className="flex items-start gap-2.5">
-              <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-bold text-amber-950">Administrative Account Detected</p>
-                <p className="text-amber-800 mt-0.5 leading-relaxed">{adminNotice}</p>
-              </div>
-            </div>
-            <div className="pt-2 border-t border-amber-200/80 flex items-center justify-between">
-              <Link
-                to="/admin/login"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#14532d] text-white hover:bg-[#0f4023] font-semibold text-xs shadow-2xs cursor-pointer"
-              >
-                <span>Proceed to Administrative Login</span>
-                <ArrowRight className="w-3 h-3" />
-              </Link>
-              <button
-                type="button"
-                onClick={() => setAdminNotice(null)}
-                className="text-stone-500 hover:text-stone-700 text-xs font-medium cursor-pointer"
-              >
-                Dismiss
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Error Alert */}
         {errorMessage && (

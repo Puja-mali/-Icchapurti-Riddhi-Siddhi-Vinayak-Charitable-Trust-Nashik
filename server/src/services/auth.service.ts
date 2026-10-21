@@ -341,7 +341,10 @@ export class AuthService {
    * Generates single-use password reset token and sends email
    * Prevents user enumeration by returning a generic response regardless of whether email exists
    */
-  public static async forgotPassword(email: string): Promise<{ success: boolean; message: string; debugResetUrl?: string }> {
+  public static async forgotPassword(
+    email: string,
+    clientOrigin?: string
+  ): Promise<{ success: boolean; message: string; debugResetUrl?: string; emailDelivered?: boolean; deliveryDiagnostic?: string }> {
     const cleanEmail = (email || '').toLowerCase().trim();
     if (!cleanEmail || !cleanEmail.includes('@')) {
       throw new AppError('A valid email address is required.', 400);
@@ -370,7 +373,21 @@ export class AuthService {
       },
     });
 
-    const resetUrl = `${env.CLIENT_URL}/reset-password?token=${rawToken}`;
+    // Dynamically resolve public website base URL (prioritize request origin, then RENDER_EXTERNAL_URL / CLIENT_URL)
+    let baseUrl = '';
+    if (clientOrigin && !clientOrigin.includes('localhost')) {
+      baseUrl = clientOrigin.replace(/\/+$/, '');
+    } else if (process.env.RENDER_EXTERNAL_URL) {
+      baseUrl = process.env.RENDER_EXTERNAL_URL.replace(/\/+$/, '');
+    } else if (process.env.CLIENT_URL && !process.env.CLIENT_URL.includes('localhost')) {
+      baseUrl = process.env.CLIENT_URL.replace(/\/+$/, '');
+    } else if (env.CLIENT_URL && !env.CLIENT_URL.includes('localhost')) {
+      baseUrl = env.CLIENT_URL.replace(/\/+$/, '');
+    } else {
+      baseUrl = (clientOrigin || env.CLIENT_URL || 'http://localhost:3000').replace(/\/+$/, '');
+    }
+
+    const resetUrl = `${baseUrl}/reset-password?token=${rawToken}`;
 
     // Send transactional email (fail-safe; never throws)
     const emailResult = await EmailService.sendPasswordResetEmail({
@@ -393,15 +410,17 @@ export class AuthService {
     return {
       success: true,
       message: 'If an account exists with this email address, password reset instructions have been sent to your inbox.',
-      // Only include debug URL in non-production when useful for testing
-      ...(!env.isProduction ? { debugResetUrl: resetUrl } : {}),
+      emailDelivered: emailResult.success,
+      ...(!emailResult.success && emailResult.reason ? { deliveryDiagnostic: emailResult.reason } : {}),
+      // Provide debug reset URL when SMTP is unconfigured or in non-production for verifiable testing
+      ...(!env.isProduction || !emailResult.success ? { debugResetUrl: resetUrl } : {}),
     };
   }
 
   /**
    * Validates unexpired single-use password reset token
    */
-  public static async validateResetToken(rawToken: string): Promise<{ valid: boolean; email: string }> {
+  public static async validateResetToken(rawToken: string): Promise<{ valid: boolean; email: string; role?: string }> {
     if (!rawToken || typeof rawToken !== 'string') {
       throw new AppError('Password reset token is required.', 400);
     }
@@ -422,7 +441,7 @@ export class AuthService {
     const parts = user.email.split('@');
     const masked = parts[0].length > 2 ? `${parts[0].slice(0, 2)}***@${parts[1]}` : user.email;
 
-    return { valid: true, email: masked };
+    return { valid: true, email: masked, role: user.role };
   }
 
   /**

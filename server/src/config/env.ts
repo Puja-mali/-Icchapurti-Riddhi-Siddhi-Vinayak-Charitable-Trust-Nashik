@@ -39,21 +39,45 @@ if (rawCloudinaryUrl && (!parsedCloudName || !parsedApiKey || !parsedApiSecret))
   }
 }
 
-// Support both SMTP_* and EMAIL_* environment variable standards (common on Render and Docker)
-const emailHost = cleanEnvStr(process.env.SMTP_HOST || process.env.EMAIL_HOST);
-const emailPortRaw = cleanEnvStr(process.env.SMTP_PORT || process.env.EMAIL_PORT) || '587';
-const emailPort = parseInt(emailPortRaw, 10);
-const emailUser = cleanEnvStr(process.env.SMTP_USER || process.env.EMAIL_USER);
-const emailPassword = cleanEnvStr(
+// Support all SMTP_* and EMAIL_* environment variable standards (common on Render and Docker)
+const emailUser = cleanEnvStr(
+  process.env.SMTP_USER ||
+  process.env.EMAIL_USER ||
+  process.env.SMTP_USERNAME ||
+  process.env.EMAIL_USERNAME
+);
+
+let emailPassword = cleanEnvStr(
   process.env.SMTP_PASS ||
   process.env.SMTP_PASSWORD ||
-  process.env.EMAIL_PASSWORD
+  process.env.EMAIL_PASSWORD ||
+  process.env.EMAIL_PASS
 );
+// Google App Passwords often contain 4-character space groupings (e.g. "abcd efgh ijkl mnop")
+if (emailPassword && emailPassword.replace(/\s+/g, '').length === 16) {
+  emailPassword = emailPassword.replace(/\s+/g, '');
+}
+
+let emailHost = cleanEnvStr(
+  process.env.SMTP_HOST ||
+  process.env.EMAIL_HOST ||
+  process.env.SMTP_SERVER
+);
+// Auto-detect Gmail SMTP if email user is a Gmail address and no host was specified
+if (!emailHost && emailUser && (emailUser.endsWith('@gmail.com') || emailUser.endsWith('@googlemail.com'))) {
+  emailHost = 'smtp.gmail.com';
+}
+
+const emailPortRaw = cleanEnvStr(process.env.SMTP_PORT || process.env.EMAIL_PORT);
+let emailPort = emailPortRaw ? parseInt(emailPortRaw, 10) : (emailHost === 'smtp.gmail.com' ? 587 : 587);
+if (isNaN(emailPort) || emailPort <= 0) {
+  emailPort = 587;
+}
+
 const emailFrom = cleanEnvStr(
   process.env.SMTP_FROM ||
   process.env.EMAIL_FROM ||
-  process.env.SMTP_USER ||
-  process.env.EMAIL_USER ||
+  emailUser ||
   'ichhapurtiriddhisiddhivinayak@gmail.com'
 );
 const emailSecureRaw = cleanEnvStr(process.env.SMTP_SECURE || process.env.EMAIL_SECURE);
@@ -106,7 +130,11 @@ export const isGeminiConfigured = (): boolean => {
 };
 
 export const isEmailConfigured = (): boolean => {
-  return Boolean(env.EMAIL_HOST && env.EMAIL_USER && env.EMAIL_PASSWORD);
+  const host = cleanEnvStr(process.env.SMTP_HOST || process.env.EMAIL_HOST || process.env.SMTP_SERVER) || env.EMAIL_HOST;
+  const user = cleanEnvStr(process.env.SMTP_USER || process.env.EMAIL_USER || process.env.SMTP_USERNAME || process.env.EMAIL_USERNAME) || env.EMAIL_USER;
+  const pass = cleanEnvStr(process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS) || env.EMAIL_PASSWORD;
+  const resolvedHost = host || (user && user.includes('@gmail.com') ? 'smtp.gmail.com' : '');
+  return Boolean(resolvedHost && user && pass);
 };
 
 export const isCloudinaryConfigured = (): boolean => {

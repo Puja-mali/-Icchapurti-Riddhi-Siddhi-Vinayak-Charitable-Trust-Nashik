@@ -31,32 +31,58 @@ export class EmailService {
   private static transporter: Transporter | null = null;
 
   /**
-   * Lazily initialize or retrieve the Nodemailer transporter.
+   * Lazily initialize or retrieve the Nodemailer transporter with cloud-ready safeguards.
    */
   private static getTransporter(): Transporter | null {
     if (!isEmailConfigured()) {
       return null;
     }
 
-    if (!this.transporter) {
-      try {
-        this.transporter = nodemailer.createTransport({
-          host: env.EMAIL_HOST,
-          port: env.EMAIL_PORT,
-          secure: env.EMAIL_SECURE, // true for 465, false for 587/STARTTLS
-          auth: {
-            user: env.EMAIL_USER,
-            pass: env.EMAIL_PASSWORD,
-          },
-          // Short timeouts to guarantee fast response without hanging user requests
-          connectionTimeout: 8000,
-          greetingTimeout: 5000,
-          socketTimeout: 10000,
-        });
-      } catch (err: any) {
-        logger.error(`[EMAIL SERVICE] Failed to create nodemailer transporter: ${err.message}`);
-        this.transporter = null;
+    const host =
+      (process.env.SMTP_HOST || process.env.EMAIL_HOST || process.env.SMTP_SERVER || '').trim() ||
+      env.EMAIL_HOST;
+    const user =
+      (process.env.SMTP_USER || process.env.EMAIL_USER || process.env.SMTP_USERNAME || process.env.EMAIL_USERNAME || '').trim() ||
+      env.EMAIL_USER;
+    let pass =
+      (process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS || '').trim() ||
+      env.EMAIL_PASSWORD;
+    if (pass && pass.replace(/\s+/g, '').length === 16) {
+      pass = pass.replace(/\s+/g, '');
+    }
+    const resolvedHost = host || (user && user.includes('@gmail.com') ? 'smtp.gmail.com' : 'smtp.gmail.com');
+    const portRaw = process.env.SMTP_PORT || process.env.EMAIL_PORT;
+    const port = portRaw ? parseInt(portRaw, 10) : env.EMAIL_PORT || 587;
+    const secure = port === 465 || process.env.SMTP_SECURE === 'true' || process.env.EMAIL_SECURE === 'true';
+
+    try {
+      const transportConfig: any = {
+        host: resolvedHost,
+        port,
+        secure,
+        auth: {
+          user,
+          pass,
+        },
+        // Force IPv4 lookup to prevent DNS resolution timeouts in Render & Docker containers
+        family: 4,
+        connectionTimeout: 10000,
+        greetingTimeout: 8000,
+        socketTimeout: 15000,
+        tls: {
+          rejectUnauthorized: env.isProduction,
+          minVersion: 'TLSv1.2',
+        },
+      };
+
+      if (port === 587) {
+        transportConfig.requireTLS = true;
       }
+
+      this.transporter = nodemailer.createTransport(transportConfig);
+    } catch (err: any) {
+      logger.error(`[EMAIL SERVICE] Failed to create nodemailer transporter: ${err.message}`);
+      this.transporter = null;
     }
 
     return this.transporter;

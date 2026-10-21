@@ -17,6 +17,7 @@
     "test:users": "tsx server/src/scripts/testUserManagement.ts",
     "test:push": "tsx server/src/scripts/testWebPush.ts",
     "test:jwt": "tsx server/src/scripts/testJwtProductionSecurity.ts",
+    "test:forgot-password": "tsx server/src/scripts/testForgotPasswordFlow.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

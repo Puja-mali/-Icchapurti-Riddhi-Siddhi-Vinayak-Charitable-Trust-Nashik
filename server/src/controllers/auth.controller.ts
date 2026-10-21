@@ -155,7 +155,12 @@ export class AuthController {
   ): Promise<void> {
     try {
       const { email } = req.body;
-      const result = await AuthService.forgotPassword(email);
+      const clientOrigin =
+        req.get('origin') ||
+        (req.headers.origin as string) ||
+        (req.headers.referer ? new URL(req.headers.referer as string).origin : '') ||
+        `${req.protocol}://${req.get('host')}`;
+      const result = await AuthService.forgotPassword(email, String(clientOrigin));
       sendSuccess(res, result, result.message, 200);
     } catch (error) {
       next(error);

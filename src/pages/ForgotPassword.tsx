@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Loader2, ShieldCheck, KeyRound } from "lucide-react";
 import { Button } from "@/src/components/common/Button";
 import { useTrust } from "@/src/context/TrustContext";
 import { authService } from "@/src/services/authService";
@@ -8,6 +8,11 @@ import { ApiError } from "@/src/services/api";
 import { TrustEmblem } from "@/src/components/common/TrustEmblem";
 
 export const ForgotPassword: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const fromAdmin = searchParams.get("from") === "admin";
+  const backTo = fromAdmin ? "/admin/login" : "/login";
+  const backLabel = fromAdmin ? "Back to Secretariat & Board Login" : "Back to Sign In";
+
   const { trustProfile } = useTrust();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -58,10 +63,12 @@ export const ForgotPassword: React.FC = () => {
             </span>
           </Link>
           <h1 className="text-2xl font-serif font-bold text-stone-900 pt-1">
-            Account Recovery
+            {fromAdmin ? "Secretariat & Administrative Recovery" : "Account Recovery"}
           </h1>
-          <p className="text-xs text-stone-600">
-            Reset your access password to the Siddhivinayak Trust donor or volunteer portal.
+          <p className="text-xs text-stone-600 max-w-sm mx-auto">
+            {fromAdmin
+              ? "Reset your access credentials for Trust Administration, Secretariat & Board accounts."
+              : "Reset your access password for supporter, volunteer, Secretariat, and administrative accounts."}
           </p>
         </div>
 
@@ -82,10 +89,29 @@ export const ForgotPassword: React.FC = () => {
                 </p>
               </div>
 
+              {debugUrl && (
+                <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-md text-amber-950 text-xs space-y-2">
+                  <div className="flex items-center gap-1.5 font-bold text-amber-900">
+                    <KeyRound className="w-4 h-4 text-amber-700 shrink-0" />
+                    <span>Testing & Verification Access Link</span>
+                  </div>
+                  <p className="text-amber-800 text-[11px] leading-relaxed">
+                    For local testing and verification without SMTP delay, you can proceed directly using the generated single-use reset token:
+                  </p>
+                  <a
+                    href={debugUrl}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#14532d] text-white hover:bg-[#0f4023] font-semibold text-xs shadow-2xs cursor-pointer"
+                  >
+                    <span>Proceed to Reset Password</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </a>
+                </div>
+              )}
+
               <div className="pt-2">
-                <Link to="/login" className="block">
+                <Link to={backTo} className="block">
                   <Button variant="outline" size="md" className="w-full text-xs font-semibold" leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}>
-                    Return to Sign In
+                    {backLabel}
                   </Button>
                 </Link>
               </div>
@@ -133,9 +159,9 @@ export const ForgotPassword: React.FC = () => {
                   {isLoading ? "Sending Reset Link..." : "Send Reset Link"}
                 </Button>
 
-                <Link to="/login" className="block text-center pt-2">
+                <Link to={backTo} className="block text-center pt-2">
                   <span className="text-xs text-stone-600 hover:text-[#14532d] hover:underline font-medium inline-flex items-center gap-1">
-                    <ArrowLeft className="w-3 h-3" /> Back to Sign In
+                    <ArrowLeft className="w-3 h-3" /> {backLabel}
                   </span>
                 </Link>
               </div>

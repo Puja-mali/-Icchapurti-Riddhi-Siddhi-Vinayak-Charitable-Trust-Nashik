@@ -17,6 +17,7 @@ export const ResetPassword: React.FC = () => {
   const [isValidating, setIsValidating] = useState(true);
   const [isTokenValid, setIsTokenValid] = useState(false);
   const [maskedEmail, setMaskedEmail] = useState("");
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const [password, setPassword] = useState("");
@@ -46,6 +47,9 @@ export const ResetPassword: React.FC = () => {
         if (isMounted) {
           setIsTokenValid(true);
           setMaskedEmail(result.email);
+          if (result.role) {
+            setUserRole(result.role);
+          }
         }
       } catch (err: any) {
         if (isMounted) {
@@ -156,16 +160,44 @@ export const ResetPassword: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-2">
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate("/login", { replace: true })}
-                  className="w-full text-xs font-semibold"
-                  rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                >
-                  Proceed to Sign In
-                </Button>
+              <div className="pt-2 space-y-2">
+                {userRole === "ADMIN" || userRole === "STAFF" || searchParams.get("from") === "admin" ? (
+                  <>
+                    <Button
+                      variant="primary"
+                      size="md"
+                      onClick={() => navigate("/admin/login", { replace: true })}
+                      className="w-full text-xs font-semibold bg-[#14532d] hover:bg-[#0f4023]"
+                      rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                    >
+                      Proceed to Secretariat & Board Login
+                    </Button>
+                    <Link
+                      to="/login"
+                      className="block text-center text-[11px] text-stone-500 hover:text-[#14532d] hover:underline"
+                    >
+                      Supporter or Volunteer? Sign in here →
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="primary"
+                      size="md"
+                      onClick={() => navigate("/login", { replace: true })}
+                      className="w-full text-xs font-semibold"
+                      rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                    >
+                      Proceed to Sign In
+                    </Button>
+                    <Link
+                      to="/admin/login"
+                      className="block text-center text-[11px] text-stone-500 hover:text-[#14532d] hover:underline"
+                    >
+                      Secretariat or Board Member? Sign in here →
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           ) : (

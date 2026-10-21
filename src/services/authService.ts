@@ -191,8 +191,8 @@ export const authService = {
   /**
    * Request password reset email for forgotten credentials
    */
-  async forgotPassword(email: string): Promise<{ success: boolean; message: string; debugResetUrl?: string }> {
-    return api.post<{ success: boolean; message: string; debugResetUrl?: string }>('/auth/forgot-password', {
+  async forgotPassword(email: string): Promise<{ success: boolean; message: string; debugResetUrl?: string; emailDelivered?: boolean; deliveryDiagnostic?: string }> {
+    return api.post<{ success: boolean; message: string; debugResetUrl?: string; emailDelivered?: boolean; deliveryDiagnostic?: string }>('/auth/forgot-password', {
       email: email.trim().toLowerCase(),
     });
   },
@@ -200,8 +200,8 @@ export const authService = {
   /**
    * Validate password reset token
    */
-  async validateResetToken(token: string): Promise<{ valid: boolean; email: string }> {
-    return api.get<{ valid: boolean; email: string }>(`/auth/reset-password/validate/${encodeURIComponent(token)}`);
+  async validateResetToken(token: string): Promise<{ valid: boolean; email: string; role?: string }> {
+    return api.get<{ valid: boolean; email: string; role?: string }>(`/auth/reset-password/validate/${encodeURIComponent(token)}`);
   },
 
   /**
