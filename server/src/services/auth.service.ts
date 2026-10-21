@@ -352,7 +352,7 @@ export class AuthService {
 
     const genericResponse = {
       success: true,
-      message: 'If an account is associated with this email address, password reset instructions will be sent. Please check your inbox and spam folder.',
+      message: 'If an account matches that email address, password reset instructions will be sent. Please check your inbox and spam folder.',
     };
 
     const user = await User.findOne({ email: cleanEmail });
@@ -375,20 +375,38 @@ export class AuthService {
       },
     });
 
+    // Helper to identify placeholder or unconfigured URLs
+    const isPlaceholderUrl = (u?: string): boolean => {
+      if (!u) return true;
+      const lower = u.toLowerCase().trim();
+      return (
+        lower.includes('your-production-domain') ||
+        lower.includes('example.org') ||
+        lower.includes('example.com') ||
+        lower.includes('placeholder')
+      );
+    };
+
     // Dynamically resolve canonical deployed public website base URL
     let baseUrl = '';
     const renderExternalUrl = (process.env.RENDER_EXTERNAL_URL || '').trim().replace(/\/+$/, '');
     const clientEnvUrl = (process.env.CLIENT_URL || env.CLIENT_URL || '').trim().replace(/\/+$/, '');
     const origin = (clientOrigin || '').trim().replace(/\/+$/, '');
 
-    if (renderExternalUrl && !renderExternalUrl.includes('localhost')) {
+    // Priority 1: Real deployed browser request origin (exact site user is navigating)
+    if (origin && !isPlaceholderUrl(origin) && !origin.includes('localhost')) {
+      baseUrl = origin;
+    } else if (renderExternalUrl && !isPlaceholderUrl(renderExternalUrl)) {
+      // Priority 2: Render platform external URL
       baseUrl = renderExternalUrl;
-    } else if (clientEnvUrl && !clientEnvUrl.includes('localhost')) {
+    } else if (clientEnvUrl && !isPlaceholderUrl(clientEnvUrl) && !clientEnvUrl.includes('localhost')) {
+      // Priority 3: Configured production client URL
       baseUrl = clientEnvUrl;
-    } else if (origin && !origin.includes('localhost')) {
+    } else if (origin && !isPlaceholderUrl(origin)) {
+      // Priority 4: Development origin
       baseUrl = origin;
     } else {
-      baseUrl = origin || clientEnvUrl || 'http://localhost:3000';
+      baseUrl = 'http://localhost:3000';
     }
 
     const resetUrl = `${baseUrl}/reset-password?token=${rawToken}`;

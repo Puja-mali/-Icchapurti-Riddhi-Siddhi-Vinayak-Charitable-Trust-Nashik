@@ -72,16 +72,16 @@ export const ForgotPassword: React.FC = () => {
         <div className="bg-white rounded-md p-6 sm:p-7 border border-stone-200 shadow-2xs">
           {isSubmitted ? (
             <div className="space-y-4">
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-950 space-y-2">
+              <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-md text-emerald-950 space-y-2">
                 <div className="flex items-center gap-2 font-bold text-sm text-emerald-900">
                   <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Password Reset Request Submitted</span>
+                  <span>Password Reset Request Received</span>
                 </div>
                 <p className="text-xs text-emerald-800 leading-relaxed">
-                  If an account exists with the email address <strong className="font-mono text-emerald-950">{email}</strong>, password reset instructions will be sent.
+                  If an account matches the email address <strong className="font-mono text-emerald-950">{email}</strong>, instructions to reset your password will be sent.
                 </p>
-                <p className="text-[11px] text-emerald-700">
-                  Please check your inbox and spam folder. Reset links are valid for <strong>60 minutes</strong>. If you do not receive an email, please verify your address or contact the Trust Secretariat.
+                <p className="text-[11px] text-emerald-700 leading-relaxed">
+                  Please check your inbox and spam folder. Reset links are valid for <strong>60 minutes</strong>. If you do not see an email within a few minutes, check your spam or junk folder, verify that your address was entered correctly, or contact the Trust Secretariat.
                 </p>
               </div>
 

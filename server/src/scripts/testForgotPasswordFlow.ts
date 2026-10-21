@@ -96,6 +96,10 @@ async function runTests() {
       (donorResult as any).resetToken === undefined,
       'SECURITY VERIFIED: No raw reset token exposed in API response'
     );
+    assert(
+      (donorResult as any).token === undefined && (donorResult as any).resetUrl === undefined,
+      'SECURITY VERIFIED: No token or resetUrl property attached to forgotPassword service return'
+    );
 
     // Verify token was stored hashed in database
     const refreshedDonor = await User.findById(donorUser._id).select('+resetPasswordToken +resetPasswordExpires');
@@ -113,9 +117,64 @@ async function runTests() {
       (adminResult as any).debugResetUrl === undefined,
       'SECURITY VERIFIED: Admin API response contains no debug link or token'
     );
+    assert(
+      (adminResult as any).resetToken === undefined,
+      'SECURITY VERIFIED: Admin API response contains no resetToken'
+    );
 
     const refreshedAdmin = await User.findById(adminUser._id).select('+resetPasswordToken +resetPasswordExpires');
     assert(Boolean(refreshedAdmin?.resetPasswordToken), 'Reset password token hash stored on admin document');
+
+    console.log('\n--- Test 2b: HTTP API Endpoint Security (/api/auth/forgot-password) ---');
+    // Import app to test real HTTP API response structure
+    const { app } = await import('../app');
+    const http = await import('http');
+    const testServer = http.createServer(app);
+    await new Promise<void>((res) => testServer.listen(0, '127.0.0.1', res));
+    const testPort = (testServer.address() as any).port;
+
+    const httpPayload = JSON.stringify({ email: testDonorEmail });
+    const apiRes = await new Promise<any>((resolve, reject) => {
+      const req = http.request(
+        {
+          hostname: '127.0.0.1',
+          port: testPort,
+          path: '/api/auth/forgot-password',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(httpPayload),
+            Origin: 'https://icchapurti-charitable-trust.onrender.com',
+          },
+        },
+        (res) => {
+          let data = '';
+          res.on('data', (c) => (data += c));
+          res.on('end', () => {
+            try {
+              resolve(JSON.parse(data));
+            } catch {
+              resolve(data);
+            }
+          });
+        }
+      );
+      req.on('error', reject);
+      req.write(httpPayload);
+      req.end();
+    });
+
+    testServer.close();
+
+    assert(apiRes.success === true, 'HTTP API returns success: true');
+    assert(apiRes.data === null, 'SECURITY VERIFIED: HTTP API data payload is null (never exposes reset links or tokens)');
+    assert(
+      apiRes.debugResetUrl === undefined &&
+        apiRes.resetToken === undefined &&
+        apiRes.token === undefined &&
+        apiRes.resetUrl === undefined,
+      'SECURITY VERIFIED: HTTP API response root contains NO token or reset link properties'
+    );
 
     console.log('\n--- Test 3: Token Validation API ---');
     // Generate known single-use test tokens and hash them into test user documents

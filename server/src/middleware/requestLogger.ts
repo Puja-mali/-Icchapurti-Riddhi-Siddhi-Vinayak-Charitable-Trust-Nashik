@@ -7,7 +7,12 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
   res.on('finish', () => {
     const duration = Date.now() - startTime;
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
-    logger.info(`${req.method} ${req.originalUrl} [${res.statusCode}] - ${duration}ms (IP: ${ip})`);
+    // Redact sensitive tokens (password reset tokens, invitation tokens) from logged URLs
+    const sanitizedUrl = (req.originalUrl || '')
+      .replace(/(\/reset-password\/validate\/)[a-zA-Z0-9_-]+/gi, '$1[REDACTED]')
+      .replace(/(\/accept-invitation\/)[a-zA-Z0-9_-]+/gi, '$1[REDACTED]')
+      .replace(/([?&]token=)[^&]+/gi, '$1[REDACTED]');
+    logger.info(`${req.method} ${sanitizedUrl} [${res.statusCode}] - ${duration}ms (IP: ${ip})`);
   });
 
   next();

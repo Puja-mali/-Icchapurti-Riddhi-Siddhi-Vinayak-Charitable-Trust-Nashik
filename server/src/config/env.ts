@@ -93,10 +93,26 @@ const emailFrom = cleanEnvStr(
 );
 const emailSecure = emailPort === 465;
 
+export const isPlaceholderCredential = (val?: string): boolean => {
+  if (!val) return true;
+  const lower = val.toLowerCase().trim();
+  return (
+    lower.includes('example.org') ||
+    lower.includes('example.com') ||
+    lower.includes('your_') ||
+    lower.includes('your-') ||
+    lower.includes('placeholder') ||
+    lower === 'changeme' ||
+    lower === 'password'
+  );
+};
+
 // Resolves deployed frontend URL (Render provides RENDER_EXTERNAL_URL)
-const resolvedClientUrl = cleanEnvStr(
-  process.env.CLIENT_URL || process.env.RENDER_EXTERNAL_URL || 'http://localhost:3000'
-);
+const rawClientUrl = cleanEnvStr(process.env.CLIENT_URL || process.env.RENDER_EXTERNAL_URL);
+const resolvedClientUrl =
+  rawClientUrl && !rawClientUrl.includes('your-production-domain') && !rawClientUrl.includes('example.org')
+    ? rawClientUrl
+    : (process.env.RENDER_EXTERNAL_URL ? cleanEnvStr(process.env.RENDER_EXTERNAL_URL) : 'http://localhost:3000');
 
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
@@ -169,7 +185,9 @@ export const isEmailConfigured = (): boolean => {
     process.env.SMTP_SERVER
   ) || env.EMAIL_HOST || (isGmailService ? 'smtp.gmail.com' : '');
 
-  return Boolean(host && user && pass);
+  if (!host || !user || !pass) return false;
+  if (isPlaceholderCredential(user) || isPlaceholderCredential(pass)) return false;
+  return true;
 };
 
 export const isCloudinaryConfigured = (): boolean => {

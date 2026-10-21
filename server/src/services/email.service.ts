@@ -149,11 +149,70 @@ export class EmailService {
         messageId: info.messageId,
       };
     } catch (error: any) {
-      // Log sanitized error message without credentials or tokens
-      logger.error(`[EMAIL SERVICE] Delivery failed to ${to}: ${error.message || error}`);
+      const rawErrorMsg = String(error?.message || error || 'Unknown email delivery failure');
+
+      // Strip sensitive parameters such as passwords or tokens if they appear in nodemailer trace
+      const sanitizedError = rawErrorMsg
+        .replace(/pass(word)?\s*[:=]\s*\S+/gi, 'pass=[REDACTED]')
+        .replace(/token\s*[:=]\s*\S+/gi, 'token=[REDACTED]');
+
+      // Specific actionable diagnosis for common hosting / SMTP hurdles
+      if (sanitizedError.includes('535') || sanitizedError.includes('BadCredentials') || sanitizedError.includes('Username and Password not accepted')) {
+        logger.error(
+          `[EMAIL SERVICE] Authentication failed to ${to}: ${sanitizedError}. [DIAGNOSTIC] Gmail / Google Workspace requires a 16-character Google App Password (generated in Google Account > Security > 2-Step Verification > App Passwords). Standard account passwords will be rejected by Google SMTP.`
+        );
+      } else if (sanitizedError.includes('ETIMEDOUT') || sanitizedError.includes('ECONNREFUSED') || sanitizedError.includes('ESOCKETTIMEDOUT')) {
+        logger.error(
+          `[EMAIL SERVICE] Network connection error to ${to}: ${sanitizedError}. [DIAGNOSTIC] Verify SMTP host & port (587 or 465) in hosting environment variables.`
+        );
+      } else {
+        logger.error(`[EMAIL SERVICE] Delivery failed to ${to}: ${sanitizedError}`);
+      }
+
       return {
         success: false,
-        error: error.message || 'Unknown email delivery failure',
+        error: sanitizedError,
+      };
+    }
+  }
+
+  /**
+   * Diagnostic verification helper to test SMTP connectivity without dispatching an email
+   */
+  public static async verifyConnection(): Promise<{
+    configured: boolean;
+    verified: boolean;
+    message: string;
+  }> {
+    if (!isEmailConfigured()) {
+      return {
+        configured: false,
+        verified: false,
+        message: 'SMTP credentials not configured in environment variables (SMTP_USER / SMTP_PASS missing or placeholder).',
+      };
+    }
+
+    try {
+      const transporter = this.getTransporter();
+      if (!transporter) {
+        return {
+          configured: true,
+          verified: false,
+          message: 'Transporter failed to initialize.',
+        };
+      }
+      await transporter.verify();
+      return {
+        configured: true,
+        verified: true,
+        message: 'SMTP server connection and authentication verified successfully.',
+      };
+    } catch (err: any) {
+      const sanitized = String(err?.message || err).replace(/pass(word)?\s*[:=]\s*\S+/gi, 'pass=[REDACTED]');
+      return {
+        configured: true,
+        verified: false,
+        message: `SMTP verification failed: ${sanitized}`,
       };
     }
   }
