@@ -56,6 +56,13 @@ import { helpRequestService, AdminHelpRequestMetrics } from "@/src/services/help
 import { adminService, AdminDashboardSummary, AdminActivityItem } from "@/src/services/adminService";
 import { Button } from "@/src/components/common/Button";
 import { Modal } from "@/src/components/common/Modal";
+import { CauseModal } from "@/src/components/admin/CauseModal";
+import { EventModal } from "@/src/components/admin/EventModal";
+import { EventAttendeesModal } from "@/src/components/admin/EventAttendeesModal";
+import { BlogModal } from "@/src/components/admin/BlogModal";
+import { TransparencyModal } from "@/src/components/admin/TransparencyModal";
+import { HelpReviewModal } from "@/src/components/admin/HelpReviewModal";
+import { DonationAuditModal } from "@/src/components/admin/DonationAuditModal";
 import { TrustManagementTab } from "@/src/components/admin/TrustManagementTab";
 import { UsersManagementTab } from "@/src/components/admin/UsersManagementTab";
 import { PushNotificationToggle } from "@/src/components/common/PushNotificationToggle";
@@ -125,8 +132,16 @@ export const AdminDashboard: React.FC = () => {
   // Real MongoDB Help Requests State
   const [helpRequests, setHelpRequests] = useState<HelpRequest[]>([]);
   const [isHelpLoading, setIsHelpLoading] = useState<boolean>(false);
-  const [helpError, setHelpError] = useState<string | null>(null);
   const [helpSearch, setHelpSearch] = useState<string>("");
+  const [debouncedHelpSearch, setDebouncedHelpSearch] = useState<string>("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedHelpSearch(helpSearch);
+    }, 350);
+    return () => clearTimeout(handler);
+  }, [helpSearch]);
+
   const [helpStatusFilter, setHelpStatusFilter] = useState<HelpRequestStatus | "ALL">("ALL");
   const [helpTypeFilter, setHelpTypeFilter] = useState<HelpRequestType | "ALL">("ALL");
   const [helpMetrics, setHelpMetrics] = useState<AdminHelpRequestMetrics | null>(null);
@@ -235,7 +250,15 @@ export const AdminDashboard: React.FC = () => {
   const [donationsError, setDonationsError] = useState<string | null>(null);
   const [donationsFilterStatus, setDonationsFilterStatus] = useState<string>("");
   const [donationsSearch, setDonationsSearch] = useState<string>("");
+  const [debouncedDonationsSearch, setDebouncedDonationsSearch] = useState<string>("");
   const [selectedDonationDetails, setSelectedDonationDetails] = useState<DonationRecord | null>(null);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedDonationsSearch(donationsSearch);
+    }, 350);
+    return () => clearTimeout(handler);
+  }, [donationsSearch]);
 
   const fetchAdminDonations = useCallback(async () => {
     setIsDonationsLoading(true);
@@ -243,7 +266,7 @@ export const AdminDashboard: React.FC = () => {
     try {
       const res = await DonationService.listAllDonations({
         status: donationsFilterStatus || undefined,
-        search: donationsSearch || undefined,
+        search: debouncedDonationsSearch.trim() || undefined,
       });
       setAdminDonations(res.donations || []);
       setDonationMetrics(res.metrics || null);
@@ -253,7 +276,7 @@ export const AdminDashboard: React.FC = () => {
     } finally {
       setIsDonationsLoading(false);
     }
-  }, [donationsFilterStatus, donationsSearch]);
+  }, [donationsFilterStatus, debouncedDonationsSearch]);
 
   useEffect(() => {
     if (activeTab === "donations") {
@@ -1155,7 +1178,7 @@ export const AdminDashboard: React.FC = () => {
       const res = await helpRequestService.getAdminHelpRequests({
         status: helpStatusFilter,
         requestType: helpTypeFilter,
-        search: helpSearch.trim() || undefined,
+        search: debouncedHelpSearch.trim() || undefined,
       });
       setHelpRequests(res.requests || []);
       setHelpMetrics(res.metrics || null);
@@ -1165,7 +1188,7 @@ export const AdminDashboard: React.FC = () => {
     } finally {
       setIsHelpLoading(false);
     }
-  }, [helpStatusFilter, helpTypeFilter, helpSearch]);
+  }, [helpStatusFilter, helpTypeFilter, debouncedHelpSearch]);
 
   useEffect(() => {
     if (activeTab === "help") {
@@ -3735,116 +3758,12 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* Donation Audit Inspection Modal */}
-      {selectedDonationDetails && (
-        <Modal
-          isOpen={!!selectedDonationDetails}
-          onClose={() => setSelectedDonationDetails(null)}
-          title={`Donation Audit Record #${selectedDonationDetails.id}`}
-          description="Cryptographic payment and reconciliation details from MongoDB"
-          size="lg"
-        >
-          <div className="space-y-4 font-mono text-xs">
-            <div className="grid grid-cols-2 gap-3 p-4 bg-stone-50 border border-stone-200 rounded-md">
-              <div>
-                <span className="text-stone-400 block text-[10px]">RECORD ID</span>
-                <span className="text-stone-900 break-all">{selectedDonationDetails.id}</span>
-              </div>
-              <div>
-                <span className="text-stone-400 block text-[10px]">GATEWAY STATUS</span>
-                <span
-                  className={`font-bold ${
-                    selectedDonationDetails.status === "SUCCESS"
-                      ? "text-emerald-700"
-                      : "text-amber-700"
-                  }`}
-                >
-                  {selectedDonationDetails.status}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">RECEIPT NUMBER</span>
-                <span className="text-stone-900 font-bold">
-                  {selectedDonationDetails.receiptNumber || "None Issued (Not Captured)"}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">AMOUNT</span>
-                <span className="font-bold text-emerald-800 text-sm">
-                  {formatCurrency(selectedDonationDetails.amount)} {selectedDonationDetails.currency}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">DONOR NAME</span>
-                <span className="text-stone-900">{selectedDonationDetails.donorName}</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">DONOR EMAIL</span>
-                <span className="text-stone-900">{selectedDonationDetails.donorEmail}</span>
-              </div>
-
-              {selectedDonationDetails.donorPhone && (
-                <div>
-                  <span className="text-stone-400 block text-[10px]">DONOR PHONE</span>
-                  <span className="text-stone-900">{selectedDonationDetails.donorPhone}</span>
-                </div>
-              )}
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">CAUSE ALLOCATION</span>
-                <span className="text-stone-900 font-sans">
-                  {typeof selectedDonationDetails.causeId === "object" && selectedDonationDetails.causeId !== null
-                    ? selectedDonationDetails.causeId.title
-                    : selectedDonationDetails.purpose || "General Trust Corpus"}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">RAZORPAY ORDER ID</span>
-                <span className="text-stone-900 break-all">
-                  {selectedDonationDetails.razorpayOrderId || "N/A"}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">RAZORPAY PAYMENT ID</span>
-                <span className="text-stone-900 break-all">
-                  {selectedDonationDetails.razorpayPaymentId || "N/A"}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">CREATED TIMESTAMP</span>
-                <span className="text-stone-700">
-                  {new Date(selectedDonationDetails.createdAt).toLocaleString("en-IN")}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 block text-[10px]">VERIFICATION TIMESTAMP</span>
-                <span className="text-stone-700">
-                  {selectedDonationDetails.paymentVerifiedAt
-                    ? new Date(selectedDonationDetails.paymentVerifiedAt).toLocaleString("en-IN")
-                    : "Not Verified"}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex justify-end pt-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setSelectedDonationDetails(null)}
-              >
-                Close Audit Record
-              </Button>
-            </div>
-          </div>
-        </Modal>
-      )}
+      <DonationAuditModal
+        key="admin-donation-modal"
+        isOpen={!!selectedDonationDetails}
+        onClose={() => setSelectedDonationDetails(null)}
+        donation={selectedDonationDetails}
+      />
 
 
       {/* ================= TAB: LIVE SYSTEM NOTIFICATIONS ================= */}
@@ -4054,1229 +3973,80 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === "users" && user?.role === "ADMIN" && (
         <UsersManagementTab />
       )}
-
-      {/* Help Request Review Modal */}
-      <Modal
-        isOpen={!!inspectHelpModal}
-        onClose={() => setInspectHelpModal(null)}
-        title={`Review Aid Application Docket: ${inspectHelpModal?.id || ""}`}
-        size="lg"
-      >
-        {inspectHelpModal && (
-          <div className="space-y-4 text-xs sm:text-sm">
-            {/* Applicant & Case Overview */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-stone-50 rounded-lg border border-stone-200">
-              <div>
-                <span className="text-stone-400 block text-[10px] uppercase font-semibold">Applicant Name</span>
-                <span className="font-semibold text-stone-900">{inspectHelpModal.name}</span>
-              </div>
-              <div>
-                <span className="text-stone-400 block text-[10px] uppercase font-semibold">Category of Need</span>
-                <span className="font-semibold text-stone-900">{inspectHelpModal.requestType}</span>
-              </div>
-              <div>
-                <span className="text-stone-400 block text-[10px] uppercase font-semibold">Contact Details</span>
-                <span className="text-stone-800 font-mono">{inspectHelpModal.phone} | {inspectHelpModal.email}</span>
-              </div>
-              <div>
-                <span className="text-stone-400 block text-[10px] uppercase font-semibold">Location / District</span>
-                <span className="text-stone-800">{inspectHelpModal.location}</span>
-              </div>
-              <div>
-                <span className="text-stone-400 block text-[10px] uppercase font-semibold">Urgency Classification</span>
-                <span className="font-semibold text-amber-800">{inspectHelpModal.urgency}</span>
-              </div>
-              <div>
-                <span className="text-stone-400 block text-[10px] uppercase font-semibold">Submission Date</span>
-                <span className="text-stone-800">{formatDate(inspectHelpModal.createdAt)}</span>
-              </div>
-            </div>
-
-            {/* Circumstances / Description */}
-            <div className="space-y-1.5">
-              <span className="font-semibold text-stone-800 block text-xs">Hardship Case Narrative:</span>
-              <p className="text-xs text-stone-700 bg-white p-3.5 rounded-lg border border-stone-200 leading-relaxed max-h-40 overflow-y-auto">
-                {inspectHelpModal.description}
-              </p>
-            </div>
-
-            {/* Status & Review Controls */}
-            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200 space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-stone-800 mb-1">
-                    Application Status:
-                  </label>
-                  <select
-                    value={modalStatusChoice}
-                    onChange={(e) => setModalStatusChoice(e.target.value as HelpRequestStatus)}
-                    className="w-full px-3 py-2 text-xs border border-stone-300 rounded-md bg-white text-stone-800 focus:outline-none focus:ring-1 focus:ring-emerald-700"
-                  >
-                    <option value="PENDING">PENDING</option>
-                    <option value="UNDER_REVIEW">UNDER_REVIEW</option>
-                    <option value="APPROVED">APPROVED</option>
-                    <option value="IN_PROGRESS">IN_PROGRESS</option>
-                    <option value="RESOLVED">RESOLVED</option>
-                    <option value="REJECTED">REJECTED</option>
-                    <option value="CLOSED">CLOSED</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-stone-800 mb-1">
-                    Last Reviewer Audit:
-                  </label>
-                  <div className="text-xs text-stone-600 pt-1.5">
-                    {inspectHelpModal.reviewedAt ? (
-                      <span>Reviewed on {formatDate(inspectHelpModal.reviewedAt)}</span>
-                    ) : (
-                      <span className="text-stone-400 italic">Not yet formally reviewed</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-800 mb-1">
-                  Internal Trust Secretariat Notes (Saved to MongoDB):
-                </label>
-                <textarea
-                  rows={3}
-                  value={modalAdminNotes}
-                  onChange={(e) => setModalAdminNotes(e.target.value)}
-                  placeholder="Record verification notes, hospital contact, sanctions amount, or reason for decline..."
-                  className="w-full px-3 py-2 text-xs border border-stone-300 rounded-md bg-white text-stone-800 focus:outline-none focus:ring-1 focus:ring-emerald-700"
-                />
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap justify-between items-center gap-2 pt-2 border-t border-stone-200">
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={isDeletingHelpRequest}
-                className="text-rose-700 border-rose-200 hover:bg-rose-50 text-xs"
-                onClick={() => handleDeleteHelpRequest(inspectHelpModal.id)}
-              >
-                {isDeletingHelpRequest ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />
-                ) : (
-                  <Trash2 className="w-3.5 h-3.5 mr-1" />
-                )}
-                Delete Application
-              </Button>
-
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setInspectHelpModal(null)}
-                  className="text-xs"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  size="sm"
-                  disabled={isSavingHelpUpdate}
-                  className="bg-[#14532d] hover:bg-[#0f4023] text-white text-xs"
-                  onClick={handleSaveHelpReview}
-                >
-                  {isSavingHelpUpdate ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
-                      Saving...
-                    </>
-                  ) : (
-                    "Save Review & Notes"
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      {/* Create / Edit Campaign Modal */}
-      <Modal
+      {/* ================= EXTRACTED ADMIN MODALS (Isolated state prevents re-render thrashing & focus loss) ================= */}
+      <CauseModal
+        key="admin-cause-modal"
         isOpen={isCauseModalOpen}
         onClose={() => setIsCauseModalOpen(false)}
-        title={editingCause ? `Edit Campaign: ${editingCause.title}` : "Create New Charitable Campaign"}
-        size="lg"
-      >
-        <form onSubmit={handleSaveCause} className="space-y-4 text-xs sm:text-sm">
-          {causeFormError && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 rounded-md flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-              <span>{causeFormError}</span>
-            </div>
-          )}
+        causeToEdit={editingCause}
+        onSuccess={(savedTitle) => {
+          setSuccessToast(`Campaign "${savedTitle}" saved successfully.`);
+          fetchAdminCauses();
+          setTimeout(() => setSuccessToast(null), 3500);
+        }}
+      />
 
-          {/* Language / Translation Selector Tabs */}
-          <div className="flex items-center gap-1.5 p-1 bg-stone-100 rounded-lg text-xs font-semibold">
-            <button
-              type="button"
-              onClick={() => setCauseFormTab("en")}
-              className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer text-center ${
-                causeFormTab === "en" ? "bg-white text-stone-900 shadow-xs" : "text-stone-600 hover:text-stone-900"
-              }`}
-            >
-              English (Primary Content)
-            </button>
-            <button
-              type="button"
-              onClick={() => setCauseFormTab("mr")}
-              className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-                causeFormTab === "mr" ? "bg-[#14532d] text-white shadow-xs" : "text-stone-600 hover:text-stone-900"
-              }`}
-            >
-              <span>मराठी भाषांतर</span>
-              {formData.title_mr ? (
-                <span className="text-[10px] bg-emerald-100 text-emerald-900 px-1 rounded font-bold">✓</span>
-              ) : (
-                <span className="text-[10px] text-amber-500 font-normal">Pending</span>
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={() => setCauseFormTab("hi")}
-              className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-                causeFormTab === "hi" ? "bg-amber-600 text-white shadow-xs" : "text-stone-600 hover:text-stone-900"
-              }`}
-            >
-              <span>हिंदी अनुवाद</span>
-              {formData.title_hi ? (
-                <span className="text-[10px] bg-amber-100 text-amber-900 px-1 rounded font-bold">✓</span>
-              ) : (
-                <span className="text-[10px] text-amber-400 font-normal">Pending</span>
-              )}
-            </button>
-          </div>
-
-          {causeFormTab === "en" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Title */}
-              <div className="sm:col-span-2 space-y-1">
-                <label className="font-semibold text-stone-800 block">
-                  Campaign Title (English) <span className="text-rose-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g., Rural School Digital Literacy Drive"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-                />
-              </div>
-
-              {/* Short Description / Tagline */}
-              <div className="sm:col-span-2 space-y-1">
-                <label className="font-semibold text-stone-800 block">
-                  Short Description / Tagline (English) <span className="text-rose-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.shortDescription}
-                  onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                  placeholder="One-sentence impact summary shown on cards"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-                />
-              </div>
-
-              {/* Full Narrative Description */}
-              <div className="sm:col-span-2 space-y-1">
-                <label className="font-semibold text-stone-800 block">
-                  Full Description / Narrative (English) <span className="text-rose-600">*</span>
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Detailed explanation of the need, target beneficiaries, and execution plan..."
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-                />
-              </div>
-            </div>
-          )}
-
-          {causeFormTab === "mr" && (
-            <div className="space-y-4 p-4 rounded-xl bg-emerald-50/50 border border-emerald-200/80">
-              <div className="text-xs text-[#14532d] space-y-0.5">
-                <div className="font-semibold">मराठी भाषांतर पुनरावलोकन (Marathi Translation Review)</div>
-                <p className="text-[11px] text-stone-600">
-                  मराठी भाषेतील अधिकृत शीर्षक व माहिती येथे प्रविष्ट करा. रिक्त ठेवल्यास इंग्रजी मूळ मजकूर सुरक्षितपणे दर्शवला जाईल.
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-semibold text-stone-800 block text-xs">
-                  मोहिमेचे शीर्षक (मराठी)
-                </label>
-                <input
-                  type="text"
-                  value={formData.title_mr}
-                  onChange={(e) => setFormData({ ...formData, title_mr: e.target.value })}
-                  placeholder="उदा. ग्रामीण शाळा डिजिटल साक्षरता अभियान"
-                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-[#14532d]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-semibold text-stone-800 block text-xs">
-                  संक्षिप्त घोषवाक्य / माहिती (मराठी)
-                </label>
-                <input
-                  type="text"
-                  value={formData.shortDescription_mr}
-                  onChange={(e) => setFormData({ ...formData, shortDescription_mr: e.target.value })}
-                  placeholder="एका वाक्यात उपक्रमाची ओळख..."
-                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-[#14532d]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-semibold text-stone-800 block text-xs">
-                  सविस्तर वर्णन (मराठी)
-                </label>
-                <textarea
-                  rows={4}
-                  value={formData.description_mr}
-                  onChange={(e) => setFormData({ ...formData, description_mr: e.target.value })}
-                  placeholder="उपक्रमाची सविस्तर माहिती, लाभार्थी व प्रत्यक्ष कार्यप्रणाली..."
-                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-[#14532d]"
-                />
-              </div>
-            </div>
-          )}
-
-          {causeFormTab === "hi" && (
-            <div className="space-y-4 p-4 rounded-xl bg-amber-50/50 border border-amber-200/80">
-              <div className="text-xs text-amber-950 space-y-0.5">
-                <div className="font-semibold">हिंदी अनुवाद समीक्षा (Hindi Translation Review)</div>
-                <p className="text-[11px] text-stone-600">
-                  हिंदी भाषा में शीर्षक एवं विवरण दर्ज करें। रिक्त रहने पर अंग्रेजी मूल विवरण सुरक्षित प्रदर्शित होगा।
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-semibold text-stone-800 block text-xs">
-                  अभियान का शीर्षक (हिंदी)
-                </label>
-                <input
-                  type="text"
-                  value={formData.title_hi}
-                  onChange={(e) => setFormData({ ...formData, title_hi: e.target.value })}
-                  placeholder="उदा. ग्रामीण शाला डिजिटल साक्षरता अभियान"
-                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-amber-600"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-semibold text-stone-800 block text-xs">
-                  संक्षिप्त विवरण / टैगलाइन (हिंदी)
-                </label>
-                <input
-                  type="text"
-                  value={formData.shortDescription_hi}
-                  onChange={(e) => setFormData({ ...formData, shortDescription_hi: e.target.value })}
-                  placeholder="एक वाक्य में प्रकल्प का सार..."
-                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-amber-600"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-semibold text-stone-800 block text-xs">
-                  विस्तृत विवरण (हिंदी)
-                </label>
-                <textarea
-                  rows={4}
-                  value={formData.description_hi}
-                  onChange={(e) => setFormData({ ...formData, description_hi: e.target.value })}
-                  placeholder="प्रकल्प का विस्तृत विवरण, लाभार्थी एवं क्रियान्वयन..."
-                  className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md text-stone-900 focus:outline-none focus:border-amber-600"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Operational Fields (Shared across languages) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-stone-100">
-            {/* Category */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Category <span className="text-rose-600">*</span>
-              </label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value as CauseCategory })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              >
-                <option value="Education">Education</option>
-                <option value="Medical Support">Medical Support</option>
-                <option value="Food & Nutrition">Food & Nutrition</option>
-                <option value="Emergency Relief">Emergency Relief</option>
-                <option value="Environment">Environment</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            {/* Status */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">Status</label>
-              <select
-                value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              >
-                <option value="ACTIVE">ACTIVE (Published)</option>
-                <option value="DRAFT">DRAFT (Hidden)</option>
-                <option value="COMPLETED">COMPLETED (Goal Met)</option>
-                <option value="ARCHIVED">ARCHIVED</option>
-              </select>
-            </div>
-
-            {/* Target Amount */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Target Amount (₹) <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="number"
-                min="1"
-                required
-                value={formData.targetAmount}
-                onChange={(e) => setFormData({ ...formData, targetAmount: e.target.value })}
-                placeholder="e.g., 500000"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Location */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">Location</label>
-              <input
-                type="text"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                placeholder="e.g., Nashik, Maharashtra"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Image URL */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Cover Image URL <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="url"
-                required
-                value={formData.imageUrl}
-                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                placeholder="https://example.com/activity-photo.jpg"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Toggles */}
-            <div className="sm:col-span-2 flex items-center gap-6 pt-1">
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.isKumbhRelated}
-                  onChange={(e) => setFormData({ ...formData, isKumbhRelated: e.target.checked })}
-                  className="rounded text-[#14532d] focus:ring-[#14532d]"
-                />
-                <span className="font-medium text-stone-800 text-xs">Nashik Kumbh Mela Program</span>
-              </label>
-
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.urgent}
-                  onChange={(e) => setFormData({ ...formData, urgent: e.target.checked })}
-                  className="rounded text-rose-600 focus:ring-rose-500"
-                />
-                <span className="font-medium text-stone-800 text-xs">Urgent Appeal</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Modal Footer */}
-          <div className="flex items-center justify-end gap-2 pt-4 border-t border-stone-200">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsCauseModalOpen(false)}
-              disabled={isSavingCause}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              size="sm"
-              disabled={isSavingCause}
-              className="bg-[#14532d] hover:bg-[#0f3d21] text-white"
-              leftIcon={isSavingCause ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
-            >
-              {isSavingCause ? "Saving..." : editingCause ? "Save Changes" : "Publish Campaign"}
-            </Button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* ================= EVENT CREATE / EDIT MODAL ================= */}
-      <Modal
+      <EventModal
+        key="admin-event-modal"
         isOpen={isEventModalOpen}
         onClose={() => setIsEventModalOpen(false)}
-        title={editingEvent ? `Edit Event: ${editingEvent.title}` : "Schedule New Trust Event or Drive"}
-      >
-        <form onSubmit={handleSaveEvent} className="space-y-4 text-xs">
-          {eventFormError && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded text-rose-800 font-medium flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-              <span>{eventFormError}</span>
-            </div>
-          )}
+        eventToEdit={editingEvent}
+        onSuccess={(savedTitle) => {
+          setSuccessToast(`Event "${savedTitle}" saved successfully.`);
+          fetchAdminEvents();
+          setTimeout(() => setSuccessToast(null), 3500);
+        }}
+      />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Event Title */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Event Title <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={eventFormData.title}
-                onChange={(e) => setEventFormData({ ...eventFormData, title: e.target.value })}
-                placeholder="e.g., Godavari Ghat Cleanliness & Sevadar Briefing"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Category */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">Category</label>
-              <select
-                value={eventFormData.category}
-                onChange={(e) => setEventFormData({ ...eventFormData, category: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              >
-                <option value="Community Outreach">Community Outreach</option>
-                <option value="Healthcare & Camps">Healthcare & Camps</option>
-                <option value="River Hygiene & Environment">River Hygiene & Environment</option>
-                <option value="Kumbh Mela Seva">Kumbh Mela Seva</option>
-                <option value="Education & Youth">Education & Youth</option>
-                <option value="Cultural & Festival">Cultural & Festival</option>
-              </select>
-            </div>
-
-            {/* Status */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">Status</label>
-              <select
-                value={eventFormData.status}
-                onChange={(e) => setEventFormData({ ...eventFormData, status: e.target.value as EventStatus })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              >
-                <option value="UPCOMING">UPCOMING (Open)</option>
-                <option value="ONGOING">ONGOING (Active now)</option>
-                <option value="COMPLETED">COMPLETED</option>
-                <option value="DRAFT">DRAFT (Hidden from Public)</option>
-                <option value="CANCELLED">CANCELLED</option>
-              </select>
-            </div>
-
-            {/* Start Date & Time */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Start Date & Time <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="datetime-local"
-                required
-                value={eventFormData.startDate}
-                onChange={(e) => setEventFormData({ ...eventFormData, startDate: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* End Date & Time */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">End Date & Time</label>
-              <input
-                type="datetime-local"
-                value={eventFormData.endDate}
-                onChange={(e) => setEventFormData({ ...eventFormData, endDate: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Location */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Location & Venue <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={eventFormData.location}
-                onChange={(e) => setEventFormData({ ...eventFormData, location: e.target.value })}
-                placeholder="e.g., Ramkund Ghats, Panchavati, Nashik"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Cover Image URL */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Cover Image URL <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="url"
-                required
-                value={eventFormData.imageUrl}
-                onChange={(e) => setEventFormData({ ...eventFormData, imageUrl: e.target.value })}
-                placeholder="https://example.com/event-photo.jpg"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Custom Slug (Optional) */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">Custom URL Slug (Optional)</label>
-              <input
-                type="text"
-                value={eventFormData.slug}
-                onChange={(e) => setEventFormData({ ...eventFormData, slug: e.target.value })}
-                placeholder="e.g., ramkund-hygiene-drive"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Capacity / Registration Limit */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">Attendee Quota / Limit</label>
-              <input
-                type="number"
-                min="0"
-                value={eventFormData.registrationLimit}
-                onChange={(e) => setEventFormData({ ...eventFormData, registrationLimit: e.target.value })}
-                placeholder="e.g., 150 (0 for unlimited)"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Short Description */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Short Description / Tagline <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={eventFormData.shortDescription}
-                onChange={(e) => setEventFormData({ ...eventFormData, shortDescription: e.target.value })}
-                placeholder="Brief summary displayed on cards and overview grids"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Full Narrative Description */}
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Full Description & Agenda <span className="text-rose-600">*</span>
-              </label>
-              <textarea
-                rows={4}
-                required
-                value={eventFormData.description}
-                onChange={(e) => setEventFormData({ ...eventFormData, description: e.target.value })}
-                placeholder="Comprehensive agenda, guidelines, assembly point instructions, and requirements..."
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-[#14532d]"
-              />
-            </div>
-
-            {/* Toggles */}
-            <div className="sm:col-span-2 flex items-center gap-6 pt-1">
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={eventFormData.registrationRequired}
-                  onChange={(e) => setEventFormData({ ...eventFormData, registrationRequired: e.target.checked })}
-                  className="rounded text-emerald-700 focus:ring-emerald-700"
-                />
-                <span className="font-medium text-stone-800 text-xs">Registration Required for Entry</span>
-              </label>
-
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={eventFormData.isKumbhRelated}
-                  onChange={(e) => setEventFormData({ ...eventFormData, isKumbhRelated: e.target.checked })}
-                  className="rounded text-amber-700 focus:ring-amber-700"
-                />
-                <span className="font-medium text-stone-800 text-xs">Nashik Kumbh Mela Initiative</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Modal Footer */}
-          <div className="flex items-center justify-end gap-2 pt-4 border-t border-stone-200">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsEventModalOpen(false)}
-              disabled={isSavingEvent}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              size="sm"
-              disabled={isSavingEvent}
-              className="bg-[#14532d] hover:bg-[#0f3d21] text-white"
-              leftIcon={isSavingEvent ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
-            >
-              {isSavingEvent ? "Saving..." : editingEvent ? "Update Event" : "Schedule Event"}
-            </Button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* ================= INSPECT ATTENDEES MODAL ================= */}
-      <Modal
+      <EventAttendeesModal
+        key="admin-attendees-modal"
         isOpen={!!inspectEvent}
         onClose={() => setInspectEvent(null)}
-        title={inspectEvent ? `Registered Attendees: ${inspectEvent.title}` : "Event Attendees"}
-      >
-        <div className="space-y-4 text-xs">
-          <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 flex items-center justify-between">
-            <div className="space-y-0.5">
-              <span className="font-semibold text-stone-900 block">{inspectEvent?.title}</span>
-              <span className="text-stone-500 block text-[11px]">
-                {inspectEvent?.date} • {inspectEvent?.location}
-              </span>
-            </div>
-            <div className="text-right">
-              <span className="text-base font-bold font-serif text-emerald-800 block">
-                {inspectRegistrations.length}
-                {inspectEvent?.registrationLimit ? ` / ${inspectEvent.registrationLimit}` : ""}
-              </span>
-              <span className="text-[10px] text-stone-500 uppercase tracking-wider font-semibold">
-                Confirmed Registrations
-              </span>
-            </div>
-          </div>
+        event={inspectEvent}
+        registrations={inspectRegistrations}
+        isLoading={isLoadingRegistrations}
+      />
 
-          {isLoadingRegistrations ? (
-            <div className="py-12 flex flex-col items-center justify-center gap-2 text-stone-500">
-              <Loader2 className="w-5 h-5 animate-spin text-emerald-700" />
-              <span>Loading attendee roster...</span>
-            </div>
-          ) : inspectRegistrations.length === 0 ? (
-            <div className="py-8 text-center space-y-2">
-              <Users className="w-8 h-8 text-stone-300 mx-auto" />
-              <p className="font-semibold text-stone-700">No registrations recorded yet.</p>
-              <p className="text-stone-500 text-[11px]">
-                Attendees will appear here once registered via the public event portal.
-              </p>
-            </div>
-          ) : (
-            <div className="max-h-80 overflow-y-auto border border-stone-200 rounded-lg divide-y divide-stone-100">
-              {inspectRegistrations.map((reg, idx) => (
-                <div key={reg.id || idx} className="p-3 hover:bg-stone-50 flex items-center justify-between gap-4">
-                  <div className="space-y-0.5">
-                    <div className="font-semibold text-stone-900 flex items-center gap-2">
-                      <span>{reg.fullName}</span>
-                      <span className="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-1.5 py-0.2 rounded border border-emerald-200">
-                        {reg.status}
-                      </span>
-                    </div>
-                    <div className="text-stone-500 text-[11px] flex items-center gap-3 flex-wrap">
-                      <span>{reg.email}</span>
-                      <span>•</span>
-                      <span>{reg.phone}</span>
-                      {reg.city && (
-                        <>
-                          <span>•</span>
-                          <span>{reg.city}</span>
-                        </>
-                      )}
-                    </div>
-                    {reg.emergencyContact && (
-                      <div className="text-[10px] text-stone-400">
-                        Emergency: {reg.emergencyContact}
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-right text-[10px] text-stone-400 shrink-0">
-                    {reg.registeredAt ? new Date(reg.registeredAt).toLocaleDateString() : ""}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="flex justify-end pt-3 border-t border-stone-200">
-            <Button size="sm" variant="outline" onClick={() => setInspectEvent(null)}>
-              Close Roster
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* ================= CREATE / EDIT BLOG POST MODAL ================= */}
-      <Modal
+      <BlogModal
+        key="admin-blog-modal"
         isOpen={isBlogModalOpen}
         onClose={() => setIsBlogModalOpen(false)}
-        title={editingBlogPost ? `Edit Story: ${editingBlogPost.title}` : "Publish New Field Story or News Article"}
-      >
-        <form onSubmit={handleSaveBlog} className="space-y-4 text-xs">
-          {blogFormError && (
-            <div className="p-3 bg-red-50 text-red-700 rounded-lg border border-red-200 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>{blogFormError}</span>
-            </div>
-          )}
+        postToEdit={editingBlogPost}
+        onSuccess={(savedTitle) => {
+          setSuccessToast(`Story "${savedTitle}" saved successfully.`);
+          fetchAdminBlogPosts();
+          setTimeout(() => setSuccessToast(null), 3500);
+        }}
+      />
 
-          {/* Title */}
-          <div className="space-y-1">
-            <label className="font-semibold text-stone-800 block">
-              Story Title <span className="text-rose-600">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="e.g. Free Mobile Diagnostic Camps Screen 3,400 Rural Citizens"
-              value={blogFormData.title}
-              onChange={(e) => {
-                const newTitle = e.target.value;
-                setBlogFormData((prev) => ({
-                  ...prev,
-                  title: newTitle,
-                  slug: editingBlogPost ? prev.slug : newTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
-                }));
-              }}
-              className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-            />
-          </div>
-
-          {/* Slug */}
-          <div className="space-y-1">
-            <label className="font-semibold text-stone-800 block">
-              URL Slug (Unique URL identifier)
-            </label>
-            <div className="flex items-center">
-              <span className="px-2.5 py-2 bg-stone-100 border border-r-0 border-stone-200 rounded-l-md text-stone-500 font-mono text-[11px]">
-                /blog/
-              </span>
-              <input
-                type="text"
-                placeholder="slug-auto-generated-or-custom"
-                value={blogFormData.slug}
-                onChange={(e) => setBlogFormData({ ...blogFormData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, "") })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-r-md text-stone-900 font-mono text-xs focus:bg-white focus:outline-none focus:border-emerald-700"
-              />
-            </div>
-            <p className="text-[10px] text-stone-400">Leave empty or use lowercase letters, numbers, and hyphens.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Category */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Category <span className="text-rose-600">*</span>
-              </label>
-              <select
-                value={blogFormData.category}
-                onChange={(e) => setBlogFormData({ ...blogFormData, category: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              >
-                <option value="Field Updates">Field Updates</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Transparency">Transparency</option>
-                <option value="Education">Education</option>
-                <option value="Governance & Impact">Governance & Impact</option>
-                <option value="Kumbh Seva">Kumbh Seva</option>
-              </select>
-            </div>
-
-            {/* Author */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Author / Editorial Desk
-              </label>
-              <input
-                type="text"
-                value={blogFormData.author}
-                onChange={(e) => setBlogFormData({ ...blogFormData, author: e.target.value })}
-                placeholder="e.g. Dr. A. Joshi, Chief Medical Officer"
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              />
-            </div>
-          </div>
-
-          {/* Cover Image Upload & URL */}
-          <FileUploadField
-            label="Cover Image"
-            category="IMAGE"
-            value={blogFormData.coverImage}
-            onChange={(url) => setBlogFormData({ ...blogFormData, coverImage: url })}
-            placeholder="https://... or click upload above"
-            helperText="Upload a JPG, PNG, or WebP image under 5MB or paste a verified image URL."
-          />
-
-          {/* Excerpt */}
-          <div className="space-y-1">
-            <label className="font-semibold text-stone-800 block">
-              Short Excerpt (Summary displayed on cards) <span className="text-rose-600">*</span>
-            </label>
-            <textarea
-              required
-              rows={2}
-              value={blogFormData.excerpt}
-              onChange={(e) => setBlogFormData({ ...blogFormData, excerpt: e.target.value })}
-              placeholder="Brief summary of the article or field report..."
-              className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-            />
-          </div>
-
-          {/* Content */}
-          <div className="space-y-1">
-            <label className="font-semibold text-stone-800 block">
-              Full Story Content <span className="text-rose-600">*</span>
-            </label>
-            <textarea
-              required
-              rows={6}
-              value={blogFormData.content}
-              onChange={(e) => setBlogFormData({ ...blogFormData, content: e.target.value })}
-              placeholder="Enter full article text. Separate paragraphs with blank lines."
-              className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-            />
-          </div>
-
-          {/* Tags */}
-          <div className="space-y-1">
-            <label className="font-semibold text-stone-800 block">
-              Tags (Comma separated)
-            </label>
-            <input
-              type="text"
-              value={blogFormData.tags}
-              onChange={(e) => setBlogFormData({ ...blogFormData, tags: e.target.value })}
-              placeholder="Healthcare, Diagnostic, Nashik, Mobile Clinic"
-              className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-            />
-          </div>
-
-          {/* Checkbox Toggles */}
-          <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 space-y-2.5">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={blogFormData.isPublished}
-                onChange={(e) => setBlogFormData({ ...blogFormData, isPublished: e.target.checked })}
-                className="w-4 h-4 rounded text-emerald-800 focus:ring-emerald-700 accent-emerald-800"
-              />
-              <span className="font-semibold text-stone-800">Publish immediately (Make visible on live website)</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={blogFormData.isFeatured}
-                onChange={(e) => setBlogFormData({ ...blogFormData, isFeatured: e.target.checked })}
-                className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 accent-amber-600"
-              />
-              <span className="font-semibold text-stone-800">Mark as Featured (Highlights post at the top)</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={blogFormData.isKumbhRelated}
-                onChange={(e) => setBlogFormData({ ...blogFormData, isKumbhRelated: e.target.checked })}
-                className="w-4 h-4 rounded text-amber-700 focus:ring-amber-600 accent-amber-700"
-              />
-              <span className="font-semibold text-stone-800">Nashik Simhastha Kumbh 2027 Field Dispatch</span>
-            </label>
-          </div>
-
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-200">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsBlogModalOpen(false)}
-              disabled={isSavingBlog}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              size="sm"
-              disabled={isSavingBlog}
-              className="bg-[#14532d] hover:bg-[#0f4023] text-white inline-flex items-center gap-1.5"
-            >
-              {isSavingBlog ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Saving to MongoDB...</span>
-                </>
-              ) : (
-                <span>{editingBlogPost ? "Update Story" : "Publish to Live Website"}</span>
-              )}
-            </Button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* ================= CREATE / EDIT TRANSPARENCY REPORT MODAL ================= */}
-      <Modal
+      <TransparencyModal
+        key="admin-transparency-modal"
         isOpen={isTransparencyModalOpen}
         onClose={() => setIsTransparencyModalOpen(false)}
-        title={editingTransparencyReport ? `Edit Report: ${editingTransparencyReport.title}` : "Publish New Statutory / Audit Report"}
-      >
-        <form onSubmit={handleSaveTransparency} className="space-y-4 text-xs">
-          {transparencyFormError && (
-            <div className="p-3 bg-red-50 text-red-700 rounded-lg border border-red-200 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>{transparencyFormError}</span>
-            </div>
-          )}
+        reportToEdit={editingTransparencyReport}
+        onSuccess={(savedTitle) => {
+          setSuccessToast(`Report "${savedTitle}" saved successfully.`);
+          fetchAdminTransparencyReports();
+          setTimeout(() => setSuccessToast(null), 3500);
+        }}
+      />
 
-          {/* Title */}
-          <div className="space-y-1">
-            <label className="font-semibold text-stone-800 block">
-              Report Title <span className="text-rose-600">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="e.g. Annual Audited Financial Statements & Balance Sheet"
-              value={transparencyFormData.title}
-              onChange={(e) => setTransparencyFormData({ ...transparencyFormData, title: e.target.value })}
-              className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Report Type */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Report Type <span className="text-rose-600">*</span>
-              </label>
-              <select
-                value={transparencyFormData.reportType}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, reportType: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              >
-                <option value="Annual Report">Annual Report</option>
-                <option value="Financial Report">Financial Report</option>
-                <option value="Audit Report">Audit Report</option>
-                <option value="Impact Report">Impact Report</option>
-                <option value="Donation Utilization Report">Donation Utilization Report</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            {/* Financial Year */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Financial Year <span className="text-rose-600">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. FY 2024-25"
-                value={transparencyFormData.financialYear}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, financialYear: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              />
-            </div>
-          </div>
-
-          {/* Description */}
-          <div className="space-y-1">
-            <label className="font-semibold text-stone-800 block">
-              Executive Summary / Overview <span className="text-rose-600">*</span>
-            </label>
-            <textarea
-              required
-              rows={3}
-              placeholder="Brief summary of disclosures, audit findings, trust activities, or donor fund deployments..."
-              value={transparencyFormData.description}
-              onChange={(e) => setTransparencyFormData({ ...transparencyFormData, description: e.target.value })}
-              className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700 resize-none"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Auditor Firm */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Auditor Firm / Certifying CA
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. M/s K. B. Deshmukh & Associates"
-                value={transparencyFormData.auditorFirm}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, auditorFirm: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              />
-            </div>
-
-            {/* Statutory Type */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Statutory Filing / Document Type
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Annual Audit Report or Institutional Review"
-                value={transparencyFormData.statutoryType}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, statutoryType: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Total Disbursal */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Reported Charitable Disbursal
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. ₹1,42,80,000"
-                value={transparencyFormData.totalDisbursal}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, totalDisbursal: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              />
-            </div>
-
-            {/* Audit Rating */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block">
-                Audit Rating / Opinion
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Unqualified Clean Opinion"
-                value={transparencyFormData.auditRating}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, auditRating: e.target.value })}
-                className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700"
-              />
-            </div>
-          </div>
-
-          {/* PDF Report Document Upload & URL */}
-          <FileUploadField
-            label="Annual/Financial Report Document (PDF)"
-            category="DOCUMENT"
-            value={transparencyFormData.fileUrl}
-            onChange={(url) => setTransparencyFormData({ ...transparencyFormData, fileUrl: url })}
-            onFileSizeChange={(sizeStr) => setTransparencyFormData((prev) => ({ ...prev, fileSize: sizeStr }))}
-            placeholder="https://... or click upload above"
-            helperText="Upload official PDF (under 10MB) or paste a verified document link."
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* File Size / Format Display */}
-            <div className="space-y-1">
-              <label className="font-semibold text-stone-800 block text-xs">
-                File Size / Format Indicator
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. PDF (2.4 MB)"
-                value={transparencyFormData.fileSize}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, fileSize: e.target.value })}
-                className="w-full px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-md text-stone-900 focus:bg-white focus:outline-none focus:border-emerald-700 text-xs"
-              />
-            </div>
-
-            {/* Cover Image Upload & URL */}
-            <FileUploadField
-              label="Report Cover Image (Optional)"
-              category="IMAGE"
-              value={transparencyFormData.coverImage}
-              onChange={(url) => setTransparencyFormData({ ...transparencyFormData, coverImage: url })}
-              placeholder="https://... or click upload above"
-              helperText="Optional report preview image."
-            />
-          </div>
-
-          {/* Checkboxes */}
-          <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 space-y-2.5">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={transparencyFormData.isPublished}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, isPublished: e.target.checked })}
-                className="w-4 h-4 rounded text-emerald-800 focus:ring-emerald-700 accent-emerald-800"
-              />
-              <span className="font-semibold text-stone-800">Publish immediately (Make visible on live website)</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={transparencyFormData.isFeatured}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, isFeatured: e.target.checked })}
-                className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 accent-amber-600"
-              />
-              <span className="font-semibold text-stone-800">Mark as Featured (Pin at top of Transparency page)</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={transparencyFormData.isKumbhRelated}
-                onChange={(e) => setTransparencyFormData({ ...transparencyFormData, isKumbhRelated: e.target.checked })}
-                className="w-4 h-4 rounded text-amber-700 focus:ring-amber-600 accent-amber-700"
-              />
-              <span className="font-semibold text-stone-800">Nashik Simhastha Kumbh 2027 Special Audit / Disclosure</span>
-            </label>
-          </div>
-
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-200">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsTransparencyModalOpen(false)}
-              disabled={isSavingTransparency}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              size="sm"
-              disabled={isSavingTransparency}
-              className="bg-[#14532d] hover:bg-[#0f4023] text-white inline-flex items-center gap-1.5"
-            >
-              {isSavingTransparency ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Saving to MongoDB...</span>
-                </>
-              ) : (
-                <span>{editingTransparencyReport ? "Update Report" : "Publish to Live Website"}</span>
-              )}
-            </Button>
-          </div>
-        </form>
-      </Modal>
+      <HelpReviewModal
+        key="admin-help-modal"
+        isOpen={!!inspectHelpModal}
+        onClose={() => setInspectHelpModal(null)}
+        helpRequest={inspectHelpModal}
+        onSuccess={(updated) => {
+          setSuccessToast(`Application #${updated.id} status updated to ${updated.status}.`);
+          fetchAdminHelpRequests();
+          setTimeout(() => setSuccessToast(null), 3500);
+        }}
+        onDelete={(id) => {
+          setSuccessToast(`Application #${id} deleted.`);
+          fetchAdminHelpRequests();
+          setTimeout(() => setSuccessToast(null), 3500);
+        }}
+      />
     </div>
   );
 };

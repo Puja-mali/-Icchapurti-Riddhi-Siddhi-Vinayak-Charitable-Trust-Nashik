@@ -49,7 +49,15 @@ export const TrustManagementTab: React.FC<Props> = ({ onNotify }) => {
   const [isTrusteesLoading, setIsTrusteesLoading] = useState<boolean>(false);
   const [trusteesError, setTrusteesError] = useState<string | null>(null);
   const [trusteeSearch, setTrusteeSearch] = useState<string>("");
+  const [debouncedTrusteeSearch, setDebouncedTrusteeSearch] = useState<string>("");
   const [trusteeFilterActive, setTrusteeFilterActive] = useState<string>("all");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedTrusteeSearch(trusteeSearch);
+    }, 350);
+    return () => clearTimeout(handler);
+  }, [trusteeSearch]);
 
   // Modal for Create/Edit Trustee
   const [isTrusteeModalOpen, setIsTrusteeModalOpen] = useState<boolean>(false);
@@ -92,7 +100,7 @@ export const TrustManagementTab: React.FC<Props> = ({ onNotify }) => {
     try {
       const data = await trustService.getAdminTrustees({
         isActive: trusteeFilterActive !== "all" ? trusteeFilterActive : undefined,
-        search: trusteeSearch.trim() || undefined,
+        search: debouncedTrusteeSearch.trim() || undefined,
       });
       setTrustees(data);
     } catch (err: any) {
@@ -101,7 +109,7 @@ export const TrustManagementTab: React.FC<Props> = ({ onNotify }) => {
     } finally {
       setIsTrusteesLoading(false);
     }
-  }, [trusteeFilterActive, trusteeSearch]);
+  }, [trusteeFilterActive, debouncedTrusteeSearch]);
 
   useEffect(() => {
     fetchProfile();

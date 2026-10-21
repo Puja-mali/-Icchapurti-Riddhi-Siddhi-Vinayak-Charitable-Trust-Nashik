@@ -56,8 +56,16 @@ export const UsersManagementTab: React.FC = () => {
   const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(true);
   const [userError, setUserError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 350);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // Invitations state
   const [invitations, setInvitations] = useState<InvitationItem[]>([]);
@@ -112,7 +120,7 @@ export const UsersManagementTab: React.FC = () => {
         const data = await userService.listUsers({
           page: pageToLoad,
           limit: 15,
-          search: searchQuery.trim() || undefined,
+          search: debouncedSearchQuery.trim() || undefined,
           role: roleFilter !== 'ALL' ? roleFilter : undefined,
           status: statusFilter !== 'ALL' ? statusFilter : undefined,
         });
@@ -125,7 +133,7 @@ export const UsersManagementTab: React.FC = () => {
         setIsLoadingUsers(false);
       }
     },
-    [isAdmin, searchQuery, roleFilter, statusFilter]
+    [isAdmin, debouncedSearchQuery, roleFilter, statusFilter]
   );
 
   // Fetch Invitations

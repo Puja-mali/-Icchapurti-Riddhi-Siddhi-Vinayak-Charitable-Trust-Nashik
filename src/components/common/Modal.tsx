@@ -25,13 +25,9 @@ export const Modal: React.FC<ModalProps> = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
-  const hasFocusedRef = useRef(false);
 
   useEffect(() => {
-    if (!isOpen) {
-      hasFocusedRef.current = false;
-      return;
-    }
+    if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onCloseRef.current();
@@ -45,27 +41,6 @@ export const Modal: React.FC<ModalProps> = ({
       document.body.style.paddingRight = `${scrollBarWidth}px`;
     }
     window.addEventListener("keydown", handleKeyDown);
-
-    // Focus modal container ONLY once on initial mount/open, never when re-rendering while user is typing
-    if (!hasFocusedRef.current) {
-      hasFocusedRef.current = true;
-      const timer = setTimeout(() => {
-        // Only set focus if user hasn't already focused an interactive element inside the modal
-        if (
-          dialogRef.current &&
-          (!document.activeElement || !dialogRef.current.contains(document.activeElement))
-        ) {
-          dialogRef.current.focus();
-        }
-      }, 50);
-
-      return () => {
-        clearTimeout(timer);
-        document.body.style.overflow = originalOverflow || "";
-        document.body.style.paddingRight = originalPaddingRight || "";
-        window.removeEventListener("keydown", handleKeyDown);
-      };
-    }
 
     return () => {
       document.body.style.overflow = originalOverflow || "";
@@ -101,7 +76,6 @@ export const Modal: React.FC<ModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        tabIndex={-1}
         className={cn(
           "relative w-full bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden z-10 m-auto flex flex-col max-h-[calc(100dvh-2.5rem)] sm:max-h-[calc(100dvh-4rem)] animate-in fade-in zoom-in-95 duration-200 outline-none",
           sizeClasses[size],
